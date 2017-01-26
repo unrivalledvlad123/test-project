@@ -48,7 +48,16 @@ namespace gw2_Investment_Tool.Forms
             this.btnLoadData = new System.Windows.Forms.Button();
             this.dgvItemsToCalculate = new System.Windows.Forms.DataGridView();
             this.NewItems = new System.Windows.Forms.TabPage();
+            this.dgvGuildIngridients = new System.Windows.Forms.DataGridView();
             this.gbItem = new System.Windows.Forms.GroupBox();
+            this.labelRecipeIdValue = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.labelItemIdValue = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.labelDescriptionValue = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.labelRarityValue = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.labelFlags = new System.Windows.Forms.Label();
             this.labelDisciplines = new System.Windows.Forms.Label();
             this.labelMinRating = new System.Windows.Forms.Label();
@@ -82,6 +91,7 @@ namespace gw2_Investment_Tool.Forms
             this.Crafting.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvItemsToCalculate)).BeginInit();
             this.NewItems.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvGuildIngridients)).BeginInit();
             this.gbItem.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvIngredients)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvNewItems)).BeginInit();
@@ -257,6 +267,7 @@ namespace gw2_Investment_Tool.Forms
             // 
             // NewItems
             // 
+            this.NewItems.Controls.Add(this.dgvGuildIngridients);
             this.NewItems.Controls.Add(this.gbItem);
             this.NewItems.Controls.Add(this.dgvIngredients);
             this.NewItems.Controls.Add(this.dgvNewItems);
@@ -274,8 +285,24 @@ namespace gw2_Investment_Tool.Forms
             this.NewItems.Text = "New Items";
             this.NewItems.UseVisualStyleBackColor = true;
             // 
+            // dgvGuildIngridients
+            // 
+            this.dgvGuildIngridients.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvGuildIngridients.Location = new System.Drawing.Point(408, 262);
+            this.dgvGuildIngridients.Name = "dgvGuildIngridients";
+            this.dgvGuildIngridients.Size = new System.Drawing.Size(322, 140);
+            this.dgvGuildIngridients.TabIndex = 9;
+            // 
             // gbItem
             // 
+            this.gbItem.Controls.Add(this.labelRecipeIdValue);
+            this.gbItem.Controls.Add(this.label13);
+            this.gbItem.Controls.Add(this.labelItemIdValue);
+            this.gbItem.Controls.Add(this.label12);
+            this.gbItem.Controls.Add(this.labelDescriptionValue);
+            this.gbItem.Controls.Add(this.label11);
+            this.gbItem.Controls.Add(this.labelRarityValue);
+            this.gbItem.Controls.Add(this.label5);
             this.gbItem.Controls.Add(this.labelFlags);
             this.gbItem.Controls.Add(this.labelDisciplines);
             this.gbItem.Controls.Add(this.labelMinRating);
@@ -295,10 +322,83 @@ namespace gw2_Investment_Tool.Forms
             this.gbItem.TabStop = false;
             this.gbItem.Text = "Item Details";
             // 
+            // labelRecipeIdValue
+            // 
+            this.labelRecipeIdValue.AutoSize = true;
+            this.labelRecipeIdValue.Location = new System.Drawing.Point(460, 107);
+            this.labelRecipeIdValue.Name = "labelRecipeIdValue";
+            this.labelRecipeIdValue.Size = new System.Drawing.Size(27, 13);
+            this.labelRecipeIdValue.TabIndex = 19;
+            this.labelRecipeIdValue.Text = "N/A";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(395, 107);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(55, 13);
+            this.label13.TabIndex = 18;
+            this.label13.Text = "RecipeID:";
+            // 
+            // labelItemIdValue
+            // 
+            this.labelItemIdValue.AutoSize = true;
+            this.labelItemIdValue.Location = new System.Drawing.Point(460, 181);
+            this.labelItemIdValue.Name = "labelItemIdValue";
+            this.labelItemIdValue.Size = new System.Drawing.Size(27, 13);
+            this.labelItemIdValue.TabIndex = 17;
+            this.labelItemIdValue.Text = "N/A";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(395, 181);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(41, 13);
+            this.label12.TabIndex = 16;
+            this.label12.Text = "ItemID:";
+            // 
+            // labelDescriptionValue
+            // 
+            this.labelDescriptionValue.AutoSize = true;
+            this.labelDescriptionValue.Location = new System.Drawing.Point(460, 20);
+            this.labelDescriptionValue.MaximumSize = new System.Drawing.Size(260, 0);
+            this.labelDescriptionValue.Name = "labelDescriptionValue";
+            this.labelDescriptionValue.Size = new System.Drawing.Size(27, 13);
+            this.labelDescriptionValue.TabIndex = 15;
+            this.labelDescriptionValue.Text = "N/A";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(395, 20);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(63, 13);
+            this.label11.TabIndex = 14;
+            this.label11.Text = "Description:";
+            // 
+            // labelRarityValue
+            // 
+            this.labelRarityValue.AutoSize = true;
+            this.labelRarityValue.Location = new System.Drawing.Point(86, 181);
+            this.labelRarityValue.Name = "labelRarityValue";
+            this.labelRarityValue.Size = new System.Drawing.Size(27, 13);
+            this.labelRarityValue.TabIndex = 13;
+            this.labelRarityValue.Text = "N/A";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(7, 181);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(37, 13);
+            this.label5.TabIndex = 12;
+            this.label5.Text = "Rarity:";
+            // 
             // labelFlags
             // 
             this.labelFlags.AutoSize = true;
-            this.labelFlags.Location = new System.Drawing.Point(49, 157);
+            this.labelFlags.Location = new System.Drawing.Point(86, 157);
             this.labelFlags.Name = "labelFlags";
             this.labelFlags.Size = new System.Drawing.Size(27, 13);
             this.labelFlags.TabIndex = 11;
@@ -307,7 +407,7 @@ namespace gw2_Investment_Tool.Forms
             // labelDisciplines
             // 
             this.labelDisciplines.AutoSize = true;
-            this.labelDisciplines.Location = new System.Drawing.Point(74, 133);
+            this.labelDisciplines.Location = new System.Drawing.Point(86, 133);
             this.labelDisciplines.Name = "labelDisciplines";
             this.labelDisciplines.Size = new System.Drawing.Size(27, 13);
             this.labelDisciplines.TabIndex = 10;
@@ -316,7 +416,7 @@ namespace gw2_Investment_Tool.Forms
             // labelMinRating
             // 
             this.labelMinRating.AutoSize = true;
-            this.labelMinRating.Location = new System.Drawing.Point(70, 107);
+            this.labelMinRating.Location = new System.Drawing.Point(86, 107);
             this.labelMinRating.Name = "labelMinRating";
             this.labelMinRating.Size = new System.Drawing.Size(27, 13);
             this.labelMinRating.TabIndex = 9;
@@ -334,7 +434,7 @@ namespace gw2_Investment_Tool.Forms
             // labelType
             // 
             this.labelType.AutoSize = true;
-            this.labelType.Location = new System.Drawing.Point(54, 50);
+            this.labelType.Location = new System.Drawing.Point(86, 50);
             this.labelType.Name = "labelType";
             this.labelType.Size = new System.Drawing.Size(27, 13);
             this.labelType.TabIndex = 7;
@@ -388,7 +488,7 @@ namespace gw2_Investment_Tool.Forms
             // labelName
             // 
             this.labelName.AutoSize = true;
-            this.labelName.Location = new System.Drawing.Point(54, 20);
+            this.labelName.Location = new System.Drawing.Point(86, 20);
             this.labelName.Name = "labelName";
             this.labelName.Size = new System.Drawing.Size(27, 13);
             this.labelName.TabIndex = 1;
@@ -406,38 +506,40 @@ namespace gw2_Investment_Tool.Forms
             // dgvIngredients
             // 
             this.dgvIngredients.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvIngredients.Location = new System.Drawing.Point(408, 181);
+            this.dgvIngredients.Location = new System.Drawing.Point(408, 117);
             this.dgvIngredients.Name = "dgvIngredients";
-            this.dgvIngredients.Size = new System.Drawing.Size(323, 221);
+            this.dgvIngredients.Size = new System.Drawing.Size(323, 139);
             this.dgvIngredients.TabIndex = 7;
             // 
             // dgvNewItems
             // 
             this.dgvNewItems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvNewItems.Location = new System.Drawing.Point(10, 181);
+            this.dgvNewItems.Location = new System.Drawing.Point(10, 117);
             this.dgvNewItems.Name = "dgvNewItems";
-            this.dgvNewItems.Size = new System.Drawing.Size(392, 221);
+            this.dgvNewItems.Size = new System.Drawing.Size(392, 285);
             this.dgvNewItems.TabIndex = 6;
+            this.dgvNewItems.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvNewItems_CellSelected);
             // 
             // btnSearch
             // 
-            this.btnSearch.Location = new System.Drawing.Point(10, 120);
+            this.btnSearch.Location = new System.Drawing.Point(10, 88);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(75, 23);
             this.btnSearch.TabIndex = 5;
             this.btnSearch.Text = "Search";
             this.btnSearch.UseVisualStyleBackColor = true;
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
             // tbNew
             // 
-            this.tbNew.Location = new System.Drawing.Point(116, 94);
+            this.tbNew.Location = new System.Drawing.Point(116, 62);
             this.tbNew.Name = "tbNew";
             this.tbNew.Size = new System.Drawing.Size(100, 20);
             this.tbNew.TabIndex = 4;
             // 
             // tbOld
             // 
-            this.tbOld.Location = new System.Drawing.Point(10, 94);
+            this.tbOld.Location = new System.Drawing.Point(10, 62);
             this.tbOld.Name = "tbOld";
             this.tbOld.Size = new System.Drawing.Size(100, 20);
             this.tbOld.TabIndex = 3;
@@ -445,7 +547,7 @@ namespace gw2_Investment_Tool.Forms
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(113, 77);
+            this.label3.Location = new System.Drawing.Point(113, 46);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(57, 13);
             this.label3.TabIndex = 2;
@@ -454,7 +556,7 @@ namespace gw2_Investment_Tool.Forms
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(7, 77);
+            this.label2.Location = new System.Drawing.Point(7, 46);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(52, 13);
             this.label2.TabIndex = 1;
@@ -472,7 +574,7 @@ namespace gw2_Investment_Tool.Forms
     "some of them may not be shown initialy, if the are not discovered by players yet" +
     ".";
             // 
-            // tabPage1
+            // TBD
             // 
             this.TBD.Location = new System.Drawing.Point(4, 22);
             this.TBD.Name = "TBD";
@@ -541,6 +643,7 @@ namespace gw2_Investment_Tool.Forms
             ((System.ComponentModel.ISupportInitialize)(this.dgvItemsToCalculate)).EndInit();
             this.NewItems.ResumeLayout(false);
             this.NewItems.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvGuildIngridients)).EndInit();
             this.gbItem.ResumeLayout(false);
             this.gbItem.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvIngredients)).EndInit();
@@ -589,7 +692,6 @@ namespace gw2_Investment_Tool.Forms
         private TabPage TBD;
         private Button btnSearch;
         private GroupBox gbItem;
-        private Label labelName;
         private Label label4;
         private DataGridView dgvIngredients;
         private DataGridView dgvNewItems;
@@ -598,10 +700,20 @@ namespace gw2_Investment_Tool.Forms
         private Label label9;
         private Label label8;
         private Label label7;
+        private DataGridView dgvGuildIngridients;
         private Label labelFlags;
         private Label labelDisciplines;
         private Label labelMinRating;
         private Label labelOutputCount;
         private Label labelType;
+        private Label labelName;
+        private Label labelRarityValue;
+        private Label label5;
+        private Label labelDescriptionValue;
+        private Label label11;
+        private Label labelItemIdValue;
+        private Label label12;
+        private Label labelRecipeIdValue;
+        private Label label13;
     }
 }

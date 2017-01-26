@@ -53,8 +53,11 @@ namespace gw2_Investment_Tool.Forms
 
         private void dgvSearchResult_CellSelected(object sender, EventArgs e)
         {
-            ItemApi item = MainForm.ItemNames.FirstOrDefault(p => p.name == dgvSearchResults.SelectedCells[0].Value.ToString());
-            tbItemId.Text = item.id.ToString();
+            if (dgvSearchResults.SelectedCells[0].Value.ToString() != "")
+            {
+                ItemApi item = MainForm.ItemNames.FirstOrDefault(p => p.name == dgvSearchResults.SelectedCells[0].Value.ToString());
+                tbItemId.Text = item.id.ToString();
+            }
         }
 
         private void SetGridColumns()

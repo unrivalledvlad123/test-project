@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Configuration;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using gw2_Investment_Tool.Classes;
 using gw2_Investment_Tool.ServiceAccess;
@@ -29,10 +24,10 @@ namespace gw2_Investment_Tool.Forms
         {
             List<int> itemIds = await SAItems.GetAllrecipeIdsAsync();
             List<OutputItemId> outputItemIds = await SAItems.GetRecipeOutputIdAsync(itemIds);
-            List<ItemApi> NamedItems = await SAItems.GetItemNamesAsync(outputItemIds);
+            List<ItemApi> namedItems = await SAItems.GetItemNamesAsync(outputItemIds);
 
             List<string> lines = new List<string>();
-            foreach (var item in NamedItems)
+            foreach (var item in namedItems)
             {
                 StringBuilder sb = new StringBuilder();
                 sb.Append(item.id.ToString());
@@ -44,7 +39,7 @@ namespace gw2_Investment_Tool.Forms
             {
                 File.WriteAllLines(ConfigurationManager.AppSettings["LoadNames"], lines);
             }
-            MainForm.ItemNames = NamedItems;
+            MainForm.ItemNames = namedItems;
             MessageBox.Show(@"Text file successfuly created!", @"Success",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
         }

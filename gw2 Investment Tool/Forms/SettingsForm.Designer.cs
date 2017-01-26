@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+﻿
 
 namespace gw2_Investment_Tool.Forms
 {
@@ -60,7 +60,7 @@ namespace gw2_Investment_Tool.Forms
             this.btnGenerate.TabIndex = 3;
             this.btnGenerate.Text = "Generate";
             this.btnGenerate.UseVisualStyleBackColor = true;
-            this.btnGenerate.Click += new System.EventHandler(this.btnGenerate_Click);
+            this.btnGenerate.Click += new System.EventHandler(btnGenerate_Click);
             // 
             // label2
             // 
@@ -73,7 +73,7 @@ namespace gw2_Investment_Tool.Forms
             // 
             // tbCurrentItems
             // 
-            this.tbCurrentItems.Location = new System.Drawing.Point(15, 158);
+            tbCurrentItems.Location = new System.Drawing.Point(15, 158);
             this.tbCurrentItems.Name = "tbCurrentItems";
             this.tbCurrentItems.Size = new System.Drawing.Size(255, 20);
             this.tbCurrentItems.TabIndex = 5;

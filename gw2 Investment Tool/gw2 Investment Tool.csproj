@@ -60,9 +60,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\GuildIngridient.cs" />
+    <Compile Include="Classes\GuildItemFull.cs" />
     <Compile Include="Classes\Ingredient.cs" />
     <Compile Include="Classes\Item.cs" />
     <Compile Include="Classes\ItemApi.cs" />
+    <Compile Include="Classes\ItemDetails.cs" />
+    <Compile Include="Classes\ItemFull.cs" />
     <Compile Include="Classes\OutputItemId.cs" />
     <Compile Include="Classes\ItemPrices.cs" />
     <Compile Include="Classes\Prices.cs" />

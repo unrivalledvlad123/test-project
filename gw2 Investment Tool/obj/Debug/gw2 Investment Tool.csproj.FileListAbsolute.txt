@@ -48,3 +48,20 @@ C:\Projects\GW2 tool\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Forms.Set
 C:\Projects\GW2 tool\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Forms.WhiteListForm.resources
 C:\Projects\GW2 tool\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Properties.Resources.resources
 C:\Projects\GW2 tool\gw2 Investment Tool\obj\Debug\gw2 Investment Tool.csproj.GenerateResource.Cache
+D:\Projects\GW2 tool\gw2 Investment Tool\bin\Debug\gw2 Investment Tool.exe.config
+D:\Projects\GW2 tool\gw2 Investment Tool\obj\Debug\gw2 Investment Tool.exe
+D:\Projects\GW2 tool\gw2 Investment Tool\obj\Debug\gw2 Investment Tool.pdb
+D:\Projects\GW2 tool\gw2 Investment Tool\bin\Debug\gw2 Investment Tool.exe
+D:\Projects\GW2 tool\gw2 Investment Tool\bin\Debug\gw2 Investment Tool.pdb
+D:\Projects\GW2 tool\gw2 Investment Tool\bin\Debug\Newtonsoft.Json.dll
+D:\Projects\GW2 tool\gw2 Investment Tool\bin\Debug\System.Net.Http.Formatting.dll
+D:\Projects\GW2 tool\gw2 Investment Tool\bin\Debug\Newtonsoft.Json.xml
+D:\Projects\GW2 tool\gw2 Investment Tool\bin\Debug\System.Net.Http.Formatting.xml
+D:\Projects\GW2 tool\gw2 Investment Tool\obj\Debug\gw2 Investment Tool.csprojResolveAssemblyReference.cache
+D:\Projects\GW2 tool\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Forms.AddOrEditForm.resources
+D:\Projects\GW2 tool\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Forms.MainForm.resources
+D:\Projects\GW2 tool\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Forms.ResultForm.resources
+D:\Projects\GW2 tool\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Forms.SettingsForm.resources
+D:\Projects\GW2 tool\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Forms.WhiteListForm.resources
+D:\Projects\GW2 tool\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Properties.Resources.resources
+D:\Projects\GW2 tool\gw2 Investment Tool\obj\Debug\gw2 Investment Tool.csproj.GenerateResource.Cache

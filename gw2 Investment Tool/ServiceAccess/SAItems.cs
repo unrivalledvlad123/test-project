@@ -29,6 +29,38 @@ namespace gw2_Investment_Tool.ServiceAccess
                 return null;
             }
         }
+        public static async Task<ItemFull> GetItemFullAsync(int itemId)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://api.guildwars2.com");
+
+                HttpResponseMessage response = await client.GetAsync($"/v2/items/{itemId}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var item = await response.Content.ReadAsAsync<ItemFull>();
+                    return item;
+                }
+
+                return null;
+            }
+        }
+        public static async Task<GuildItemFull> GetGuildItemFullAsync(int itemId)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://api.guildwars2.com");
+
+                HttpResponseMessage response = await client.GetAsync($"/v2/guild/upgrades/{itemId}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var item = await response.Content.ReadAsAsync<GuildItemFull>();
+                    return item;
+                }
+
+                return null;
+            }
+        }
 
         public static async Task<int[]> GetRecipesOutputAsync(int itemId)
         {
@@ -168,6 +200,48 @@ namespace gw2_Investment_Tool.ServiceAccess
                     {
                         List<ItemApi> items = await response.Content.ReadAsAsync<List<ItemApi>>();
                         results.AddRange(items);
+                    }
+                }
+                return results;
+            }
+        }
+
+        public static async Task<List<RecipeFull>> GetRecipeFullAsync(List<int> itemIds)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                List<RecipeFull> results = new List<RecipeFull>();
+                client.BaseAddress = new Uri("https://api.guildwars2.com");
+                int counter = 0;
+                while (counter <= itemIds.Count)
+                {
+                    List<int> currentLoop = new List<int>();
+                    for (int i = counter; i < counter + 100; i++)
+                    {
+
+                        if (i < itemIds.Count)
+                        {
+                            currentLoop.Add(itemIds[i]);
+                        }
+                    }
+                    counter += 100;
+                    StringBuilder sb = new StringBuilder();
+                    foreach (var id in currentLoop)
+                    {
+                        sb.Append(id.ToString());
+                        sb.Append(",");
+                    }
+                    HttpResponseMessage response = await client.GetAsync($"/v2/recipes?ids={sb}");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        List<RecipeFull> ids = await response.Content.ReadAsAsync<List<RecipeFull>>();
+                        foreach (var id in ids)
+                        {
+                            if (results.FirstOrDefault(p => p.output_item_id == id.output_item_id) == null)
+                            {
+                                results.AddRange(ids);
+                            }
+                        }
                     }
                 }
                 return results;

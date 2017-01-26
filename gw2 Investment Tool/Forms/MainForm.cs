@@ -8,6 +8,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -27,6 +28,7 @@ namespace gw2_Investment_Tool.Forms
         public List<int> AllItemIds = new List<int>();
         public List<int> AllRecipeIds = new List<int>();
         public static List<WhiteListedItem> WhiteListedItems = new List<WhiteListedItem>();
+        List<RecipeFull> newRecipesFull = new List<RecipeFull>();
         public static int TotalGold = 0;
         public static float TotalKarma = 0;
 
@@ -34,6 +36,9 @@ namespace gw2_Investment_Tool.Forms
         {
             InitializeComponent();
             SetGridColumns();
+            SetGuildIngridientsGridColumns();
+            SetIngridientsGridColumns();
+            SetItemNameGridColumns();
             try
             {
                 Load += btnLoadData_Click;
@@ -573,6 +578,213 @@ namespace gw2_Investment_Tool.Forms
             dgvItemsToCalculate.Columns.Add(c7);
 
         }
+
+        #region // < ================ New Items Tab ================>
+
+        private async void btnSearch_Click(object sender, EventArgs e)
+        {
+            dgvNewItems.DataSource = null;
+            List<ItemFull> newItemsData = new List<ItemFull>();
+            List<GuildItemFull> newGuildItemsFull = new List<GuildItemFull>();
+            if (tbOld.Text.Length != 0)
+            {
+                List<int> itemIds = await SAItems.GetAllrecipeIdsAsync();
+                tbNew.Text = itemIds.Last().ToString();
+                List<int> newItemsIDsIndexes = new List<int>();
+                int newIndex;
+                int oldIndex;
+                int.TryParse(tbNew.Text, out newIndex);
+                int.TryParse(tbOld.Text, out oldIndex);
+                for (int i = oldIndex; i <= newIndex; i++)
+                {
+                    newItemsIDsIndexes.Add(i);
+                }
+                newRecipesFull = await SAItems.GetRecipeFullAsync(newItemsIDsIndexes);
+                foreach (var recipe in newRecipesFull)
+                {
+                    if (recipe.type == "GuildConsumable" || recipe.type == "GuildDecoration" || recipe.type == "GuildConsumableWvw")
+                    {
+                        foreach (var ingredients in recipe.guild_ingredients)
+                        {
+                            GuildItemFull ingData = await SAItems.GetGuildItemFullAsync(ingredients.upgrade_id);
+                            ingredients.name = ingData.name;
+                        }
+                        if (recipe.ingredients != null)
+                        {
+                            foreach (var ingredients in recipe.ingredients)
+                            {
+                                ItemFull ingData = await SAItems.GetItemFullAsync(ingredients.item_id);
+                                ingredients.name = ingData.name;
+                            }
+                        }
+                        GuildItemFull nameData = await SAItems.GetGuildItemFullAsync(recipe.output_upgrade_id);
+                        recipe.OutputItemName = nameData.name;
+                        recipe.Description = nameData.description;
+                        recipe.Rarity = "Common";
+                    }
+                    else
+                    {
+                        foreach (var ingredients in recipe.ingredients)
+                        {
+                            ItemFull ingData = await SAItems.GetItemFullAsync(ingredients.item_id);
+                            ingredients.name = ingData.name;
+                        }
+                        ItemFull nameData = await SAItems.GetItemFullAsync(recipe.output_item_id);
+                        recipe.OutputItemName = nameData.name;
+                        if (nameData.details != null)
+                        {
+                            if (nameData.details.description != null)
+                            {
+                                recipe.Description = nameData.details.description;
+                            }
+                            else
+                            {
+                                recipe.Description = nameData.description;
+                            }
+                        }
+                        else
+                        {
+                            recipe.Description = nameData.description;
+                        }
+                        recipe.Rarity = nameData.rarity;
+                        recipe.type = nameData.type;
+                        recipe.flags = nameData.flags;
+                    }
+                }
+                dgvNewItems.DataSource = null;
+                dgvNewItems.DataSource = newRecipesFull;
+            }
+        }
+
+        private void dgvNewItems_CellSelected(object sender, EventArgs e)
+        {
+            RecipeFull selectedItem = newRecipesFull.FirstOrDefault(p => p.OutputItemName == dgvNewItems.SelectedCells[0].Value.ToString());
+            dgvIngredients.DataSource = null;
+            dgvGuildIngridients.DataSource = null;
+            if (selectedItem != null)
+            {
+                dgvIngredients.DataSource = selectedItem.ingredients;
+                dgvGuildIngridients.DataSource = selectedItem.guild_ingredients;
+                labelType.Text = selectedItem.type;
+                labelMinRating.Text = selectedItem.min_rating.ToString();
+                labelDisciplines.Text = SimpleStringBuilder(selectedItem.disciplines);
+                labelFlags.Text = SimpleStringBuilder(selectedItem.flags);
+                labelName.Text = selectedItem.OutputItemName;
+                labelDescriptionValue.Text = selectedItem.Description;
+                labelRarityValue.Text = selectedItem.Rarity;
+                labelOutputCount.Text = selectedItem.output_item_count.ToString();
+                if (selectedItem.type == "GuildConsumable" || selectedItem.type == "GuildDecoration" || selectedItem.type == "GuildConsumableWvw")
+                {
+                    labelItemIdValue.Text = selectedItem.output_upgrade_id.ToString();
+                }
+                else
+                {
+                    labelItemIdValue.Text = selectedItem.output_item_id.ToString();
+                }
+                labelRecipeIdValue.Text = selectedItem.id.ToString();
+            }
+        }
+
+        public string SimpleStringBuilder(string[] strings)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (var str in strings)
+            {
+                sb.Append(str + " ");
+            }
+            return sb.ToString();
+        }
+
+        private void SetItemNameGridColumns()
+        {
+            dgvNewItems.DataSource = null;
+            dgvNewItems.Columns.Clear();
+            dgvNewItems.AutoGenerateColumns = false;
+            dgvNewItems.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+            dgvNewItems.RowHeadersVisible = false;
+
+            DataGridViewTextBoxColumn c1 = new DataGridViewTextBoxColumn();
+            c1.Name = "OutputItemName";
+            c1.HeaderText = "Item Name";
+            c1.DataPropertyName = "OutputItemName";
+            c1.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dgvNewItems.Columns.Add(c1);
+
+            DataGridViewTextBoxColumn c2 = new DataGridViewTextBoxColumn();
+            c2.Name = "id";
+            c2.HeaderText = "Item ID";
+            c2.DataPropertyName = "id";
+            c2.Visible = false;
+            dgvNewItems.Columns.Add(c2);
+        }
+
+        private void SetIngridientsGridColumns()
+        {
+            dgvIngredients.DataSource = null;
+            dgvIngredients.Columns.Clear();
+            dgvIngredients.AutoGenerateColumns = false;
+            dgvIngredients.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+            dgvIngredients.RowHeadersVisible = false;
+
+
+            DataGridViewTextBoxColumn c1 = new DataGridViewTextBoxColumn();
+            c1.Name = "name";
+            c1.HeaderText = "Item Name";
+            c1.DataPropertyName = "name";
+            c1.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dgvIngredients.Columns.Add(c1);
+
+            DataGridViewTextBoxColumn c2 = new DataGridViewTextBoxColumn();
+            c2.Name = "count";
+            c2.HeaderText = "Quantity";
+            c2.DataPropertyName = "count";
+            c2.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            c2.Width = 100;
+            dgvIngredients.Columns.Add(c2);
+
+            DataGridViewTextBoxColumn c3 = new DataGridViewTextBoxColumn();
+            c3.Name = "item_id";
+            c3.HeaderText = "Item ID";
+            c3.DataPropertyName = "item_id";
+            c3.Visible = false;
+            dgvIngredients.Columns.Add(c3);
+        }
+
+        private void SetGuildIngridientsGridColumns()
+        {
+            dgvGuildIngridients.DataSource = null;
+            dgvGuildIngridients.Columns.Clear();
+            dgvGuildIngridients.AutoGenerateColumns = false;
+            dgvGuildIngridients.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+            dgvGuildIngridients.RowHeadersVisible = false;
+
+
+            DataGridViewTextBoxColumn c1 = new DataGridViewTextBoxColumn();
+            c1.Name = "name";
+            c1.HeaderText = "Item Name";
+            c1.DataPropertyName = "name";
+            c1.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dgvGuildIngridients.Columns.Add(c1);
+
+            DataGridViewTextBoxColumn c2 = new DataGridViewTextBoxColumn();
+            c2.Name = "count";
+            c2.HeaderText = "Quantity";
+            c2.DataPropertyName = "count";
+            c2.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            c2.Width = 100;
+            dgvGuildIngridients.Columns.Add(c2);
+
+            DataGridViewTextBoxColumn c3 = new DataGridViewTextBoxColumn();
+            c3.Name = "upgrade_id";
+            c3.HeaderText = "Item ID";
+            c3.DataPropertyName = "upgrade_id";
+            c3.Visible = false;
+            dgvGuildIngridients.Columns.Add(c3);
+
+        }
+        
+        #endregion
+
     }
 }
 
