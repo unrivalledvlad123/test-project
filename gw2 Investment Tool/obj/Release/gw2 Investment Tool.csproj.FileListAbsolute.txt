@@ -1,0 +1,16 @@
+C:\Projects\GW2--Investment-Tool\gw2 Investment Tool\bin\Release\gw2 Investment Tool.exe.config
+C:\Projects\GW2--Investment-Tool\gw2 Investment Tool\bin\Release\gw2 Investment Tool.exe
+C:\Projects\GW2--Investment-Tool\gw2 Investment Tool\bin\Release\gw2 Investment Tool.pdb
+C:\Projects\GW2--Investment-Tool\gw2 Investment Tool\bin\Release\Newtonsoft.Json.dll
+C:\Projects\GW2--Investment-Tool\gw2 Investment Tool\bin\Release\System.Net.Http.Formatting.dll
+C:\Projects\GW2--Investment-Tool\gw2 Investment Tool\bin\Release\Newtonsoft.Json.xml
+C:\Projects\GW2--Investment-Tool\gw2 Investment Tool\bin\Release\System.Net.Http.Formatting.xml
+C:\Projects\GW2--Investment-Tool\gw2 Investment Tool\obj\Release\gw2_Investment_Tool.Forms.AddOrEditForm.resources
+C:\Projects\GW2--Investment-Tool\gw2 Investment Tool\obj\Release\gw2_Investment_Tool.Forms.MainForm.resources
+C:\Projects\GW2--Investment-Tool\gw2 Investment Tool\obj\Release\gw2_Investment_Tool.Forms.ResultForm.resources
+C:\Projects\GW2--Investment-Tool\gw2 Investment Tool\obj\Release\gw2_Investment_Tool.Forms.SettingsForm.resources
+C:\Projects\GW2--Investment-Tool\gw2 Investment Tool\obj\Release\gw2_Investment_Tool.Forms.WhiteListForm.resources
+C:\Projects\GW2--Investment-Tool\gw2 Investment Tool\obj\Release\gw2_Investment_Tool.Properties.Resources.resources
+C:\Projects\GW2--Investment-Tool\gw2 Investment Tool\obj\Release\gw2 Investment Tool.csproj.GenerateResource.Cache
+C:\Projects\GW2--Investment-Tool\gw2 Investment Tool\obj\Release\gw2 Investment Tool.exe
+C:\Projects\GW2--Investment-Tool\gw2 Investment Tool\obj\Release\gw2 Investment Tool.pdb
