@@ -633,14 +633,7 @@ namespace gw2_Investment_Tool.Forms
                         recipe.OutputItemName = nameData.name;
                         if (nameData.details != null)
                         {
-                            if (nameData.details.description != null)
-                            {
-                                recipe.Description = nameData.details.description;
-                            }
-                            else
-                            {
-                                recipe.Description = nameData.description;
-                            }
+                            recipe.Description = nameData.details.description ?? nameData.description;
                         }
                         else
                         {
@@ -658,30 +651,33 @@ namespace gw2_Investment_Tool.Forms
 
         private void dgvNewItems_CellSelected(object sender, EventArgs e)
         {
-            RecipeFull selectedItem = newRecipesFull.FirstOrDefault(p => p.OutputItemName == dgvNewItems.SelectedCells[0].Value.ToString());
-            dgvIngredients.DataSource = null;
-            dgvGuildIngridients.DataSource = null;
-            if (selectedItem != null)
+            if (dgvNewItems.SelectedCells[0].Value != null)
             {
-                dgvIngredients.DataSource = selectedItem.ingredients;
-                dgvGuildIngridients.DataSource = selectedItem.guild_ingredients;
-                labelType.Text = selectedItem.type;
-                labelMinRating.Text = selectedItem.min_rating.ToString();
-                labelDisciplines.Text = SimpleStringBuilder(selectedItem.disciplines);
-                labelFlags.Text = SimpleStringBuilder(selectedItem.flags);
-                labelName.Text = selectedItem.OutputItemName;
-                labelDescriptionValue.Text = selectedItem.Description;
-                labelRarityValue.Text = selectedItem.Rarity;
-                labelOutputCount.Text = selectedItem.output_item_count.ToString();
-                if (selectedItem.type == "GuildConsumable" || selectedItem.type == "GuildDecoration" || selectedItem.type == "GuildConsumableWvw")
+                RecipeFull selectedItem = newRecipesFull.FirstOrDefault(p => p.OutputItemName == dgvNewItems.SelectedCells[0].Value.ToString());
+                dgvIngredients.DataSource = null;
+                dgvGuildIngridients.DataSource = null;
+                if (selectedItem != null)
                 {
-                    labelItemIdValue.Text = selectedItem.output_upgrade_id.ToString();
+                    dgvIngredients.DataSource = selectedItem.ingredients;
+                    dgvGuildIngridients.DataSource = selectedItem.guild_ingredients;
+                    labelType.Text = selectedItem.type;
+                    labelMinRating.Text = selectedItem.min_rating.ToString();
+                    labelDisciplines.Text = SimpleStringBuilder(selectedItem.disciplines);
+                    labelFlags.Text = SimpleStringBuilder(selectedItem.flags);
+                    labelName.Text = selectedItem.OutputItemName;
+                    labelDescriptionValue.Text = selectedItem.Description;
+                    labelRarityValue.Text = selectedItem.Rarity;
+                    labelOutputCount.Text = selectedItem.output_item_count.ToString();
+                    if (selectedItem.type == "GuildConsumable" || selectedItem.type == "GuildDecoration" || selectedItem.type == "GuildConsumableWvw")
+                    {
+                        labelItemIdValue.Text = selectedItem.output_upgrade_id.ToString();
+                    }
+                    else
+                    {
+                        labelItemIdValue.Text = selectedItem.output_item_id.ToString();
+                    }
+                    labelRecipeIdValue.Text = selectedItem.id.ToString();
                 }
-                else
-                {
-                    labelItemIdValue.Text = selectedItem.output_item_id.ToString();
-                }
-                labelRecipeIdValue.Text = selectedItem.id.ToString();
             }
         }
 
