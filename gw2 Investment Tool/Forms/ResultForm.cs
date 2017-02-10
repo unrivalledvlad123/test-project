@@ -110,7 +110,7 @@ namespace gw2_Investment_Tool.Forms
             foreach (var item in MainForm.WhiteListedItems)
             {
                 ItemPrices prices = await SAItems.GetItemPricesAsync(item.ItemId);
-                item.CurrentPrice = prices.sells.unit_price;
+                item.CurrentPrice = prices.sells.unit_price+1;
             }
             
             await GetRecipeFromApi(AllItems);
@@ -175,18 +175,18 @@ namespace gw2_Investment_Tool.Forms
                     resultItem.ItemId = result.Key;
                     resultItem.Quantity = result.Value;
                     resultItem.Name = item.name;
-                    resultItem.PriceEach = prices.buys.unit_price;
-                    resultItem.Total = prices.buys.unit_price*result.Value;
-                    resultItem.PriceFormated = ParsePrices(prices.buys.unit_price);
-                    resultItem.PriceTotalFormated = ParsePrices(prices.buys.unit_price*result.Value);
+                    resultItem.PriceEach = prices.buys.unit_price+1;
+                    resultItem.Total = (prices.buys.unit_price+1)*result.Value;
+                    resultItem.PriceFormated = ParsePrices(prices.buys.unit_price +1);
+                    resultItem.PriceTotalFormated = ParsePrices((prices.buys.unit_price+1)*result.Value);
                     resultItem.RecalculateChecked = false;
                     ResultItem check = ItemsToKeep.FirstOrDefault(p => p.ItemId == resultItem.ItemId);
                     if (check != null)
                     {
                         check.Quantity = check.Quantity + resultItem.Quantity;
                         check.Total = check.Total + resultItem.Total;
-                        check.PriceFormated = ParsePrices(prices.buys.unit_price);
-                        check.PriceTotalFormated = ParsePrices(prices.buys.unit_price*check.Quantity);
+                        check.PriceFormated = ParsePrices(prices.buys.unit_price +1);
+                        check.PriceTotalFormated = ParsePrices((prices.buys.unit_price+1)*check.Quantity);
                     }
                     else
                     {
