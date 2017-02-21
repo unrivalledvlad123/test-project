@@ -466,10 +466,10 @@ namespace gw2_Investment_Tool.Forms
                     resultItem.ItemId = itemID.Key;
                     resultItem.Quantity = itemID.Value;
                     resultItem.Name = item.name;
-                    resultItem.PriceEach = prices.buys.unit_price;
-                    resultItem.Total = prices.buys.unit_price*itemID.Value;
-                    resultItem.PriceFormated = ParsePrices(prices.buys.unit_price);
-                    resultItem.PriceTotalFormated = ParsePrices(prices.buys.unit_price*itemID.Value);
+                    resultItem.PriceEach = prices.buys.unit_price + 1;
+                    resultItem.Total = resultItem.PriceEach * itemID.Value;
+                    resultItem.PriceFormated = ParsePrices(prices.buys.unit_price +1);
+                    resultItem.PriceTotalFormated = ParsePrices((prices.buys.unit_price + 1) * itemID.Value);
                     resultItem.RecalculateChecked = false;
                     ItemsToBuy.Add(resultItem);
                 }
@@ -484,7 +484,7 @@ namespace gw2_Investment_Tool.Forms
                 if (item.Active)
                 {
                     ItemPrices prices = await SAItems.GetItemPricesAsync(item.ItemId);
-                    count = count + prices.sells.unit_price*item.Quantity;
+                    count = count + (prices.sells.unit_price+1)*item.Quantity;
                 }
 
             }
