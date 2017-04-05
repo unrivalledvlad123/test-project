@@ -583,9 +583,8 @@ namespace gw2_Investment_Tool.Forms
 
         private async void btnSearch_Click(object sender, EventArgs e)
         {
+            int globalMissingItemIndex = 0;
             dgvNewItems.DataSource = null;
-            List<ItemFull> newItemsData = new List<ItemFull>();
-            List<GuildItemFull> newGuildItemsFull = new List<GuildItemFull>();
             if (tbOld.Text.Length != 0)
             {
                 List<int> itemIds = await SAItems.GetAllrecipeIdsAsync();
@@ -602,7 +601,8 @@ namespace gw2_Investment_Tool.Forms
                 newRecipesFull = await SAItems.GetRecipeFullAsync(newItemsIDsIndexes);
                 foreach (var recipe in newRecipesFull)
                 {
-                    if (recipe.type == "GuildConsumable" || recipe.type == "GuildDecoration" || recipe.type == "GuildConsumableWvw")
+                    if (recipe.type == "GuildConsumable" || recipe.type == "GuildDecoration" ||
+                        recipe.type == "GuildConsumableWvw")
                     {
                         foreach (var ingredients in recipe.guild_ingredients)
                         {
@@ -618,30 +618,46 @@ namespace gw2_Investment_Tool.Forms
                             }
                         }
                         GuildItemFull nameData = await SAItems.GetGuildItemFullAsync(recipe.output_upgrade_id);
-                        recipe.OutputItemName = nameData.name;
-                        recipe.Description = nameData.description;
-                        recipe.Rarity = "Common";
+                        if (nameData == null)
+                        {
+                            globalMissingItemIndex++;
+                            recipe.OutputItemName = "Missing Name" + globalMissingItemIndex;
+                            recipe.Description = "Missing Description";
+                            recipe.Rarity = "Common";
+                        }
+                        else
+                        {
+                            recipe.OutputItemName = nameData.name;
+                            recipe.Description = nameData.description;
+                            recipe.Rarity = "Common";
+                        }
                     }
                     else
                     {
                         foreach (var ingredients in recipe.ingredients)
                         {
                             ItemFull ingData = await SAItems.GetItemFullAsync(ingredients.item_id);
-                            ingredients.name = ingData.name;
+                            if (ingData != null)
+                            {
+                                ingredients.name = ingData.name;
+                            }
                         }
                         ItemFull nameData = await SAItems.GetItemFullAsync(recipe.output_item_id);
-                        recipe.OutputItemName = nameData.name;
-                        if (nameData.details != null)
+                        if (nameData != null)
                         {
-                            recipe.Description = nameData.details.description ?? nameData.description;
+                            recipe.OutputItemName = nameData.name;
+                            if (nameData.details != null)
+                            {
+                                recipe.Description = nameData.details.description ?? nameData.description;
+                            }
+                            else
+                            {
+                                recipe.Description = nameData.description;
+                            }
+                            recipe.Rarity = nameData.rarity;
+                            recipe.type = nameData.type;
+                            recipe.flags = nameData.flags;
                         }
-                        else
-                        {
-                            recipe.Description = nameData.description;
-                        }
-                        recipe.Rarity = nameData.rarity;
-                        recipe.type = nameData.type;
-                        recipe.flags = nameData.flags;
                     }
                 }
                 dgvNewItems.DataSource = null;
@@ -701,14 +717,14 @@ namespace gw2_Investment_Tool.Forms
 
             DataGridViewTextBoxColumn c1 = new DataGridViewTextBoxColumn();
             c1.Name = "OutputItemName";
-            c1.HeaderText = "Item Name";
+            c1.HeaderText = @"Item Name";
             c1.DataPropertyName = "OutputItemName";
             c1.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             dgvNewItems.Columns.Add(c1);
 
             DataGridViewTextBoxColumn c2 = new DataGridViewTextBoxColumn();
             c2.Name = "id";
-            c2.HeaderText = "Item ID";
+            c2.HeaderText = @"Item ID";
             c2.DataPropertyName = "id";
             c2.Visible = false;
             dgvNewItems.Columns.Add(c2);
@@ -725,14 +741,14 @@ namespace gw2_Investment_Tool.Forms
 
             DataGridViewTextBoxColumn c1 = new DataGridViewTextBoxColumn();
             c1.Name = "name";
-            c1.HeaderText = "Item Name";
+            c1.HeaderText = @"Item Name";
             c1.DataPropertyName = "name";
             c1.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             dgvIngredients.Columns.Add(c1);
 
             DataGridViewTextBoxColumn c2 = new DataGridViewTextBoxColumn();
             c2.Name = "count";
-            c2.HeaderText = "Quantity";
+            c2.HeaderText = @"Quantity";
             c2.DataPropertyName = "count";
             c2.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
             c2.Width = 100;
@@ -740,7 +756,7 @@ namespace gw2_Investment_Tool.Forms
 
             DataGridViewTextBoxColumn c3 = new DataGridViewTextBoxColumn();
             c3.Name = "item_id";
-            c3.HeaderText = "Item ID";
+            c3.HeaderText = @"Item ID";
             c3.DataPropertyName = "item_id";
             c3.Visible = false;
             dgvIngredients.Columns.Add(c3);
