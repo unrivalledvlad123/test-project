@@ -583,8 +583,14 @@ namespace gw2_Investment_Tool.Forms
 
         private async void btnSearch_Click(object sender, EventArgs e)
         {
+            dgvIngredients.DataSource = null;
+            dgvGuildIngridients.DataSource = null;
             int globalMissingItemIndex = 0;
             dgvNewItems.DataSource = null;
+            List<int> recipeItemIds = new List<int>();
+            List<int> recipeGuildItemIds = new List<int>();
+
+
             if (tbOld.Text.Length != 0)
             {
                 List<int> itemIds = await SAItems.GetAllrecipeIdsAsync();
@@ -599,25 +605,56 @@ namespace gw2_Investment_Tool.Forms
                     newItemsIDsIndexes.Add(i);
                 }
                 newRecipesFull = await SAItems.GetRecipeFullAsync(newItemsIDsIndexes);
+
+                foreach (RecipeFull recipe in newRecipesFull)
+                {
+                    if (recipe.type == "GuildConsumable" || recipe.type == "GuildDecoration" ||
+                        recipe.type == "GuildConsumableWvw")
+                    {
+                        if (recipe.guild_ingredients!=null)
+                        {
+                          recipeGuildItemIds.AddRange(
+                            recipe.guild_ingredients.Select(ingredients => ingredients.upgrade_id));  
+                        }
+                        recipeGuildItemIds.Add(recipe.output_upgrade_id);
+                        if (recipe.ingredients != null)
+                        {
+                            recipeItemIds.AddRange(recipe.ingredients.Select(ingredients => ingredients.item_id));
+                        }
+                        recipeItemIds.Add(recipe.output_item_id);
+                    }
+                    else
+                    {
+                        recipeItemIds.AddRange(recipe.ingredients.Select(ingredients => ingredients.item_id));
+                        recipeItemIds.Add(recipe.output_item_id);
+                    }
+                }
+                // do mass calls
+                var allGuildItemsDetails = await SAItems.GetAllGuildItemsAsync(recipeGuildItemIds);
+                var allItemsDetails = await SAItems.GetAlItemsAsync(recipeItemIds);
+                
                 foreach (var recipe in newRecipesFull)
                 {
                     if (recipe.type == "GuildConsumable" || recipe.type == "GuildDecoration" ||
                         recipe.type == "GuildConsumableWvw")
                     {
-                        foreach (var ingredients in recipe.guild_ingredients)
+                        if (recipe.guild_ingredients != null)
                         {
-                            GuildItemFull ingData = await SAItems.GetGuildItemFullAsync(ingredients.upgrade_id);
-                            ingredients.name = ingData.name;
+                            foreach (var ingredients in recipe.guild_ingredients)
+                            {
+                                GuildItemFull ingData = allGuildItemsDetails.First(p => p.id == ingredients.upgrade_id);
+                                ingredients.name = ingData.name;
+                            }
                         }
                         if (recipe.ingredients != null)
                         {
                             foreach (var ingredients in recipe.ingredients)
                             {
-                                ItemFull ingData = await SAItems.GetItemFullAsync(ingredients.item_id);
-                                ingredients.name = ingData.name;
+                                ItemFull ingData = allItemsDetails.FirstOrDefault(p => p.id == ingredients.item_id);
+                                if (ingData != null) ingredients.name = ingData.name;
                             }
                         }
-                        GuildItemFull nameData = await SAItems.GetGuildItemFullAsync(recipe.output_upgrade_id);
+                        GuildItemFull nameData = allGuildItemsDetails.FirstOrDefault(p => p.id == recipe.output_upgrade_id);
                         if (nameData == null)
                         {
                             globalMissingItemIndex++;
@@ -636,13 +673,13 @@ namespace gw2_Investment_Tool.Forms
                     {
                         foreach (var ingredients in recipe.ingredients)
                         {
-                            ItemFull ingData = await SAItems.GetItemFullAsync(ingredients.item_id);
+                            ItemFull ingData = allItemsDetails.FirstOrDefault(p => p.id == ingredients.item_id);
                             if (ingData != null)
                             {
                                 ingredients.name = ingData.name;
                             }
                         }
-                        ItemFull nameData = await SAItems.GetItemFullAsync(recipe.output_item_id);
+                        ItemFull nameData = allItemsDetails.FirstOrDefault(p=> p.id==recipe.output_item_id);
                         if (nameData != null)
                         {
                             recipe.OutputItemName = nameData.name;

@@ -247,5 +247,74 @@ namespace gw2_Investment_Tool.ServiceAccess
                 return results;
             }
         }
+
+        public static async Task<List<GuildItemFull>> GetAllGuildItemsAsync(List<int> itemIds)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                List<GuildItemFull> results = new List<GuildItemFull>();
+                client.BaseAddress = new Uri("https://api.guildwars2.com");
+                int counter = 0;
+                while (counter <= itemIds.Count)
+                {
+                    List<int> currentLoop = new List<int>();
+                    for (int i = counter; i < counter + 100; i++)
+                    {
+                        if (i < itemIds.Count)
+                        {
+                            currentLoop.Add(itemIds[i]);
+                        }
+                    }
+                    counter += 100;
+                    StringBuilder sb = new StringBuilder();
+                    foreach (var id in currentLoop)
+                    {
+                        sb.Append(id.ToString());
+                        sb.Append(",");
+                    }
+                    HttpResponseMessage response = await client.GetAsync($"/v2/guild/upgrades?ids={sb}");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        List<GuildItemFull> items = await response.Content.ReadAsAsync<List<GuildItemFull>>();
+                        results.AddRange(items);
+                    }
+                }
+                return results;
+            }
+        }
+        public static async Task<List<ItemFull>> GetAlItemsAsync(List<int> itemIds)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                List<ItemFull> results = new List<ItemFull>();
+                client.BaseAddress = new Uri("https://api.guildwars2.com");
+                int counter = 0;
+                while (counter <= itemIds.Count)
+                {
+                    List<int> currentLoop = new List<int>();
+                    for (int i = counter; i < counter + 100; i++)
+                    {
+                        if (i < itemIds.Count)
+                        {
+                            currentLoop.Add(itemIds[i]);
+                        }
+                    }
+                    counter += 100;
+                    StringBuilder sb = new StringBuilder();
+                    foreach (var id in currentLoop)
+                    {
+                        sb.Append(id.ToString());
+                        sb.Append(",");
+                    }
+                    HttpResponseMessage response = await client.GetAsync($"/v2/items?ids={sb}");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        List<ItemFull> items = await response.Content.ReadAsAsync<List<ItemFull>>();
+                        results.AddRange(items);
+                    }
+                }
+                return results;
+            }
+        }
     }
 }
