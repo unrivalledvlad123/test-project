@@ -15,9 +15,9 @@ namespace gw2_Investment_Tool.Forms
         public SettingsForm()
         {
             InitializeComponent();
-            tbCurrentItems.Text = ConfigurationManager.AppSettings["LoadCurrentItems"];
-            tbSearchLocation.Text = ConfigurationManager.AppSettings["LoadNames"];
-            tbWhiteListedItems.Text = ConfigurationManager.AppSettings["LoadWhiteList"];
+            tbCurrentItems.Text = Properties.Settings.Default.LoadCurrentItems;
+            tbSearchLocation.Text = Properties.Settings.Default.LoadNames;
+            tbWhiteListedItems.Text = Properties.Settings.Default.LoadWhiteList;
         }
 
         private async void btnGenerate_Click(object sender, EventArgs e)
@@ -37,7 +37,7 @@ namespace gw2_Investment_Tool.Forms
             }
             if (lines.Count != 0)
             {
-                File.WriteAllLines(ConfigurationManager.AppSettings["LoadNames"], lines);
+                File.WriteAllLines(Properties.Settings.Default.LoadNames, lines);
             }
             MainForm.ItemNames = namedItems;
             MessageBox.Show(@"Text file successfuly created!", @"Success",
@@ -46,13 +46,10 @@ namespace gw2_Investment_Tool.Forms
 
         private void btnSaveExit_Click(object sender, EventArgs e)
         {
-            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            AppSettingsSection app = config.AppSettings;
-            app.Settings.Add("LoadCurrentItems", tbCurrentItems.Text);
-            app.Settings.Add("LoadWhiteList", tbWhiteListedItems.Text);
-            app.Settings.Add("LoadNames", tbSearchLocation.Text);
-            config.Save(ConfigurationSaveMode.Modified);
-
+            Properties.Settings.Default.LoadCurrentItems = tbCurrentItems.Text;
+            Properties.Settings.Default.LoadNames = tbSearchLocation.Text;
+            Properties.Settings.Default.LoadWhiteList = tbWhiteListedItems.Text;
+            Properties.Settings.Default.Save();
         }
     }
 }

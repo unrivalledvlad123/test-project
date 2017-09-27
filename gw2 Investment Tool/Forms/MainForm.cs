@@ -60,7 +60,7 @@ namespace gw2_Investment_Tool.Forms
             {
                 string line;
                 StreamReader file =
-                    new StreamReader(ConfigurationManager.AppSettings["LoadCurrentItems"]);
+                    new StreamReader(Properties.Settings.Default.LoadCurrentItems);
                 while ((line = file.ReadLine()) != null)
                 {
                     Item item = new Item();
@@ -91,7 +91,7 @@ namespace gw2_Investment_Tool.Forms
 
                 string line2;
                 StreamReader file2 =
-                    new StreamReader(ConfigurationManager.AppSettings["LoadWhiteList"]);
+                    new StreamReader(Properties.Settings.Default.LoadWhiteList);
                 while ((line2 = file2.ReadLine()) != null)
                 {
                     WhiteListedItem item = new WhiteListedItem();
@@ -116,7 +116,7 @@ namespace gw2_Investment_Tool.Forms
                 file2.Close();
 
                 string line3;
-                StreamReader file3 = new StreamReader(ConfigurationManager.AppSettings["LoadNames"]);
+                StreamReader file3 = new StreamReader(Properties.Settings.Default.LoadNames);
                 while ((line3 = file3.ReadLine()) != null)
                 {
                     ItemApi item = new ItemApi();
@@ -210,50 +210,14 @@ namespace gw2_Investment_Tool.Forms
                 }
                 if (lines.Count != 0)
                 {
-                    File.WriteAllLines(ConfigurationManager.AppSettings["LoadWhiteList"], lines);
+                    File.WriteAllLines(Properties.Settings.Default.LoadWhiteList, lines);
                 }
                 else
                 {
-                    File.WriteAllText(ConfigurationManager.AppSettings["LoadWhiteList"], string.Empty);
+                    File.WriteAllText(Properties.Settings.Default.LoadWhiteList, string.Empty);
                 }
             }
         }
-
-        //private void btnEdit_Click(object sender, EventArgs e)
-        //{
-        //    if (dgvItemsToCalculate.SelectedRows.Count <= 0)
-        //        return;
-
-        //    Item selectedItem = (Item) dgvItemsToCalculate.SelectedRows[0].DataBoundItem;
-        //    AddOrEditForm addForm = new AddOrEditForm(selectedItem);
-
-        //    if (addForm.ShowDialog() == DialogResult.OK)
-        //    {
-        //        Item newItem = addForm.Item;
-        //        var check = AllItems.FirstOrDefault(p => p.ItemId == newItem.ItemId);
-        //        if (check != null)
-        //        {
-        //            Item sincedItem = AllItems.FirstOrDefault(p => p.ItemId == addForm.Item.ItemId);
-        //            if (sincedItem != null)
-        //            {
-        //                sincedItem.ItemId = addForm.Item.ItemId;
-        //                sincedItem.Quantity = addForm.Item.Quantity;
-        //                sincedItem.Discipline = addForm.Item.Discipline;
-        //                sincedItem.KarmaPerItem = addForm.Item.KarmaPerItem;
-        //                sincedItem.Active = addForm.Item.Active;
-        //                sincedItem.TotalKarma = (float?) (addForm.Item.Quantity*addForm.Item.KarmaPerItem);
-        //            }
-        //            dgvItemsToCalculate.DataSource = null;
-        //            dgvItemsToCalculate.DataSource = AllItems;
-        //            labelKarmaValue.Text = CalculateTotalKarma().ToString(CultureInfo.InvariantCulture);
-        //        }
-        //        else
-        //        {
-        //            MessageBox.Show(@"Selected Item cound not be found", @"Edit error",
-        //                MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //        }
-        //    }
-        //}
 
         private async void btnCalculate_Click(object sender, EventArgs e)
         {
@@ -290,7 +254,7 @@ namespace gw2_Investment_Tool.Forms
             }
             if (lines.Count != 0)
             {
-                File.WriteAllLines(ConfigurationManager.AppSettings["LoadCurrentItems"], lines);
+                File.WriteAllLines(Properties.Settings.Default.LoadCurrentItems, lines);
             }
         }
 
@@ -325,7 +289,7 @@ namespace gw2_Investment_Tool.Forms
                     float quantity;
                     float.TryParse(row.Cells["quantity"].Value.ToString(), out quantity);
                     float.TryParse(row.Cells["karmaPE"].Value.ToString(), out karma);
-                    row.Cells["karmaTotal"].Value = karma*quantity;
+                    row.Cells["karmaTotal"].Value = karma * quantity;
                 }
                 if ((bool) row.Cells["active"].Value)
                 {
@@ -389,7 +353,7 @@ namespace gw2_Investment_Tool.Forms
                     if (sincedItem != null)
                     {
                         sincedItem.Name = item.name;
-                        sincedItem.TotalKarma = (float?) (sincedItem.KarmaPerItem*sincedItem.Quantity);
+                        sincedItem.TotalKarma = (float?) (sincedItem.KarmaPerItem * sincedItem.Quantity);
                     }
                 }
             }
@@ -400,7 +364,7 @@ namespace gw2_Investment_Tool.Forms
                 if (sincedItem != null)
                 {
                     sincedItem.Name = item.name;
-                    sincedItem.TotalKarma = (float?) (sincedItem.KarmaPerItem*sincedItem.Quantity);
+                    sincedItem.TotalKarma = (float?) (sincedItem.KarmaPerItem * sincedItem.Quantity);
                 }
             }
         }
@@ -424,13 +388,13 @@ namespace gw2_Investment_Tool.Forms
                                 {
                                     var oldQuantity = ResultSet[ingredient.item_id];
                                     ResultSet[ingredient.item_id] = oldQuantity +
-                                                                    (ingredient.count*item.Quantity/
+                                                                    (ingredient.count * item.Quantity /
                                                                      recipeData.output_item_count);
                                 }
                                 else
                                 {
                                     ResultSet.Add(ingredient.item_id,
-                                        ingredient.count*item.Quantity/recipeData.output_item_count);
+                                        ingredient.count * item.Quantity / recipeData.output_item_count);
                                 }
                             }
                         }
@@ -468,7 +432,7 @@ namespace gw2_Investment_Tool.Forms
                     resultItem.Name = item.name;
                     resultItem.PriceEach = prices.buys.unit_price + 1;
                     resultItem.Total = resultItem.PriceEach * itemID.Value;
-                    resultItem.PriceFormated = ParsePrices(prices.buys.unit_price +1);
+                    resultItem.PriceFormated = ParsePrices(prices.buys.unit_price + 1);
                     resultItem.PriceTotalFormated = ParsePrices((prices.buys.unit_price + 1) * itemID.Value);
                     resultItem.RecalculateChecked = false;
                     ItemsToBuy.Add(resultItem);
@@ -484,7 +448,7 @@ namespace gw2_Investment_Tool.Forms
                 if (item.Active)
                 {
                     ItemPrices prices = await SAItems.GetItemPricesAsync(item.ItemId);
-                    count = count + (prices.sells.unit_price+1)*item.Quantity;
+                    count = count + (prices.sells.unit_price + 1) * item.Quantity;
                 }
 
             }
@@ -494,10 +458,10 @@ namespace gw2_Investment_Tool.Forms
         public string ParsePrices(int price)
         {
             string result;
-            int copper = price%100;
-            int left = price/100;
-            int silver = left%100;
-            int gold = left/100;
+            int copper = price % 100;
+            int left = price / 100;
+            int silver = left % 100;
+            int gold = left / 100;
             if (gold == 0 && silver != 0)
             {
                 result = string.Format("{0}s, {1}c", silver, copper);
@@ -611,10 +575,10 @@ namespace gw2_Investment_Tool.Forms
                     if (recipe.type == "GuildConsumable" || recipe.type == "GuildDecoration" ||
                         recipe.type == "GuildConsumableWvw")
                     {
-                        if (recipe.guild_ingredients!=null)
+                        if (recipe.guild_ingredients != null)
                         {
-                          recipeGuildItemIds.AddRange(
-                            recipe.guild_ingredients.Select(ingredients => ingredients.upgrade_id));  
+                            recipeGuildItemIds.AddRange(
+                                recipe.guild_ingredients.Select(ingredients => ingredients.upgrade_id));
                         }
                         recipeGuildItemIds.Add(recipe.output_upgrade_id);
                         if (recipe.ingredients != null)
@@ -632,7 +596,7 @@ namespace gw2_Investment_Tool.Forms
                 // do mass calls
                 var allGuildItemsDetails = await SAItems.GetAllGuildItemsAsync(recipeGuildItemIds);
                 var allItemsDetails = await SAItems.GetAlItemsAsync(recipeItemIds);
-                
+
                 foreach (var recipe in newRecipesFull)
                 {
                     if (recipe.type == "GuildConsumable" || recipe.type == "GuildDecoration" ||
@@ -654,7 +618,8 @@ namespace gw2_Investment_Tool.Forms
                                 if (ingData != null) ingredients.name = ingData.name;
                             }
                         }
-                        GuildItemFull nameData = allGuildItemsDetails.FirstOrDefault(p => p.id == recipe.output_upgrade_id);
+                        GuildItemFull nameData =
+                            allGuildItemsDetails.FirstOrDefault(p => p.id == recipe.output_upgrade_id);
                         if (nameData == null)
                         {
                             globalMissingItemIndex++;
@@ -679,7 +644,7 @@ namespace gw2_Investment_Tool.Forms
                                 ingredients.name = ingData.name;
                             }
                         }
-                        ItemFull nameData = allItemsDetails.FirstOrDefault(p=> p.id==recipe.output_item_id);
+                        ItemFull nameData = allItemsDetails.FirstOrDefault(p => p.id == recipe.output_item_id);
                         if (nameData != null)
                         {
                             recipe.OutputItemName = nameData.name;
@@ -706,7 +671,9 @@ namespace gw2_Investment_Tool.Forms
         {
             if (dgvNewItems.SelectedCells[0].Value != null)
             {
-                RecipeFull selectedItem = newRecipesFull.FirstOrDefault(p => p.OutputItemName == dgvNewItems.SelectedCells[0].Value.ToString());
+                RecipeFull selectedItem =
+                    newRecipesFull.FirstOrDefault(
+                        p => p.OutputItemName == dgvNewItems.SelectedCells[0].Value.ToString());
                 dgvIngredients.DataSource = null;
                 dgvGuildIngridients.DataSource = null;
                 if (selectedItem != null)
@@ -721,7 +688,8 @@ namespace gw2_Investment_Tool.Forms
                     labelDescriptionValue.Text = selectedItem.Description;
                     labelRarityValue.Text = selectedItem.Rarity;
                     labelOutputCount.Text = selectedItem.output_item_count.ToString();
-                    if (selectedItem.type == "GuildConsumable" || selectedItem.type == "GuildDecoration" || selectedItem.type == "GuildConsumableWvw")
+                    if (selectedItem.type == "GuildConsumable" || selectedItem.type == "GuildDecoration" ||
+                        selectedItem.type == "GuildConsumableWvw")
                     {
                         labelItemIdValue.Text = selectedItem.output_upgrade_id.ToString();
                     }
@@ -831,7 +799,7 @@ namespace gw2_Investment_Tool.Forms
             dgvGuildIngridients.Columns.Add(c3);
 
         }
-        
+
         #endregion
 
     }
