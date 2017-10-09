@@ -40,104 +40,60 @@ namespace gw2_Investment_Tool.Forms
             SetIngridientsGridColumns();
             SetItemNameGridColumns();
 	        cbLists.DataSource = GetAllList();
-
+	        LoadDataInitially();
+			
         }
 
         #region // <================ Events ================> 
 
-        private async void btnLoadData_Click(object sender, EventArgs e)
-        {
-	        dgvItemsToCalculate.DataSource = null;
-			AllItemIds.Clear();
-			AllItems.Clear();
-			try
-			{
+	    private async void btnLoadData_Click(object sender, EventArgs e)
+	    {
+		    dgvItemsToCalculate.DataSource = null;
+		    AllItemIds.Clear();
+		    AllItems.Clear();
+		    try
+		    {
 			    string line;
-                StreamReader file = new StreamReader(Properties.Settings.Default.LoadCurrentItems + @"\" + cbLists.SelectedItem + ".txt");
-                while ((line = file.ReadLine()) != null)
-                {
-                    Item item = new Item();
-                    string[] values = line.Split(Convert.ToChar("%"));
-                    int itemId;
-                    int quantity;
-                    decimal karmaperitem;
-                    bool active;
-                    int.TryParse(values[0], out itemId);
-                    int.TryParse(values[1], out quantity);
-                    decimal.TryParse(values[3], out karmaperitem);
-                    bool.TryParse(values[4], out active);
+			    StreamReader file = new StreamReader(Properties.Settings.Default.LoadCurrentItems + @"\" + cbLists.SelectedItem +
+			                                         ".txt");
+			    while ((line = file.ReadLine()) != null)
+			    {
+				    Item item = new Item();
+				    string[] values = line.Split(Convert.ToChar("%"));
+				    int itemId;
+				    int quantity;
+				    decimal karmaperitem;
+				    bool active;
+				    int.TryParse(values[0], out itemId);
+				    int.TryParse(values[1], out quantity);
+				    decimal.TryParse(values[3], out karmaperitem);
+				    bool.TryParse(values[4], out active);
 
-                    item.ItemId = itemId;
-                    item.Quantity = quantity;
-                    item.Discipline = values[2];
-                    item.KarmaPerItem = karmaperitem;
-                    item.Active = active;
+				    item.ItemId = itemId;
+				    item.Quantity = quantity;
+				    item.Discipline = values[2];
+				    item.KarmaPerItem = karmaperitem;
+				    item.Active = active;
 
-                    if (AllItems.FirstOrDefault(p => p.ItemId == item.ItemId) == null)
-                    {
-                        AllItems.Add(item);
-                        AllItemIds.Add(item.ItemId);
-                    }
-                }
-                file.Close();
-
-                string line2;
-                StreamReader file2 =
-                    new StreamReader(Properties.Settings.Default.LoadWhiteList);
-                while ((line2 = file2.ReadLine()) != null)
-                {
-                    WhiteListedItem item = new WhiteListedItem();
-                    string[] values = line2.Split(Convert.ToChar("%"));
-                    int itemId;
-                    int price;
-                    bool active;
-                    int.TryParse(values[1], out itemId);
-                    int.TryParse(values[2], out price);
-                    bool.TryParse(values[3], out active);
-
-                    item.ItemId = itemId;
-                    item.Price = price;
-                    item.Name = values[0];
-                    item.Active = active;
-
-                    if (WhiteListedItems.FirstOrDefault(p => p.ItemId == item.ItemId) == null)
-                    {
-                        WhiteListedItems.Add(item);
-                    }
-                }
-                file2.Close();
-
-                string line3;
-                StreamReader file3 = new StreamReader(Properties.Settings.Default.LoadNames);
-                while ((line3 = file3.ReadLine()) != null)
-                {
-                    ItemApi item = new ItemApi();
-                    string[] values = line3.Split(Convert.ToChar("%"));
-                    int itemId;
-                    int.TryParse(values[0], out itemId);
-                    item.id = itemId;
-                    item.name = values[1];
-	                item.rarity = values[2];
-	                int level;
-	                int.TryParse(values[3], out level);
-	                item.level = level;
-					ItemNames.Add(item);
-
-                   
-                }
-                file3.Close();
-            }
-            catch (Exception)
-            {
-                MessageBox.Show(
-                    @"Directories Not Set! Please use setting button to set them first, then hit Reload data button",
-                    @"Load error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            await GetNameFromApi(AllItemIds, null);
-            dgvItemsToCalculate.DataSource = AllItems;
-            labelKarmaValue.Text = CalculateTotalKarma().ToString(CultureInfo.InvariantCulture);
-        }
+				    if (AllItems.FirstOrDefault(p => p.ItemId == item.ItemId) == null)
+				    {
+					    AllItems.Add(item);
+					    AllItemIds.Add(item.ItemId);
+				    }
+			    }
+			    file.Close();
+		    }
+		    catch (Exception)
+		    {
+			    MessageBox.Show(
+				    @"Directories Not Set! Please use setting button to set them first, then hit Reload data button",
+				    @"Load error",
+				    MessageBoxButtons.OK, MessageBoxIcon.Error);
+		    }
+		    await GetNameFromApi(AllItemIds, null);
+		    dgvItemsToCalculate.DataSource = AllItems;
+		    labelKarmaValue.Text = CalculateTotalKarma().ToString(CultureInfo.InvariantCulture);
+	    }
 
 	    private async void btnAddItem_Click(object sender, EventArgs e)
 	    {
@@ -354,6 +310,56 @@ namespace gw2_Investment_Tool.Forms
 
 		    return alLists;
 	    }
+
+
+	    public void LoadDataInitially()
+	    {
+			string line2;
+		    StreamReader file2 =
+			    new StreamReader(Properties.Settings.Default.LoadWhiteList);
+		    while ((line2 = file2.ReadLine()) != null)
+		    {
+			    WhiteListedItem item = new WhiteListedItem();
+			    string[] values = line2.Split(Convert.ToChar("%"));
+			    int itemId;
+			    int price;
+			    bool active;
+			    int.TryParse(values[1], out itemId);
+			    int.TryParse(values[2], out price);
+			    bool.TryParse(values[3], out active);
+
+			    item.ItemId = itemId;
+			    item.Price = price;
+			    item.Name = values[0];
+			    item.Active = active;
+
+			    if (WhiteListedItems.FirstOrDefault(p => p.ItemId == item.ItemId) == null)
+			    {
+				    WhiteListedItems.Add(item);
+			    }
+		    }
+		    file2.Close();
+
+		    string line3;
+		    StreamReader file3 = new StreamReader(Properties.Settings.Default.LoadNames);
+		    while ((line3 = file3.ReadLine()) != null)
+		    {
+			    ItemApi item = new ItemApi();
+			    string[] values = line3.Split(Convert.ToChar("%"));
+			    int itemId;
+			    int.TryParse(values[0], out itemId);
+			    item.id = itemId;
+			    item.name = values[1];
+			    item.rarity = values[2];
+			    int level;
+			    int.TryParse(values[3], out level);
+			    item.level = level;
+			    ItemNames.Add(item);
+
+
+		    }
+		    file3.Close();
+		}
 
 
 
