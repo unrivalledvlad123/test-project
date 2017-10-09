@@ -39,16 +39,7 @@ namespace gw2_Investment_Tool.Forms
             SetGuildIngridientsGridColumns();
             SetIngridientsGridColumns();
             SetItemNameGridColumns();
-            try
-            {
-                Load += btnLoadData_Click;
-            }
-            catch (Exception)
-            {
-
-                MessageBox.Show(@"File Not Found!", @"Load error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+	        cbLists.DataSource = GetAllList();
 
         }
 
@@ -56,11 +47,13 @@ namespace gw2_Investment_Tool.Forms
 
         private async void btnLoadData_Click(object sender, EventArgs e)
         {
-            try
-            {
-                string line;
-                StreamReader file =
-                    new StreamReader(Properties.Settings.Default.LoadCurrentItems);
+	        dgvItemsToCalculate.DataSource = null;
+			AllItemIds.Clear();
+			AllItems.Clear();
+			try
+			{
+			    string line;
+                StreamReader file = new StreamReader(Properties.Settings.Default.LoadCurrentItems + @"\" + cbLists.SelectedItem + ".txt");
                 while ((line = file.ReadLine()) != null)
                 {
                     Item item = new Item();
@@ -71,8 +64,7 @@ namespace gw2_Investment_Tool.Forms
                     bool active;
                     int.TryParse(values[0], out itemId);
                     int.TryParse(values[1], out quantity);
-                    bool b = decimal.TryParse(values[3], out karmaperitem);
-                    decimal value = Decimal.Parse(values[3], NumberStyles.Currency, CultureInfo.InvariantCulture);
+                    decimal.TryParse(values[3], out karmaperitem);
                     bool.TryParse(values[4], out active);
 
                     item.ItemId = itemId;
@@ -348,7 +340,24 @@ namespace gw2_Investment_Tool.Forms
 
         #region // < ================ Methodts ================>
 
-        public async Task GetNameFromApi(List<int> allIds, int? singleId)
+	    public List<string> GetAllList()
+	    {
+		    List<string> alLists = new List<string>();
+		    string[] files = Directory.GetFiles(Properties.Settings.Default.LoadCurrentItems);
+		    foreach (string list in files)
+		    {
+			    var temp = list.Replace(Properties.Settings.Default.LoadCurrentItems, "");
+			    string temp2 = temp.Replace(@"\", "");
+			    string temp3 = temp2.Replace(".txt", "");
+			    alLists.Add(temp3);
+		    }
+
+		    return alLists;
+	    }
+
+
+
+	    public async Task GetNameFromApi(List<int> allIds, int? singleId)
         {
             if (allIds != null)
             {
@@ -436,10 +445,10 @@ namespace gw2_Investment_Tool.Forms
                     resultItem.ItemId = itemID.Key;
                     resultItem.Quantity = itemID.Value;
                     resultItem.Name = item.name;
-                    resultItem.PriceEach = prices.buys.unit_price + 1;
+                    resultItem.PriceEach = prices.buys.unit_price != 0? prices.buys.unit_price + 1: prices.sells.unit_price +1;
                     resultItem.Total = resultItem.PriceEach * itemID.Value;
-                    resultItem.PriceFormated = ParsePrices(prices.buys.unit_price + 1);
-                    resultItem.PriceTotalFormated = ParsePrices((prices.buys.unit_price + 1) * itemID.Value);
+                    resultItem.PriceFormated = ParsePrices(prices.buys.unit_price != 0 ? prices.buys.unit_price + 1 : prices.sells.unit_price + 1);
+                    resultItem.PriceTotalFormated = ParsePrices((prices.buys.unit_price != 0 ? prices.buys.unit_price + 1 : prices.sells.unit_price + 1) * itemID.Value);
                     resultItem.RecalculateChecked = false;
                     ItemsToBuy.Add(resultItem);
                 }
