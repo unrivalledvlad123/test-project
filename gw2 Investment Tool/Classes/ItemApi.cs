@@ -10,5 +10,8 @@ namespace gw2_Investment_Tool.Classes
     {
         public string name { get; set; }
         public int id { get; set; }
-    }
+		public string rarity { get; set; }
+		public int level { get; set; }
+
+	}
 }

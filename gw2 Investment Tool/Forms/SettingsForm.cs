@@ -33,6 +33,10 @@ namespace gw2_Investment_Tool.Forms
                 sb.Append(item.id.ToString());
                 sb.Append("%");
                 sb.Append(item.name);
+	            sb.Append("%");
+	            sb.Append(item.rarity);
+	            sb.Append("%");
+	            sb.Append(item.level);
                 lines.Add(sb.ToString());
             }
             if (lines.Count != 0)

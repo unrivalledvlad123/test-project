@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace gw2_Investment_Tool.Classes
 {
-    public class Item : Save
-    {
-        public string Name { get; set; }
-        public float? TotalKarma { get; set; }
-    }
+	public class Item : Save
+	{
+		public string Name { get; set; }
+		public float? TotalKarma { get; set; }
+	}
 }

@@ -125,13 +125,15 @@ namespace gw2_Investment_Tool.Forms
                     int.TryParse(values[0], out itemId);
                     item.id = itemId;
                     item.name = values[1];
+	                item.rarity = values[2];
+	                int level;
+	                int.TryParse(values[3], out level);
+	                item.level = level;
+					ItemNames.Add(item);
 
-                    if (ItemNames.FirstOrDefault(p => p.id == item.id) == null)
-                    {
-                        ItemNames.Add(item);
-                    }
+                   
                 }
-                file.Close();
+                file3.Close();
             }
             catch (Exception)
             {
@@ -145,48 +147,52 @@ namespace gw2_Investment_Tool.Forms
             labelKarmaValue.Text = CalculateTotalKarma().ToString(CultureInfo.InvariantCulture);
         }
 
-        private async void btnAddItem_Click(object sender, EventArgs e)
-        {
-            AddOrEditForm addForm = new AddOrEditForm(null);
+	    private async void btnAddItem_Click(object sender, EventArgs e)
+	    {
+		    AddOrEditForm addForm = new AddOrEditForm(null);
 
-            if (addForm.ShowDialog() == DialogResult.OK)
-            {
-                Item newItem = addForm.Item;
-                var check = AllItems.FirstOrDefault(p => p.ItemId == newItem.ItemId);
-                if (check == null)
-                {
-                    try
-                    {
+		    if (addForm.ShowDialog() == DialogResult.OK)
+		    {
+			    if (addForm.Item != null)
+			    {
+				    Item newItem = addForm.Item;
+				    var check = AllItems.FirstOrDefault(p => p.ItemId == newItem.ItemId);
+				    if (check == null)
+				    {
+					    try
+					    {
 
-                        AllItems.Add(newItem);
-                        AllItemIds.Add(newItem.ItemId);
-                        await GetNameFromApi(null, addForm.Item.ItemId);
-                        dgvItemsToCalculate.DataSource = null;
-                        dgvItemsToCalculate.DataSource = AllItems;
-                    }
-                    catch (Exception)
-                    {
-                        AllItems.Remove(newItem);
-                        AllItemIds.Remove(newItem.ItemId);
-                        MessageBox.Show(@"Invalid ItemID!", @"Add error",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
+						    AllItems.Add(newItem);
+						    AllItemIds.Add(newItem.ItemId);
+						    await GetNameFromApi(null, addForm.Item.ItemId);
+						    dgvItemsToCalculate.DataSource = null;
+						    dgvItemsToCalculate.DataSource = AllItems;
+					    }
+					    catch (Exception)
+					    {
+						    AllItems.Remove(newItem);
+						    AllItemIds.Remove(newItem.ItemId);
+						    MessageBox.Show(@"Invalid ItemID!", @"Add error",
+							    MessageBoxButtons.OK, MessageBoxIcon.Error);
+					    }
 
 
-                    if (newItem.Active)
-                    {
-                        labelKarmaValue.Text = CalculateTotalKarma().ToString(CultureInfo.InvariantCulture);
-                    }
-                }
-                else
-                {
-                    MessageBox.Show(@"Item is already added!", @"Add error",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-        }
+					    if (newItem.Active)
+					    {
+						    labelKarmaValue.Text = CalculateTotalKarma().ToString(CultureInfo.InvariantCulture);
+					    }
+				    }
+				    else
+				    {
+					    MessageBox.Show(@"Item is already added!", @"Add error",
+						    MessageBoxButtons.OK, MessageBoxIcon.Error);
+				    }
+			    }
 
-        private void btnWhiteList_Click(object sender, EventArgs e)
+		    }
+	    }
+
+	    private void btnWhiteList_Click(object sender, EventArgs e)
         {
             WhiteListForm WLForm = new WhiteListForm(WhiteListedItems);
             if (WLForm.ShowDialog() == DialogResult.OK)
@@ -352,7 +358,7 @@ namespace gw2_Investment_Tool.Forms
                     Item sincedItem = AllItems.FirstOrDefault(p => p.ItemId == item.id);
                     if (sincedItem != null)
                     {
-                        sincedItem.Name = item.name;
+                        sincedItem.Name = item.name + "  " + item.level + "  " + item.rarity;
                         sincedItem.TotalKarma = (float?) (sincedItem.KarmaPerItem * sincedItem.Quantity);
                     }
                 }
@@ -363,8 +369,8 @@ namespace gw2_Investment_Tool.Forms
                 Item sincedItem = AllItems.FirstOrDefault(p => p.ItemId == item.id);
                 if (sincedItem != null)
                 {
-                    sincedItem.Name = item.name;
-                    sincedItem.TotalKarma = (float?) (sincedItem.KarmaPerItem * sincedItem.Quantity);
+					sincedItem.Name = item.name + "  " + item.level + "  " + item.rarity;
+					sincedItem.TotalKarma = (float?) (sincedItem.KarmaPerItem * sincedItem.Quantity);
                 }
             }
         }

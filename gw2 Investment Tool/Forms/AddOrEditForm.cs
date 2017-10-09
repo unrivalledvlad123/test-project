@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using gw2_Investment_Tool.Classes;
@@ -47,34 +49,65 @@ namespace gw2_Investment_Tool.Forms
             if (tbSearch.Text.Length>=4)
             {
                 dgvSearchResults.DataSource = null;
-                dgvSearchResults.DataSource = MainForm.ItemNames.Where(p => p.name.ToLower().Contains(tbSearch.Text)).ToList();
+	            string test = tbSearch.Text;
+                dgvSearchResults.DataSource = MainForm.ItemNames.Where(p => p.name.ToLower().Contains(tbSearch.Text.ToLower())).ToList();
             }
         }
 
-        private void dgvSearchResult_CellSelected(object sender, EventArgs e)
-        {
-            if (dgvSearchResults.SelectedCells[0].Value.ToString() != "")
-            {
-                ItemApi item = MainForm.ItemNames.FirstOrDefault(p => p.name == dgvSearchResults.SelectedCells[0].Value.ToString());
-                tbItemId.Text = item.id.ToString();
-            }
-        }
+	    private void dgvSearchResult_CellSelected(object sender, EventArgs e)
+	    {
+		    if (dgvSearchResults.SelectedRows.Count != 0)
+		    {
+			    if (dgvSearchResults.SelectedCells[0].Value.ToString() != "")
+			    {
+				    ItemApi item = (ItemApi) dgvSearchResults.SelectedRows[0].DataBoundItem;
+				    tbItemId.Text = item.id.ToString();
+			    }
+		    }
 
-        private void SetGridColumns()
+	    }
+
+	    private void SetGridColumns()
         {
             dgvSearchResults.DataSource = null;
             dgvSearchResults.Columns.Clear();
             dgvSearchResults.AutoGenerateColumns = false;
             dgvSearchResults.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
-            dgvSearchResults.RowHeadersVisible = false;
+            //dgvSearchResults.RowHeadersVisible = false;
 
-            DataGridViewTextBoxColumn c2 = new DataGridViewTextBoxColumn();
+			DataGridViewTextBoxColumn c1 = new DataGridViewTextBoxColumn();
+			c1.Name = "id";
+			c1.HeaderText = "id";
+			c1.DataPropertyName = "id";
+			c1.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+			c1.ReadOnly = true;
+			c1.Visible = false;
+			dgvSearchResults.Columns.Add(c1);
+
+			DataGridViewTextBoxColumn c2 = new DataGridViewTextBoxColumn();
             c2.Name = "name";
             c2.HeaderText = "Item Name";
             c2.DataPropertyName = "name";
             c2.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             c2.ReadOnly = true;
             dgvSearchResults.Columns.Add(c2);
-        }
-    }
+
+	        DataGridViewTextBoxColumn c3 = new DataGridViewTextBoxColumn();
+	        c3.Name = "rarity";
+	        c3.HeaderText = "Rarity";
+	        c3.DataPropertyName = "Rarity";
+	        c3.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+	        c3.ReadOnly = true;
+	        dgvSearchResults.Columns.Add(c3);
+
+	        DataGridViewTextBoxColumn c4 = new DataGridViewTextBoxColumn();
+	        c4.Name = "level";
+	        c4.HeaderText = "Level";
+	        c4.DataPropertyName = "Level";
+	        c4.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+	        c4.ReadOnly = true;
+	        dgvSearchResults.Columns.Add(c4);
+		}
+
+	}
 }

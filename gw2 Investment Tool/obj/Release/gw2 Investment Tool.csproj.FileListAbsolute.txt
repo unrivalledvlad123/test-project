@@ -48,3 +48,20 @@ C:\Projects\test-project\gw2 Investment Tool\obj\Release\gw2_Investment_Tool.For
 C:\Projects\test-project\gw2 Investment Tool\obj\Release\gw2_Investment_Tool.Forms.WhiteListForm.resources
 C:\Projects\test-project\gw2 Investment Tool\obj\Release\gw2_Investment_Tool.Properties.Resources.resources
 C:\Projects\test-project\gw2 Investment Tool\obj\Release\gw2 Investment Tool.csproj.GenerateResource.Cache
+D:\Projects\test-project\gw2 Investment Tool\bin\Release\gw2 Investment Tool.exe.config
+D:\Projects\test-project\gw2 Investment Tool\obj\Release\gw2 Investment Tool.exe
+D:\Projects\test-project\gw2 Investment Tool\obj\Release\gw2 Investment Tool.pdb
+D:\Projects\test-project\gw2 Investment Tool\bin\Release\gw2 Investment Tool.exe
+D:\Projects\test-project\gw2 Investment Tool\bin\Release\gw2 Investment Tool.pdb
+D:\Projects\test-project\gw2 Investment Tool\bin\Release\Newtonsoft.Json.dll
+D:\Projects\test-project\gw2 Investment Tool\bin\Release\System.Net.Http.Formatting.dll
+D:\Projects\test-project\gw2 Investment Tool\bin\Release\Newtonsoft.Json.xml
+D:\Projects\test-project\gw2 Investment Tool\bin\Release\System.Net.Http.Formatting.xml
+D:\Projects\test-project\gw2 Investment Tool\obj\Release\gw2 Investment Tool.csprojResolveAssemblyReference.cache
+D:\Projects\test-project\gw2 Investment Tool\obj\Release\gw2_Investment_Tool.Forms.AddOrEditForm.resources
+D:\Projects\test-project\gw2 Investment Tool\obj\Release\gw2_Investment_Tool.Forms.MainForm.resources
+D:\Projects\test-project\gw2 Investment Tool\obj\Release\gw2_Investment_Tool.Forms.ResultForm.resources
+D:\Projects\test-project\gw2 Investment Tool\obj\Release\gw2_Investment_Tool.Forms.SettingsForm.resources
+D:\Projects\test-project\gw2 Investment Tool\obj\Release\gw2_Investment_Tool.Forms.WhiteListForm.resources
+D:\Projects\test-project\gw2 Investment Tool\obj\Release\gw2_Investment_Tool.Properties.Resources.resources
+D:\Projects\test-project\gw2 Investment Tool\obj\Release\gw2 Investment Tool.csproj.GenerateResource.Cache
