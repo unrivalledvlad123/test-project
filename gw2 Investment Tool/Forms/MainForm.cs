@@ -383,9 +383,10 @@ namespace gw2_Investment_Tool.Forms
         {
             if (allIds != null)
             {
+	            List<ItemFull> allitems = await SAItems.GetAlItemsAsync(allIds);
                 foreach (var id in allIds)
                 {
-                    ItemApi item = await SAItems.GetItemsAsync(id);
+	                ItemFull item = allitems.FirstOrDefault(p => p.id == id);
                     Item sincedItem = AllItems.FirstOrDefault(p => p.ItemId == item.id);
                     if (sincedItem != null)
                     {
@@ -407,12 +408,13 @@ namespace gw2_Investment_Tool.Forms
         }
 
         public async Task GetRecipeFromApi(List<Item> allItems)
-        {
-            foreach (var item in allItems)
+        {      
+			foreach (var item in allItems)
             {
                 if (item.Active)
                 {
-                    int[] recipe = await SAItems.GetRecipesOutputAsync(item.ItemId);
+	                // cant change to multiple calls as v2 api does not support multiple recipe calls!!!!
+					int[] recipe = await SAItems.GetRecipesOutputAsync(item.ItemId);
                     if (recipe.Length != 0)
                     {
                         var currentRecipeId = recipe[0];
@@ -464,21 +466,23 @@ namespace gw2_Investment_Tool.Forms
 
 	    public async Task CombineAllData()
         {
-            foreach (var itemID in ResultSet)
+	        List<int> allitemIds = ResultSet.Select(pair => pair.Key).ToList();
+	        List<ItemFull> allItemApis = await SAItems.GetAlItemsAsync(allitemIds);
+	        List<ItemPrices> allItemPriceses = await SAItems.GetAllItemPrices(allitemIds);
+			foreach (var result in ResultSet)
             {
-                ResultItem resultItem = new ResultItem();
-                ItemApi item = await SAItems.GetItemsAsync(itemID.Key);
-                ItemPrices prices = await SAItems.GetItemPricesAsync(itemID.Key);
-                var test = item.name;
+				ResultItem resultItem = new ResultItem();
+	            ItemFull item = allItemApis.FirstOrDefault(p => p.id == result.Key);
+	            ItemPrices prices = allItemPriceses.FirstOrDefault(p => p.id == result.Key);
                 if (prices != null)
                 {
-                    resultItem.ItemId = itemID.Key;
-                    resultItem.Quantity = itemID.Value;
+                    resultItem.ItemId = result.Key;
+                    resultItem.Quantity = result.Value;
                     resultItem.Name = item.name;
                     resultItem.PriceEach = prices.buys.unit_price != 0? prices.buys.unit_price + 1: prices.sells.unit_price +1;
-                    resultItem.Total = resultItem.PriceEach * itemID.Value;
+                    resultItem.Total = resultItem.PriceEach * result.Value;
                     resultItem.PriceFormated = ParsePrices(prices.buys.unit_price != 0 ? prices.buys.unit_price + 1 : prices.sells.unit_price + 1);
-                    resultItem.PriceTotalFormated = ParsePrices((prices.buys.unit_price != 0 ? prices.buys.unit_price + 1 : prices.sells.unit_price + 1) * itemID.Value);
+                    resultItem.PriceTotalFormated = ParsePrices((prices.buys.unit_price != 0 ? prices.buys.unit_price + 1 : prices.sells.unit_price + 1) * result.Value);
                     resultItem.RecalculateChecked = false;
                     ItemsToBuy.Add(resultItem);
                 }
@@ -487,12 +491,14 @@ namespace gw2_Investment_Tool.Forms
 
         public async Task<int> CalculateMargin(List<Item> AllItems)
         {
-            var count = 0;
-            foreach (var item in AllItems)
+	        var count = 0;
+			List<int> allitemIds = AllItems.Select(pair => pair.ItemId).ToList();
+			List<ItemPrices> allItemPriceses = await SAItems.GetAllItemPrices(allitemIds);
+			foreach (var item in AllItems)
             {
                 if (item.Active)
                 {
-                    ItemPrices prices = await SAItems.GetItemPricesAsync(item.ItemId);
+	                ItemPrices prices = allItemPriceses.FirstOrDefault(p => p.id == item.ItemId);
                     count = count + (prices.sells.unit_price + 1) * item.Quantity;
                 }
 

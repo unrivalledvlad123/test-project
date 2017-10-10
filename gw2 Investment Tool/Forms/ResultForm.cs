@@ -108,9 +108,11 @@ namespace gw2_Investment_Tool.Forms
                     ItemsToKeep.Add(CurrnetItems.FirstOrDefault(p => p.ItemId == (int) row.Cells["itemId"].Value));
                 }
             }
-            foreach (var item in MainForm.WhiteListedItems)
+	        List<int> allitemIds = MainForm.WhiteListedItems.Select(p => p.ItemId).ToList();
+	        List<ItemPrices> allItemPriceses = await SAItems.GetAllItemPrices(allitemIds);
+			foreach (var item in MainForm.WhiteListedItems)
             {
-                ItemPrices prices = await SAItems.GetItemPricesAsync(item.ItemId);
+                ItemPrices prices = allItemPriceses.FirstOrDefault(p => p.id == item.ItemId);
                 item.CurrentPrice = prices.sells.unit_price+1;
             }
             
@@ -166,12 +168,15 @@ namespace gw2_Investment_Tool.Forms
         
         public async Task CombineAllData()
         {
-            foreach (var result in ResultSet)
+	        List<int> allitemIds = ResultSet.Select(pair => pair.Key).ToList();
+	        List<ItemFull> allItemApis = await SAItems.GetAlItemsAsync(allitemIds);
+	        List<ItemPrices> allItemPriceses = await SAItems.GetAllItemPrices(allitemIds);
+			foreach (var result in ResultSet)
             {
                 ResultItem resultItem = new ResultItem();
-                ItemApi item = await SAItems.GetItemsAsync(result.Key);
-                ItemPrices prices = await SAItems.GetItemPricesAsync(result.Key);
-                if (prices != null)
+				ItemFull item = allItemApis.FirstOrDefault(p => p.id == result.Key);
+	            ItemPrices prices = allItemPriceses.FirstOrDefault(p => p.id == result.Key);
+				if (prices != null)
                 {
                     resultItem.ItemId = result.Key;
                     resultItem.Quantity = result.Value;

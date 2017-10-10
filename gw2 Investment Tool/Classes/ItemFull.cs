@@ -15,5 +15,6 @@ namespace gw2_Investment_Tool.Classes
         public int id { get; set; }
         public string[] flags { get; set; }
         public ItemDetails details { get; set; }
-    }
+	    public int level { get; set; }
+	}
 }
