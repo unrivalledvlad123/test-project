@@ -176,19 +176,19 @@ namespace gw2_Investment_Tool.Forms
                     resultItem.ItemId = result.Key;
                     resultItem.Quantity = result.Value;
                     resultItem.Name = item.name;
-                    resultItem.PriceEach = prices.buys.unit_price+1;
-                    resultItem.Total = (prices.buys.unit_price+1)*result.Value;
-                    resultItem.PriceFormated = ParsePrices(prices.buys.unit_price +1);
-                    resultItem.PriceTotalFormated = ParsePrices((prices.buys.unit_price+1)*result.Value);
-                    resultItem.RecalculateChecked = false;
+					resultItem.PriceEach = prices.buys.unit_price != 0 ? prices.buys.unit_price + 1 : prices.sells.unit_price + 1;
+	                resultItem.Total = resultItem.PriceEach * result.Value;
+	                resultItem.PriceFormated = ParsePrices(prices.buys.unit_price != 0 ? prices.buys.unit_price + 1 : prices.sells.unit_price + 1);
+	                resultItem.PriceTotalFormated = ParsePrices((prices.buys.unit_price != 0 ? prices.buys.unit_price + 1 : prices.sells.unit_price + 1) * result.Value);
+					resultItem.RecalculateChecked = false;
                     ResultItem check = ItemsToKeep.FirstOrDefault(p => p.ItemId == resultItem.ItemId);
                     if (check != null)
                     {
                         check.Quantity = check.Quantity + resultItem.Quantity;
                         check.Total = check.Total + resultItem.Total;
-                        check.PriceFormated = ParsePrices(prices.buys.unit_price +1);
-                        check.PriceTotalFormated = ParsePrices((prices.buys.unit_price+1)*check.Quantity);
-                    }
+                        check.PriceFormated = ParsePrices(prices.buys.unit_price != 0 ? prices.buys.unit_price + 1 : prices.sells.unit_price + 1);
+						check.PriceTotalFormated = ParsePrices((prices.buys.unit_price != 0 ? prices.buys.unit_price + 1 : prices.sells.unit_price + 1) * result.Value);
+					}
                     else
                     {
                         ItemsToKeep.Add(resultItem);

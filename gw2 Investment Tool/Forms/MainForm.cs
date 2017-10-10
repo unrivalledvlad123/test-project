@@ -208,7 +208,7 @@ namespace gw2_Investment_Tool.Forms
             }
             if (lines.Count != 0)
             {
-                File.WriteAllLines(Properties.Settings.Default.LoadCurrentItems, lines);
+                File.WriteAllLines(Properties.Settings.Default.LoadCurrentItems + @"\" + cbLists.SelectedItem +".txt", lines);
             }
         }
 
@@ -298,68 +298,84 @@ namespace gw2_Investment_Tool.Forms
 
 	    public List<string> GetAllList()
 	    {
-		    List<string> alLists = new List<string>();
-		    string[] files = Directory.GetFiles(Properties.Settings.Default.LoadCurrentItems);
-		    foreach (string list in files)
+		    try
 		    {
-			    var temp = list.Replace(Properties.Settings.Default.LoadCurrentItems, "");
-			    string temp2 = temp.Replace(@"\", "");
-			    string temp3 = temp2.Replace(".txt", "");
-			    alLists.Add(temp3);
+			    List<string> alLists = new List<string>();
+			    string[] files = Directory.GetFiles(Properties.Settings.Default.LoadCurrentItems);
+			    foreach (string list in files)
+			    {
+				    var temp = list.Replace(Properties.Settings.Default.LoadCurrentItems, "");
+				    string temp2 = temp.Replace(@"\", "");
+				    string temp3 = temp2.Replace(".txt", "");
+				    alLists.Add(temp3);
+			    }
+
+			    return alLists;
+		    }
+		    catch (Exception e)
+		    {
+			    MessageBox.Show(this, "Set directories!");
+			    return new List<string>();
 		    }
 
-		    return alLists;
 	    }
 
 
 	    public void LoadDataInitially()
 	    {
-			string line2;
-		    StreamReader file2 =
-			    new StreamReader(Properties.Settings.Default.LoadWhiteList);
-		    while ((line2 = file2.ReadLine()) != null)
+		    try
 		    {
-			    WhiteListedItem item = new WhiteListedItem();
-			    string[] values = line2.Split(Convert.ToChar("%"));
-			    int itemId;
-			    int price;
-			    bool active;
-			    int.TryParse(values[1], out itemId);
-			    int.TryParse(values[2], out price);
-			    bool.TryParse(values[3], out active);
-
-			    item.ItemId = itemId;
-			    item.Price = price;
-			    item.Name = values[0];
-			    item.Active = active;
-
-			    if (WhiteListedItems.FirstOrDefault(p => p.ItemId == item.ItemId) == null)
+			    string line2;
+			    StreamReader file2 =
+				    new StreamReader(Properties.Settings.Default.LoadWhiteList);
+			    while ((line2 = file2.ReadLine()) != null)
 			    {
-				    WhiteListedItems.Add(item);
+				    WhiteListedItem item = new WhiteListedItem();
+				    string[] values = line2.Split(Convert.ToChar("%"));
+				    int itemId;
+				    int price;
+				    bool active;
+				    int.TryParse(values[1], out itemId);
+				    int.TryParse(values[2], out price);
+				    bool.TryParse(values[3], out active);
+
+				    item.ItemId = itemId;
+				    item.Price = price;
+				    item.Name = values[0];
+				    item.Active = active;
+
+				    if (WhiteListedItems.FirstOrDefault(p => p.ItemId == item.ItemId) == null)
+				    {
+					    WhiteListedItems.Add(item);
+				    }
 			    }
-		    }
-		    file2.Close();
+			    file2.Close();
 
-		    string line3;
-		    StreamReader file3 = new StreamReader(Properties.Settings.Default.LoadNames);
-		    while ((line3 = file3.ReadLine()) != null)
+			    string line3;
+			    StreamReader file3 = new StreamReader(Properties.Settings.Default.LoadNames);
+			    while ((line3 = file3.ReadLine()) != null)
+			    {
+				    ItemApi item = new ItemApi();
+				    string[] values = line3.Split(Convert.ToChar("%"));
+				    int itemId;
+				    int.TryParse(values[0], out itemId);
+				    item.id = itemId;
+				    item.name = values[1];
+				    item.rarity = values[2];
+				    int level;
+				    int.TryParse(values[3], out level);
+				    item.level = level;
+				    ItemNames.Add(item);
+
+
+			    }
+			    file3.Close();
+		    }
+		    catch (Exception e)
 		    {
-			    ItemApi item = new ItemApi();
-			    string[] values = line3.Split(Convert.ToChar("%"));
-			    int itemId;
-			    int.TryParse(values[0], out itemId);
-			    item.id = itemId;
-			    item.name = values[1];
-			    item.rarity = values[2];
-			    int level;
-			    int.TryParse(values[3], out level);
-			    item.level = level;
-			    ItemNames.Add(item);
-
 
 		    }
-		    file3.Close();
-		}
+	    }
 
 
 

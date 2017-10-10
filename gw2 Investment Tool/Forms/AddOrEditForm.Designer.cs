@@ -33,7 +33,6 @@ namespace gw2_Investment_Tool.Forms
         {
 			this.tbItemId = new System.Windows.Forms.TextBox();
 			this.tbQuantity = new System.Windows.Forms.TextBox();
-			this.tbDiscipline = new System.Windows.Forms.TextBox();
 			this.labelItemId = new System.Windows.Forms.Label();
 			this.labelQuantity = new System.Windows.Forms.Label();
 			this.labelDiscipline = new System.Windows.Forms.Label();
@@ -46,6 +45,7 @@ namespace gw2_Investment_Tool.Forms
 			this.tbSearch = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.dgvSearchResults = new System.Windows.Forms.DataGridView();
+			this.cbDiscipline = new System.Windows.Forms.ComboBox();
 			((System.ComponentModel.ISupportInitialize)(this.dgvSearchResults)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -62,13 +62,6 @@ namespace gw2_Investment_Tool.Forms
 			this.tbQuantity.Name = "tbQuantity";
 			this.tbQuantity.Size = new System.Drawing.Size(284, 20);
 			this.tbQuantity.TabIndex = 1;
-			// 
-			// tbDiscipline
-			// 
-			this.tbDiscipline.Location = new System.Drawing.Point(107, 352);
-			this.tbDiscipline.Name = "tbDiscipline";
-			this.tbDiscipline.Size = new System.Drawing.Size(284, 20);
-			this.tbDiscipline.TabIndex = 2;
 			// 
 			// labelItemId
 			// 
@@ -181,11 +174,20 @@ namespace gw2_Investment_Tool.Forms
 			this.dgvSearchResults.TabIndex = 15;
 			this.dgvSearchResults.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvSearchResult_CellSelected);
 			// 
+			// cbDiscipline
+			// 
+			this.cbDiscipline.FormattingEnabled = true;
+			this.cbDiscipline.Location = new System.Drawing.Point(107, 352);
+			this.cbDiscipline.Name = "cbDiscipline";
+			this.cbDiscipline.Size = new System.Drawing.Size(284, 21);
+			this.cbDiscipline.TabIndex = 16;
+			// 
 			// AddOrEditForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(403, 529);
+			this.Controls.Add(this.cbDiscipline);
 			this.Controls.Add(this.dgvSearchResults);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.tbSearch);
@@ -198,7 +200,6 @@ namespace gw2_Investment_Tool.Forms
 			this.Controls.Add(this.labelDiscipline);
 			this.Controls.Add(this.labelQuantity);
 			this.Controls.Add(this.labelItemId);
-			this.Controls.Add(this.tbDiscipline);
 			this.Controls.Add(this.tbQuantity);
 			this.Controls.Add(this.tbItemId);
 			this.Name = "AddOrEditForm";
@@ -213,7 +214,6 @@ namespace gw2_Investment_Tool.Forms
 
         private System.Windows.Forms.TextBox tbItemId;
         private System.Windows.Forms.TextBox tbQuantity;
-        private System.Windows.Forms.TextBox tbDiscipline;
         private System.Windows.Forms.Label labelItemId;
         private System.Windows.Forms.Label labelQuantity;
         private System.Windows.Forms.Label labelDiscipline;
@@ -226,5 +226,6 @@ namespace gw2_Investment_Tool.Forms
         private System.Windows.Forms.TextBox tbSearch;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DataGridView dgvSearchResults;
+		private ComboBox cbDiscipline;
 	}
 }

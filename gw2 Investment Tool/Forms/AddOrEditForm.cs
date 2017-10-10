@@ -12,19 +12,31 @@ namespace gw2_Investment_Tool.Forms
     {
         public Item Item;
 
-        public AddOrEditForm(Item SelectedItem)
+        public AddOrEditForm(Item selectedItem)
         {
             InitializeComponent();
             SetGridColumns();
             Item = new Item();
+			List<string> disciplines = new List<string>
+			{
+				"Weaponsmith",
+				"Huntsman",
+				"Artificer",
+				"Armorsmith",
+				"Leatherworker",
+				"Tailor",
+				"Jeweler",
+				"Chef",
+				"Scribe"
+			};
+	        cbDiscipline.DataSource = disciplines;
 
-            if (SelectedItem != null)
+            if (selectedItem != null)
             {
-                tbDiscipline.Text = SelectedItem.Discipline;
-                tbItemId.Text = SelectedItem.ItemId.ToString();
-                tbKarmaPerItem.Text = SelectedItem.KarmaPerItem.ToString();
-                tbQuantity.Text = SelectedItem.Quantity.ToString();
-                cbActive.Checked = SelectedItem.Active;
+                tbItemId.Text = selectedItem.ItemId.ToString();
+                tbKarmaPerItem.Text = selectedItem.KarmaPerItem.ToString();
+                tbQuantity.Text = selectedItem.Quantity.ToString();
+                cbActive.Checked = selectedItem.Active;
             }
         }
 
@@ -39,7 +51,7 @@ namespace gw2_Investment_Tool.Forms
 
             Item.KarmaPerItem = karmaPerItem;
             Item.Active = cbActive.Checked;
-            Item.Discipline = tbDiscipline.Text;
+            Item.Discipline = cbDiscipline.SelectedItem.ToString();
             Item.ItemId = itemId;
             Item.Quantity = quantity;
         }

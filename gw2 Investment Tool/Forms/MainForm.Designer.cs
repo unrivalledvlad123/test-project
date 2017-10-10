@@ -139,7 +139,7 @@ namespace gw2_Investment_Tool.Forms
 			this.cbLists.FormattingEnabled = true;
 			this.cbLists.Location = new System.Drawing.Point(10, 159);
 			this.cbLists.Name = "cbLists";
-			this.cbLists.Size = new System.Drawing.Size(174, 21);
+			this.cbLists.Size = new System.Drawing.Size(255, 21);
 			this.cbLists.TabIndex = 17;
 			// 
 			// btnSettings
@@ -258,7 +258,7 @@ namespace gw2_Investment_Tool.Forms
 			// 
 			// btnLoadData
 			// 
-			this.btnLoadData.Location = new System.Drawing.Point(190, 157);
+			this.btnLoadData.Location = new System.Drawing.Point(271, 159);
 			this.btnLoadData.Name = "btnLoadData";
 			this.btnLoadData.Size = new System.Drawing.Size(75, 23);
 			this.btnLoadData.TabIndex = 2;
