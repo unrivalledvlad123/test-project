@@ -440,21 +440,29 @@ namespace gw2_Investment_Tool.Forms
             }
         }
 
-        public float CalculateTotalKarma()
-        {
-            float total = 0;
-            foreach (DataGridViewRow row in dgvItemsToCalculate.Rows)
-            {
-                DataGridViewCheckBoxCell cell = row.Cells[0] as DataGridViewCheckBoxCell;
-                if (Convert.ToBoolean(cell.Value))
-                {
-                    total = total + (float) row.Cells["karmaTotal"].Value;
-                }
-            }
-            return total;
-        }
+	    public float CalculateTotalKarma()
+	    {
+		    try
+		    {
+			    float total = 0;
+			    foreach (DataGridViewRow row in dgvItemsToCalculate.Rows)
+			    {
+				    DataGridViewCheckBoxCell cell = row.Cells[0] as DataGridViewCheckBoxCell;
+				    if (Convert.ToBoolean(cell.Value))
+				    {
+					    total = total + (float) row.Cells["karmaTotal"].Value;
+				    }
+			    }
+			    return total;
+		    }
+		    catch (Exception e)
+		    {
+			    return float.Epsilon;
+		    }
 
-        public async Task CombineAllData()
+	    }
+
+	    public async Task CombineAllData()
         {
             foreach (var itemID in ResultSet)
             {
