@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace gw2_Investment_Tool.Classes
 {
-    class ItemDetails
-    {
-        public string description { get; set; }
-    }
+	public class ItemDetails
+	{
+		public string description { get; set; }
+	}
 }

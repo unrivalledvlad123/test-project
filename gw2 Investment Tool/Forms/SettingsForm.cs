@@ -24,7 +24,7 @@ namespace gw2_Investment_Tool.Forms
         {
             List<int> itemIds = await SAItems.GetAllrecipeIdsAsync();
             List<OutputItemId> outputItemIds = await SAItems.GetRecipeOutputIdAsync(itemIds);
-            List<ItemApi> namedItems = await SAItems.GetItemNamesAsync(outputItemIds);
+            List<ItemFull> namedItems = await SAItems.GetItemNamesAsync(outputItemIds);
 
             List<string> lines = new List<string>();
             foreach (var item in namedItems)

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace gw2_Investment_Tool.Classes
 {
-    class ItemFull
+	public class ItemFull
     {
         public string name { get; set; }
         public string description { get; set; }

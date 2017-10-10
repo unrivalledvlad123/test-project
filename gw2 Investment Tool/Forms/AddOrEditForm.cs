@@ -72,7 +72,7 @@ namespace gw2_Investment_Tool.Forms
 		    {
 			    if (dgvSearchResults.SelectedCells[0].Value.ToString() != "")
 			    {
-				    ItemApi item = (ItemApi) dgvSearchResults.SelectedRows[0].DataBoundItem;
+				    ItemFull item = (ItemFull) dgvSearchResults.SelectedRows[0].DataBoundItem;
 				    tbItemId.Text = item.id.ToString();
 			    }
 		    }

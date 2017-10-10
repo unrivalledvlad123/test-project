@@ -23,12 +23,12 @@ namespace gw2_Investment_Tool.Forms
     {
         public List<ResultItem> ItemsToBuy = new List<ResultItem>();
         public List<Item> AllItems = new List<Item>();
-        public static List<ItemApi> ItemNames = new List<ItemApi>();
+        public static List<ItemFull> ItemNames = new List<ItemFull>();
         public Dictionary<int, int> ResultSet = new Dictionary<int, int>(); //key - itemId , value - quantity
         public List<int> AllItemIds = new List<int>();
         public List<int> AllRecipeIds = new List<int>();
         public static List<WhiteListedItem> WhiteListedItems = new List<WhiteListedItem>();
-        List<RecipeFull> newRecipesFull = new List<RecipeFull>();
+        List<Recipe> newRecipesFull = new List<Recipe>();
         public static int TotalGold = 0;
         public static float TotalKarma = 0;
 
@@ -355,7 +355,7 @@ namespace gw2_Investment_Tool.Forms
 			    StreamReader file3 = new StreamReader(Properties.Settings.Default.LoadNames);
 			    while ((line3 = file3.ReadLine()) != null)
 			    {
-				    ItemApi item = new ItemApi();
+				    ItemFull item = new ItemFull();
 				    string[] values = line3.Split(Convert.ToChar("%"));
 				    int itemId;
 				    int.TryParse(values[0], out itemId);
@@ -397,7 +397,7 @@ namespace gw2_Investment_Tool.Forms
             }
             else
             {
-                ItemApi item = await SAItems.GetItemsAsync((int) singleId);
+	            ItemFull item = await SAItems.GetItemsAsync((int) singleId);
                 Item sincedItem = AllItems.FirstOrDefault(p => p.ItemId == item.id);
                 if (sincedItem != null)
                 {
@@ -621,7 +621,7 @@ namespace gw2_Investment_Tool.Forms
                 }
                 newRecipesFull = await SAItems.GetRecipeFullAsync(newItemsIDsIndexes);
 
-                foreach (RecipeFull recipe in newRecipesFull)
+                foreach (Recipe recipe in newRecipesFull)
                 {
                     if (recipe.type == "GuildConsumable" || recipe.type == "GuildDecoration" ||
                         recipe.type == "GuildConsumableWvw")
@@ -722,7 +722,7 @@ namespace gw2_Investment_Tool.Forms
         {
             if (dgvNewItems.SelectedCells[0].Value != null)
             {
-                RecipeFull selectedItem =
+	            Recipe selectedItem =
                     newRecipesFull.FirstOrDefault(
                         p => p.OutputItemName == dgvNewItems.SelectedCells[0].Value.ToString());
                 dgvIngredients.DataSource = null;

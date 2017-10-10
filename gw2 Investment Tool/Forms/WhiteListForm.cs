@@ -150,7 +150,7 @@ namespace gw2_Investment_Tool.Forms
         }
         private void dgvSearchResult_CellSelected(object sender, EventArgs e)
         {
-            ItemApi item = MainForm.ItemNames.FirstOrDefault(p => p.name == dgvResults.SelectedCells[0].Value.ToString());
+	        ItemFull item = MainForm.ItemNames.FirstOrDefault(p => p.name == dgvResults.SelectedCells[0].Value.ToString());
             tbItemId.Text = item.id.ToString();
             tbName.Text = dgvResults.SelectedCells[0].Value.ToString();
         }

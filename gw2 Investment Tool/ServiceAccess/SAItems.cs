@@ -13,7 +13,7 @@ namespace gw2_Investment_Tool.ServiceAccess
     class SAItems
     {
 
-        public static async Task<ItemApi> GetItemsAsync(int itemId)
+        public static async Task<ItemFull> GetItemsAsync(int itemId)
         {
             using (HttpClient client = new HttpClient())
             {
@@ -22,7 +22,7 @@ namespace gw2_Investment_Tool.ServiceAccess
                 HttpResponseMessage response = await client.GetAsync($"/v2/items/{itemId}");
                 if (response.IsSuccessStatusCode)
                 {
-                    var item = await response.Content.ReadAsAsync<ItemApi>();
+                    var item = await response.Content.ReadAsAsync<ItemFull>();
                     return item;
                 }
 
@@ -157,11 +157,11 @@ namespace gw2_Investment_Tool.ServiceAccess
             }
         }
 
-        public static async Task<List<ItemApi>> GetItemNamesAsync(List<OutputItemId> itemIds)
+        public static async Task<List<ItemFull>> GetItemNamesAsync(List<OutputItemId> itemIds)
         {
             using (HttpClient client = new HttpClient())
             {
-                List<ItemApi> results = new List<ItemApi>();
+                List<ItemFull> results = new List<ItemFull>();
                 client.BaseAddress = new Uri("https://api.guildwars2.com");
                 int counter = 0;
                 while (counter <= itemIds.Count)
@@ -184,7 +184,7 @@ namespace gw2_Investment_Tool.ServiceAccess
                     HttpResponseMessage response = await client.GetAsync($"/v2/items?ids={sb}");
                     if (response.IsSuccessStatusCode)
                     {
-                        List<ItemApi> items = await response.Content.ReadAsAsync<List<ItemApi>>();
+                        List<ItemFull> items = await response.Content.ReadAsAsync<List<ItemFull>>();
                         results.AddRange(items);
                     }
                 }
@@ -192,11 +192,11 @@ namespace gw2_Investment_Tool.ServiceAccess
             }
         }
 
-        public static async Task<List<RecipeFull>> GetRecipeFullAsync(List<int> itemIds)
+        public static async Task<List<Recipe>> GetRecipeFullAsync(List<int> itemIds)
         {
             using (HttpClient client = new HttpClient())
             {
-                List<RecipeFull> results = new List<RecipeFull>();
+                List<Recipe> results = new List<Recipe>();
                 client.BaseAddress = new Uri("https://api.guildwars2.com");
                 int counter = 0;
                 while (counter <= itemIds.Count)
@@ -220,7 +220,7 @@ namespace gw2_Investment_Tool.ServiceAccess
                     HttpResponseMessage response = await client.GetAsync($"/v2/recipes?ids={sb}");
                     if (response.IsSuccessStatusCode)
                     {
-                        List<RecipeFull> ids = await response.Content.ReadAsAsync<List<RecipeFull>>();
+                        List<Recipe> ids = await response.Content.ReadAsAsync<List<Recipe>>();
                         foreach (var id in ids)
                         {
                             if (results.FirstOrDefault(p => p.output_item_id == id.output_item_id) == null)

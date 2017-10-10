@@ -63,7 +63,6 @@
     <Compile Include="Classes\GuildItemFull.cs" />
     <Compile Include="Classes\Ingredient.cs" />
     <Compile Include="Classes\Item.cs" />
-    <Compile Include="Classes\ItemApi.cs" />
     <Compile Include="Classes\ItemDetails.cs" />
     <Compile Include="Classes\ItemFull.cs" />
     <Compile Include="Classes\OutputItemId.cs" />
@@ -72,7 +71,6 @@
     <Compile Include="Classes\Recipe.cs" />
     <Compile Include="Classes\RecipeFull.cs" />
     <Compile Include="Classes\ResultItem.cs" />
-    <Compile Include="Classes\Save.cs" />
     <Compile Include="Classes\WhiteListedItem.cs" />
     <Compile Include="Forms\AddOrEditForm.cs">
       <SubType>Form</SubType>
