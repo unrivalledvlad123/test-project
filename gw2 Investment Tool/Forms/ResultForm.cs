@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using gw2_Investment_Tool.Classes;
+using gw2_Investment_Tool.Controls;
 using gw2_Investment_Tool.ServiceAccess;
 
 namespace gw2_Investment_Tool.Forms
@@ -40,11 +41,23 @@ namespace gw2_Investment_Tool.Forms
                 CurrnetItems.Add(newItem);
                 tempList.Add(newItem);
             }
-            labelProfitValue.Text = ParsePricesTotal((int) ((MainForm.TotalGold - CalculateTotal(items))*0.85));
-            labelTotalValue.Text = ParsePricesTotal(CalculateTotal(items));
-	        labelTotalPerKarmaValue.Text = MainForm.TotalKarma < 1 ? "No Karma Used!" : ParsePricesTotal((int) ((int) ((MainForm.TotalGold - CalculateTotal(items))*0.85)/(MainForm.TotalKarma/1000)));
-			labelROI.Text = (((MainForm.TotalGold - CalculateTotal(items)) * 0.85) / (CalculateTotal(items))).ToString("#.##" + "%");
+			
+	        
+	        ParsePriceInControl((int) ((MainForm.TotalGold - CalculateTotal(items))*0.85),gvcProfitValue);
+            ParsePriceInControl(CalculateTotal(items),gvcTotalValue);
+			if (MainForm.TotalKarma < 1)
+	        {
+		        labelTotalPerKarmaValue.Text = "No Karma Used!";
+		        gvcTotalPerKarmaValue.Visible = false;
+	        }
+	        else
+	        {
+		        labelTotalPerKarmaValue.Visible = false;
+		        gvcTotalPerKarmaValue.Visible = true;
+				ParsePriceInControl((int)((int)((MainForm.TotalGold - CalculateTotal(items)) * 0.85) / (MainForm.TotalKarma / 1000)),gvcTotalPerKarmaValue);
+	        }
 
+			labelROI.Text = (((MainForm.TotalGold - CalculateTotal(items)) * 0.85) / (CalculateTotal(items))).ToString("#.##" + "%");
 			dgvResults.DataSource = null;
             dgvResults.DataSource = tempList;
         }
@@ -68,6 +81,15 @@ namespace gw2_Investment_Tool.Forms
             string result = string.Format("{0} Gold, {1} Silver, {2} Copper", gold, silver, copper);
             return result;
         }
+
+	    public void ParsePriceInControl(int price, GoldValueControl control)
+	    {
+			int copper = price % 100;
+		    int left = price / 100;
+		    int silver = left % 100;
+		    int gold = left / 100;
+			control.BindValues(gold,silver,copper);
+		}
 
         public string ParsePrices(int price)
         {

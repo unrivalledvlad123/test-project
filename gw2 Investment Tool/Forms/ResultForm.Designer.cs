@@ -34,14 +34,15 @@
 			this.Colomn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.labelTotal = new System.Windows.Forms.Label();
-			this.labelTotalValue = new System.Windows.Forms.Label();
 			this.btnRecalculate = new System.Windows.Forms.Button();
 			this.labelProfit = new System.Windows.Forms.Label();
-			this.labelProfitValue = new System.Windows.Forms.Label();
 			this.labelTotalPerKarmaValue = new System.Windows.Forms.Label();
 			this.labelText1 = new System.Windows.Forms.Label();
 			this.label1 = new System.Windows.Forms.Label();
 			this.labelROI = new System.Windows.Forms.Label();
+			this.gvcTotalValue = new gw2_Investment_Tool.Controls.GoldValueControl();
+			this.gvcTotalPerKarmaValue = new gw2_Investment_Tool.Controls.GoldValueControl();
+			this.gvcProfitValue = new gw2_Investment_Tool.Controls.GoldValueControl();
 			((System.ComponentModel.ISupportInitialize)(this.dgvResults)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -83,15 +84,6 @@
 			this.labelTotal.TabIndex = 1;
 			this.labelTotal.Text = "Total Cost:";
 			// 
-			// labelTotalValue
-			// 
-			this.labelTotalValue.AutoSize = true;
-			this.labelTotalValue.Location = new System.Drawing.Point(506, 636);
-			this.labelTotalValue.Name = "labelTotalValue";
-			this.labelTotalValue.Size = new System.Drawing.Size(27, 13);
-			this.labelTotalValue.TabIndex = 2;
-			this.labelTotalValue.Text = "N/A";
-			// 
 			// btnRecalculate
 			// 
 			this.btnRecalculate.Location = new System.Drawing.Point(12, 589);
@@ -111,19 +103,10 @@
 			this.labelProfit.TabIndex = 4;
 			this.labelProfit.Text = "Total profit after tax:";
 			// 
-			// labelProfitValue
-			// 
-			this.labelProfitValue.AutoSize = true;
-			this.labelProfitValue.Location = new System.Drawing.Point(136, 615);
-			this.labelProfitValue.Name = "labelProfitValue";
-			this.labelProfitValue.Size = new System.Drawing.Size(150, 13);
-			this.labelProfitValue.TabIndex = 5;
-			this.labelProfitValue.Text = "324 gold, 34 silve, 34 copper  ";
-			// 
 			// labelTotalPerKarmaValue
 			// 
 			this.labelTotalPerKarmaValue.AutoSize = true;
-			this.labelTotalPerKarmaValue.Location = new System.Drawing.Point(136, 636);
+			this.labelTotalPerKarmaValue.Location = new System.Drawing.Point(129, 636);
 			this.labelTotalPerKarmaValue.Name = "labelTotalPerKarmaValue";
 			this.labelTotalPerKarmaValue.Size = new System.Drawing.Size(146, 13);
 			this.labelTotalPerKarmaValue.TabIndex = 7;
@@ -141,7 +124,7 @@
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(446, 615);
+			this.label1.Location = new System.Drawing.Point(442, 615);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(29, 13);
 			this.label1.TabIndex = 9;
@@ -150,25 +133,47 @@
 			// labelROI
 			// 
 			this.labelROI.AutoSize = true;
-			this.labelROI.Location = new System.Drawing.Point(498, 615);
+			this.labelROI.Location = new System.Drawing.Point(503, 615);
 			this.labelROI.Name = "labelROI";
 			this.labelROI.Size = new System.Drawing.Size(35, 13);
 			this.labelROI.TabIndex = 10;
 			this.labelROI.Text = "label2";
+			// 
+			// gvcTotalValue
+			// 
+			this.gvcTotalValue.Location = new System.Drawing.Point(506, 634);
+			this.gvcTotalValue.Name = "gvcTotalValue";
+			this.gvcTotalValue.Size = new System.Drawing.Size(133, 15);
+			this.gvcTotalValue.TabIndex = 13;
+			// 
+			// gvcTotalPerKarmaValue
+			// 
+			this.gvcTotalPerKarmaValue.Location = new System.Drawing.Point(132, 634);
+			this.gvcTotalPerKarmaValue.Name = "gvcTotalPerKarmaValue";
+			this.gvcTotalPerKarmaValue.Size = new System.Drawing.Size(133, 15);
+			this.gvcTotalPerKarmaValue.TabIndex = 12;
+			// 
+			// gvcProfitValue
+			// 
+			this.gvcProfitValue.Location = new System.Drawing.Point(132, 613);
+			this.gvcProfitValue.Name = "gvcProfitValue";
+			this.gvcProfitValue.Size = new System.Drawing.Size(133, 15);
+			this.gvcProfitValue.TabIndex = 11;
 			// 
 			// ResultForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(665, 658);
+			this.Controls.Add(this.gvcTotalValue);
+			this.Controls.Add(this.gvcTotalPerKarmaValue);
+			this.Controls.Add(this.gvcProfitValue);
 			this.Controls.Add(this.labelROI);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.labelText1);
 			this.Controls.Add(this.labelTotalPerKarmaValue);
-			this.Controls.Add(this.labelProfitValue);
 			this.Controls.Add(this.labelProfit);
 			this.Controls.Add(this.btnRecalculate);
-			this.Controls.Add(this.labelTotalValue);
 			this.Controls.Add(this.labelTotal);
 			this.Controls.Add(this.dgvResults);
 			this.Name = "ResultForm";
@@ -183,17 +188,18 @@
 
         private System.Windows.Forms.DataGridView dgvResults;
         private System.Windows.Forms.Label labelTotal;
-        private System.Windows.Forms.Label labelTotalValue;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
         private System.Windows.Forms.DataGridViewTextBoxColumn Colomn3;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
         private System.Windows.Forms.Button btnRecalculate;
         private System.Windows.Forms.Label labelProfit;
-        private System.Windows.Forms.Label labelProfitValue;
         private System.Windows.Forms.Label labelTotalPerKarmaValue;
         private System.Windows.Forms.Label labelText1;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label labelROI;
+		private Controls.GoldValueControl gvcProfitValue;
+		private Controls.GoldValueControl gvcTotalPerKarmaValue;
+		private Controls.GoldValueControl gvcTotalValue;
 	}
 }
