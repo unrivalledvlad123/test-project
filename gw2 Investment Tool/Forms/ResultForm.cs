@@ -43,8 +43,9 @@ namespace gw2_Investment_Tool.Forms
             labelProfitValue.Text = ParsePricesTotal((int) ((MainForm.TotalGold - CalculateTotal(items))*0.85));
             labelTotalValue.Text = ParsePricesTotal(CalculateTotal(items));
 	        labelTotalPerKarmaValue.Text = MainForm.TotalKarma < 1 ? "No Karma Used!" : ParsePricesTotal((int) ((int) ((MainForm.TotalGold - CalculateTotal(items))*0.85)/(MainForm.TotalKarma/1000)));
-            
-            dgvResults.DataSource = null;
+			labelROI.Text = (((MainForm.TotalGold - CalculateTotal(items)) * 0.85) / (CalculateTotal(items))).ToString("#.##" + "%");
+
+			dgvResults.DataSource = null;
             dgvResults.DataSource = tempList;
         }
 
