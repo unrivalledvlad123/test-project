@@ -58,8 +58,8 @@ namespace gw2_Investment_Tool.Forms
 	        }
 
 			labelROI.Text = (((MainForm.TotalGold - CalculateTotal(items)) * 0.85) / (CalculateTotal(items))).ToString("#.##" + "%");
-			dgvResults.DataSource = null;
-            dgvResults.DataSource = tempList;
+            dgvResults.DataSource = null;
+            dgvResults.DataSource = SortResult(tempList);
         }
 
         public int CalculateTotal(List<ResultItem> items)
@@ -224,6 +224,255 @@ namespace gw2_Investment_Tool.Forms
                 }
             }
         }
+
+        public List<ResultItem> SortResult(List<ResultItem> unsortedList )
+        {
+
+            List<ResultItem> ingots = new List<ResultItem>();
+            List<ResultItem> insignias = new List<ResultItem>();
+            List<ResultItem> inscriptions = new List<ResultItem>();
+            List<ResultItem> all = new List<ResultItem>();
+            List<ResultItem> jewels = new List<ResultItem>();
+
+            foreach (ResultItem item in unsortedList)
+            {
+                if (item.Name.Contains("Ingot"))
+                {
+                    ingots.Add(item);
+                }else if (item.Name.Contains("Insignia"))
+                {
+                    insignias.Add(item);
+                }else if (item.Name.Contains("Inscription"))
+                {
+                   inscriptions.Add(item); 
+                }else if (item.Name.Contains("Jewel"))
+                {
+                    jewels.Add(item);
+                }
+                else
+                {
+                    all.Add(item);
+                }
+            }
+            List<ResultItem> result = new List<ResultItem>();
+            result.AddRange(new List<ResultItem>(ingots.OrderBy(p => p.Name)));
+            result.AddRange(new List<ResultItem>(SortInsigniasInner(insignias)));
+            result.AddRange( new List<ResultItem>(SortInscriptionInner(inscriptions)));
+            result.AddRange(new List<ResultItem>(InnerRaritySorting(jewels)));
+            result.AddRange(new List<ResultItem>(all.OrderBy(p => p.Name)));
+
+            return result;
+        }
+
+
+        public List<ResultItem> SortInsigniasInner(List<ResultItem> items)
+        {
+            List<ResultItem> jute = new List<ResultItem>();
+            List<ResultItem> wool = new List<ResultItem>();
+            List<ResultItem> cotton = new List<ResultItem>();
+            List<ResultItem> linen = new List<ResultItem>();
+            List<ResultItem> silk = new List<ResultItem>();
+            List<ResultItem> gossamer = new List<ResultItem>();
+            List<ResultItem> others = new List<ResultItem>();
+            foreach (ResultItem item in items)
+            {
+                if (item.Name.Contains("Jute"))
+                {
+                    jute.Add(item);
+                }
+                else if (item.Name.Contains("Wool"))
+                {
+                    wool.Add(item);
+                }
+                else if (item.Name.Contains("Cotton"))
+                {
+                    cotton.Add(item);
+                }
+                else if (item.Name.Contains("Linen"))
+                {
+                    linen.Add(item);
+                }
+                else if (item.Name.Contains("Silk"))
+                {
+                    silk.Add(item);
+                }
+                else if (item.Name.Contains("Gossamer"))
+                {
+                    gossamer.Add(item);
+                }
+                else
+                {
+                    others.Add(item);
+                }
+            }
+            List<ResultItem> result = new List<ResultItem>();
+
+            result.AddRange(InnerRaritySorting(jute));
+            result.AddRange(InnerRaritySorting(wool));
+            result.AddRange(InnerRaritySorting(cotton));
+            result.AddRange(InnerRaritySorting(linen));
+            result.AddRange(InnerRaritySorting(silk));
+            result.AddRange(InnerRaritySorting(gossamer));
+            result.AddRange(new List<ResultItem>(others.OrderBy(p => p.Name)));
+            
+            return result;
+        }
+
+        public List<ResultItem> SortInscriptionInner(List<ResultItem> items)
+        {
+            List<ResultItem> green = new List<ResultItem>();
+            List<ResultItem> bronze = new List<ResultItem>();
+            List<ResultItem> soft = new List<ResultItem>();
+            List<ResultItem> iron = new List<ResultItem>();
+            List<ResultItem> seasoned = new List<ResultItem>();
+            List<ResultItem> steel = new List<ResultItem>();
+            List<ResultItem> others = new List<ResultItem>();
+            List<ResultItem> hard = new List<ResultItem>();
+            List<ResultItem> darksteel = new List<ResultItem>();
+            List<ResultItem> elder = new List<ResultItem>();
+            List<ResultItem> mithril = new List<ResultItem>();
+            List<ResultItem> orichalcum = new List<ResultItem>();
+            foreach (ResultItem item in items)
+            {
+                if (item.Name.Contains("Green"))
+                {
+                    green.Add(item);
+                }
+                else if (item.Name.Contains("Bronze"))
+                {
+                    bronze.Add(item);
+                }
+                else if (item.Name.Contains("Soft"))
+                {
+                    soft.Add(item);
+                }
+                else if (item.Name.Contains("Iron"))
+                {
+                    iron.Add(item);
+                }
+                else if (item.Name.Contains("Seasoned"))
+                {
+                    seasoned.Add(item);
+                }
+                else if (item.Name.Contains("Hard"))
+                {
+                    hard.Add(item);
+                }
+                else if (item.Name.Contains("Darksteel"))
+                {
+                    darksteel.Add(item);
+                }
+                else if (item.Name.Contains("Steel"))
+                {
+                    steel.Add(item);
+                }
+                else if (item.Name.Contains("Elder"))
+                {
+                    elder.Add(item);
+                }
+                else if (item.Name.Contains("Mithril"))
+                {
+                    mithril.Add(item);
+                }
+                else if (item.Name.Contains("Orichalcum"))
+                {
+                    orichalcum.Add(item);
+                }
+                else
+                {
+                    others.Add(item);
+                }
+            }
+            List<ResultItem> result = new List<ResultItem>();
+
+            result.AddRange(InnerRaritySorting(green));
+            result.AddRange(InnerRaritySorting(bronze));
+            result.AddRange(InnerRaritySorting(soft));
+            result.AddRange(InnerRaritySorting(iron));
+            result.AddRange(InnerRaritySorting(seasoned));
+            result.AddRange(InnerRaritySorting(steel));
+            result.AddRange(InnerRaritySorting(hard));
+            result.AddRange(InnerRaritySorting(darksteel));
+            result.AddRange(InnerRaritySorting(elder));
+            result.AddRange(InnerRaritySorting(mithril));
+            result.AddRange(InnerRaritySorting(orichalcum));
+            result.AddRange(new List<ResultItem>(others.OrderBy(p => p.Name)));
+
+            return result;
+        }
+
+        public List<ResultItem> InnerRaritySorting(List<ResultItem> items)
+        {
+            List<ResultItem> all = new List<ResultItem>();
+            List<ResultItem> rarity2 = new List<ResultItem>();
+            List<ResultItem> rarity3 = new List<ResultItem>();
+            List<ResultItem> rarity4 = new List<ResultItem>();
+            List<ResultItem> rarity5 = new List<ResultItem>();
+            List<ResultItem> rarity6 = new List<ResultItem>();
+            List<ResultItem> rarity7 = new List<ResultItem>();
+
+            foreach (ResultItem item in items)
+            {
+                if (!item.Name.Contains("Jewel"))
+                {
+                    if (item.Name.Contains("Embroidered") || item.Name.Contains("Plated"))
+                    {
+                        rarity2.Add(item);
+                    }
+                    else if (item.Name.Contains("Intricate") || item.Name.Contains("Imbued"))
+                    {
+                        rarity3.Add(item);
+                    }
+                    else
+                    {
+                        all.Add(item);
+                    }
+                }
+                else
+                {
+                    if (item.Name.Contains("Adorned"))
+                    {
+                        rarity2.Add(item);
+                    }
+                    else if(item.Name.Contains("Embellished Intricate"))
+                    {
+                        rarity3.Add(item);
+                    }
+                    else if (item.Name.Contains("Embellished Gilded"))
+                    {
+                        rarity4.Add(item);
+                    }
+                    else if (item.Name.Contains("Embellished Ornate"))
+                    {
+                        rarity5.Add(item);
+                    }
+                    else if (item.Name.Contains("Embellished Brilliant"))
+                    {
+                        rarity6.Add(item);
+                    }
+                    else if (item.Name.Contains("Exquisite"))
+                    {
+                        rarity7.Add(item);
+                    }
+                    else
+                    {
+                        all.Add(item);
+                    }
+                }
+
+
+            }
+            List<ResultItem> result = new List<ResultItem>();
+            result.AddRange(new List<ResultItem>(rarity2.OrderBy(p => p.Name)));
+            result.AddRange(new List<ResultItem>(rarity3.OrderBy(p => p.Name)));
+            result.AddRange(new List<ResultItem>(rarity4.OrderBy(p => p.Name)));
+            result.AddRange(new List<ResultItem>(rarity5.OrderBy(p => p.Name)));
+            result.AddRange(new List<ResultItem>(rarity6.OrderBy(p => p.Name)));
+            result.AddRange(new List<ResultItem>(rarity7.OrderBy(p => p.Name)));
+            result.AddRange(new List<ResultItem>(all.OrderBy(p => p.Name)));
+            return result;
+        }
+
 
         private void SetGridColumns()
         {

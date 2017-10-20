@@ -83,7 +83,7 @@ namespace gw2_Investment_Tool.Forms
 			    }
 			    file.Close();
 		    }
-		    catch (Exception)
+		    catch (Exception exception)
 		    {
 			    MessageBox.Show(
 				    @"Directories Not Set! Please use setting button to set them first, then hit Reload data button",

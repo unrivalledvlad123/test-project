@@ -65,3 +65,4 @@ D:\Projects\test-project\gw2 Investment Tool\obj\Release\gw2_Investment_Tool.For
 D:\Projects\test-project\gw2 Investment Tool\obj\Release\gw2_Investment_Tool.Forms.WhiteListForm.resources
 D:\Projects\test-project\gw2 Investment Tool\obj\Release\gw2_Investment_Tool.Properties.Resources.resources
 D:\Projects\test-project\gw2 Investment Tool\obj\Release\gw2 Investment Tool.csproj.GenerateResource.Cache
+C:\Projects\test-project\gw2 Investment Tool\obj\Release\gw2_Investment_Tool.Controls.GoldValueControl.resources
