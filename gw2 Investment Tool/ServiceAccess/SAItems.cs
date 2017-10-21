@@ -99,7 +99,44 @@ namespace gw2_Investment_Tool.ServiceAccess
 			}
 		}
 
-		public static async Task<List<int>> GetAllrecipeIdsAsync()
+        public static async Task<List<ItemListings>> GetAllItemListnings(List<int> itemIds)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                List<ItemListings> results = new List<ItemListings>();
+                client.BaseAddress = new Uri("https://api.guildwars2.com");
+                int counter = 0;
+                while (counter <= itemIds.Count)
+                {
+                    List<int> currentLoop = new List<int>();
+                    for (int i = counter; i < counter + 100; i++)
+                    {
+                        if (i < itemIds.Count)
+                        {
+                            currentLoop.Add(itemIds[i]);
+                        }
+                    }
+                    counter += 100;
+                    StringBuilder sb = new StringBuilder();
+                    foreach (var id in currentLoop)
+                    {
+                        sb.Append(id.ToString());
+                        sb.Append(",");
+                    }
+                    HttpResponseMessage response = await client.GetAsync($"/v2/commerce/listings?ids={sb}");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        List<ItemListings> items = await response.Content.ReadAsAsync<List<ItemListings>>();
+                        results.AddRange(items);
+                    }
+                }
+                return results;
+            }
+        }
+
+
+
+        public static async Task<List<int>> GetAllrecipeIdsAsync()
         {
             using (HttpClient client = new HttpClient())
             {

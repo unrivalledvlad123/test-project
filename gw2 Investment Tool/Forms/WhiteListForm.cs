@@ -145,7 +145,7 @@ namespace gw2_Investment_Tool.Forms
             if (tbSearch.Text.Length >= 4)
             {
                 dgvResults.DataSource = null;
-                dgvResults.DataSource = MainForm.ItemNames.Where(p => p.name.ToLower().Contains(tbSearch.Text)).ToList();
+                dgvResults.DataSource = MainForm.ItemNames.Where(p => p.name.ToLower().Contains(tbSearch.Text.ToLower())).ToList();
             }
         }
         private void dgvSearchResult_CellSelected(object sender, EventArgs e)
