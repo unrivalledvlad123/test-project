@@ -16,6 +16,7 @@ namespace gw2_Investment_Tool.Classes
         public string PriceFormated { get; set; }
         public string PriceTotalFormated { get; set; }
         public bool RecalculateChecked { get; set; }
+        public int CraftingPrice { get; set; }
        
     }
 }

@@ -20,7 +20,7 @@ namespace gw2_Investment_Tool.Forms
         public List<ResultItem> CurrnetItems = new List<ResultItem>();
         public List<ResultItem> ItemsToKeep = new List<ResultItem>();
         public List<Item> AllItems = new List<Item>();
-        public Dictionary<int, int> ResultSet = new Dictionary<int, int>();
+        public List<Item> ResultSet = new List<Item>();
 
         public ResultForm(List<ResultItem> items)
         {
@@ -131,12 +131,36 @@ namespace gw2_Investment_Tool.Forms
             
             await GetRecipeFromApi(AllItems);
             await CombineAllData();
+            List<ItemPrices> sellItemPriceses = await SAItems.GetAllItemPrices(ItemsToKeep.Select(p => p.ItemId).ToList());
             foreach (var item in ItemsToKeep)
             {
-                item.PriceTotalFormated = ParsePrices(item.Quantity * item.PriceEach.Value);
+                if (item.RecalculateChecked)
+                {
+                    ItemPrices pr = sellItemPriceses.FirstOrDefault(p => p.id == item.ItemId);
+                    int determinedPrice = item.CraftingPrice <= pr.sells.unit_price
+                        ? pr.buys.unit_price
+                        : pr.sells.unit_price;
+                    item.PriceEach = determinedPrice;
+                    item.PriceFormated = ParsePrices(determinedPrice);
+                    item.PriceTotalFormated = ParsePrices(item.Quantity * determinedPrice);
+                    item.Name = item.CraftingPrice <= pr.sells.unit_price
+                        ? item.Name
+                        : AdjustName(item.CraftingPrice, item.Name);
+
+                }
+                else
+                {
+                    item.PriceTotalFormated = ParsePrices(item.Quantity * item.PriceEach.Value);
+                }
+
             }
             ResultForm resultForm = new ResultForm(ItemsToKeep);
             resultForm.ShowDialog();
+        }
+
+        public string AdjustName(int price, string name)
+        {
+            return name.Contains("Instabuy") ? name : name + $" - Instabuy ( {ParsePrices(price)} )";
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -235,17 +259,21 @@ namespace gw2_Investment_Tool.Forms
                                 if (recipeData != null)
                                     foreach (var ingredient in recipeData.ingredients)
                                     {
-                                        if (ResultSet.ContainsKey(ingredient.item_id))
+                                        Item check = ResultSet.FirstOrDefault(p => p.ItemId == ingredient.item_id);
+                                        if (check != null)
                                         {
-                                            var oldQuantity = ResultSet[ingredient.item_id];
-                                            ResultSet[ingredient.item_id] = oldQuantity +
-                                                                            (ingredient.count * remainingQuantity /
-                                                                             recipeData.output_item_count);
+                                            check.Quantity = check.Quantity +
+                                                             (ingredient.count * remainingQuantity /
+                                                              recipeData.output_item_count);
                                         }
                                         else
                                         {
-                                            ResultSet.Add(ingredient.item_id,
-                                                ingredient.count * remainingQuantity / recipeData.output_item_count);
+                                            ResultSet.Add(new Item()
+                                            {
+                                                ItemId = ingredient.item_id,
+                                                Quantity =
+                                                    ingredient.count * remainingQuantity / recipeData.output_item_count
+                                            });
                                         }
                                     }
                                 break;
@@ -265,7 +293,7 @@ namespace gw2_Investment_Tool.Forms
                                 var price = ingredientPrices.FirstOrDefault(p => p.id == ing.item_id);
                                 priceCounter += ing.count * price.buys.unit_price;
                             }
-
+                            item.CraftingPrice = priceCounter;
                             ItemPrices itemPrice = ingredientPrices.FirstOrDefault(p => p.id == item.ItemId);
                             if (priceCounter >= itemPrice.sells.unit_price)
                             {
@@ -278,20 +306,24 @@ namespace gw2_Investment_Tool.Forms
                                         {
                                             if (listning.quantity >= remainingQuantity)
                                             {
-                                                ResultItem check1 = ItemsToKeep.FirstOrDefault(p => p.ItemId == item.ItemId);
+                                                ResultItem check1 =
+                                                    ItemsToKeep.FirstOrDefault(p => p.ItemId == item.ItemId);
                                                 if (check1 != null)
                                                 {
                                                     check1.Quantity += remainingQuantity;
                                                 }
                                                 else
                                                 {
-                                                    ItemsToKeep.Add(CurrnetItems.FirstOrDefault(p => p.ItemId == item.ItemId));
+                                                    ResultItem temp = CurrnetItems.FirstOrDefault(p => p.ItemId == item.ItemId);
+                                                    temp.CraftingPrice = item.CraftingPrice.Value;
+                                                    ItemsToKeep.Add(temp);
                                                 }
                                                 break;
                                             }
                                             else
                                             {
-                                                ResultItem check = ItemsToKeep.FirstOrDefault(p => p.ItemId == item.ItemId);
+                                                ResultItem check =
+                                                    ItemsToKeep.FirstOrDefault(p => p.ItemId == item.ItemId);
                                                 if (check != null)
                                                 {
                                                     check.Quantity += Math.Min(remainingQuantity, listning.quantity);
@@ -302,6 +334,7 @@ namespace gw2_Investment_Tool.Forms
                                                     ResultItem temp =
                                                         CurrnetItems.FirstOrDefault(p => p.ItemId == item.ItemId);
                                                     temp.Quantity = listning.quantity;
+                                                    temp.CraftingPrice = item.CraftingPrice.Value;
                                                     remainingQuantity = remainingQuantity - listning.quantity;
                                                     ItemsToKeep.Add(temp);
                                                 }
@@ -318,17 +351,21 @@ namespace gw2_Investment_Tool.Forms
                                         if (recipeData != null)
                                             foreach (var ingredient in recipeData.ingredients)
                                             {
-                                                if (ResultSet.ContainsKey(ingredient.item_id))
+                                                Item check = ResultSet.FirstOrDefault(p => p.ItemId == ingredient.item_id);
+                                                if (check != null)
                                                 {
-                                                    var oldQuantity = ResultSet[ingredient.item_id];
-                                                    ResultSet[ingredient.item_id] = oldQuantity +
-                                                                                    (ingredient.count * remainingQuantity /
-                                                                                     recipeData.output_item_count);
+                                                    check.Quantity = check.Quantity +
+                                                                     (ingredient.count * remainingQuantity /
+                                                                      recipeData.output_item_count);
                                                 }
                                                 else
                                                 {
-                                                    ResultSet.Add(ingredient.item_id,
-                                                        ingredient.count * remainingQuantity / recipeData.output_item_count);
+                                                    ResultSet.Add(new Item()
+                                                    {
+                                                        ItemId = ingredient.item_id,
+                                                        Quantity =
+                                                            ingredient.count * remainingQuantity / recipeData.output_item_count
+                                                    });
                                                 }
                                             }
                                         break;
@@ -342,54 +379,81 @@ namespace gw2_Investment_Tool.Forms
                                 {
                                     foreach (var ingredient in recipeData.ingredients)
                                     {
-                                        if (ResultSet.ContainsKey(ingredient.item_id))
+                                        Item check = ResultSet.FirstOrDefault(p => p.ItemId == ingredient.item_id);
+                                        if (check != null)
                                         {
-                                            var oldQuantity = ResultSet[ingredient.item_id];
-                                            ResultSet[ingredient.item_id] = oldQuantity +
-                                                                            (ingredient.count * item.Quantity /
-                                                                             recipeData.output_item_count);
+                                            check.Quantity = check.Quantity +
+                                                             (ingredient.count * remainingQuantity /
+                                                              recipeData.output_item_count);
                                         }
                                         else
                                         {
-                                            ResultSet.Add(ingredient.item_id,
-                                                ingredient.count * item.Quantity / recipeData.output_item_count);
+                                            ResultSet.Add(new Item()
+                                            {
+                                                ItemId = ingredient.item_id,
+                                                Quantity =
+                                                    ingredient.count * remainingQuantity / recipeData.output_item_count
+                                            });
                                         }
                                     }
                                 }
                             }
                         }
+                        else
+                        {
+                            Item check = ResultSet.FirstOrDefault(p => p.ItemId == item.ItemId);
+                            if (check != null)
+                            {
+                                check.Quantity += item.Quantity;
+                            }
+                            else
+                            {
+                                ResultSet.Add(new Item() {ItemId = item.ItemId,Quantity = item.Quantity});
+                            }
+                        }
                     }
                 }
             }
+            //foreach (Item result in ResultSet)
+            //{
+            //    Item item = AllItems.FirstOrDefault(p => p.ItemId == result.ItemId);
+            //    if (item!=null)
+            //    {
+            //        result.CraftingPrice = item.CraftingPrice;
+            //    }
+            //}
+
+
         }
 
         public async Task CombineAllData()
         {
-	        List<int> allitemIds = ResultSet.Select(pair => pair.Key).ToList();
+	        List<int> allitemIds = ResultSet.Select(pair => pair.ItemId).ToList();
 	        List<ItemFull> allItemApis = await SAItems.GetAlItemsAsync(allitemIds);
 	        List<ItemPrices> allItemPriceses = await SAItems.GetAllItemPrices(allitemIds);
 			foreach (var result in ResultSet)
             {
                 ResultItem resultItem = new ResultItem();
-				ItemFull item = allItemApis.FirstOrDefault(p => p.id == result.Key);
-	            ItemPrices prices = allItemPriceses.FirstOrDefault(p => p.id == result.Key);
+				ItemFull item = allItemApis.FirstOrDefault(p => p.id == result.ItemId);
+	            ItemPrices prices = allItemPriceses.FirstOrDefault(p => p.id == result.ItemId);
 				if (prices != null)
                 {
-                    resultItem.ItemId = result.Key;
-                    resultItem.Quantity = result.Value;
+                    resultItem.ItemId = result.ItemId;
+                    resultItem.Quantity = result.Quantity;
                     resultItem.Name = item.name;
 					resultItem.PriceEach = prices.buys.unit_price != 0 ? prices.buys.unit_price + 1 : prices.sells.unit_price + 1;
-	                resultItem.Total = resultItem.PriceEach * result.Value;
+	                resultItem.Total = resultItem.PriceEach * result.Quantity;
 	                resultItem.PriceFormated = ParsePrices(prices.buys.unit_price != 0 ? prices.buys.unit_price + 1 : prices.sells.unit_price + 1);
-	                resultItem.PriceTotalFormated = ParsePrices((prices.buys.unit_price != 0 ? prices.buys.unit_price + 1 : prices.sells.unit_price + 1) * result.Value);
+	                resultItem.PriceTotalFormated = ParsePrices((prices.buys.unit_price != 0 ? prices.buys.unit_price + 1 : prices.sells.unit_price + 1) * result.Quantity);
 					resultItem.RecalculateChecked = false;
+                    result.CraftingPrice = result.CraftingPrice ?? 0;
                     ResultItem check = ItemsToKeep.FirstOrDefault(p => p.ItemId == resultItem.ItemId);
                     if (check != null)
                     {
                         check.Quantity = check.Quantity + resultItem.Quantity;
                         check.Total = check.Total + resultItem.Total;
                         check.PriceFormated = ParsePrices(prices.buys.unit_price != 0 ? prices.buys.unit_price + 1 : prices.sells.unit_price + 1);
-						check.PriceTotalFormated = ParsePrices((prices.buys.unit_price != 0 ? prices.buys.unit_price + 1 : prices.sells.unit_price + 1) * result.Value);
+						check.PriceTotalFormated = ParsePrices((prices.buys.unit_price != 0 ? prices.buys.unit_price + 1 : prices.sells.unit_price + 1) * result.Quantity);
 					}
                     else
                     {
@@ -704,5 +768,16 @@ namespace gw2_Investment_Tool.Forms
             dgvResults.Columns.Add(c6);
         }
 
-     }
+        private void btnSelectAll_Click(object sender, EventArgs e)
+        {
+            if (dgvResults.DataSource != null)
+            {
+                foreach (DataGridViewRow row in dgvResults.Rows)
+                {
+                    DataGridViewCheckBoxCell chk = (DataGridViewCheckBoxCell)row.Cells[0];
+                    chk.Value = true;
+                } 
+            }
+        }
+    }
 }

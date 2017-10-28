@@ -16,5 +16,6 @@ namespace gw2_Investment_Tool.Classes
 		public bool Active { get; set; }
 		public string Name { get; set; }
 		public float? TotalKarma { get; set; }
+        public int? CraftingPrice { get; set; }
 	}
 }
