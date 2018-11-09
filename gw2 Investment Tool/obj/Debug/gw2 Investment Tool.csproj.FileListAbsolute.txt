@@ -74,7 +74,6 @@ D:\Projects\test-project\gw2 Investment Tool\bin\Debug\Newtonsoft.Json.dll
 D:\Projects\test-project\gw2 Investment Tool\bin\Debug\System.Net.Http.Formatting.dll
 D:\Projects\test-project\gw2 Investment Tool\bin\Debug\Newtonsoft.Json.xml
 D:\Projects\test-project\gw2 Investment Tool\bin\Debug\System.Net.Http.Formatting.xml
-D:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2 Investment Tool.csprojResolveAssemblyReference.cache
 D:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Forms.AddOrEditForm.resources
 D:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Forms.MainForm.resources
 D:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Forms.ResultForm.resources
@@ -101,3 +100,6 @@ C:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2 Investment Tool.cspro
 C:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2 Investment Tool.exe
 C:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2 Investment Tool.pdb
 C:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2 Investment Tool.csprojResolveAssemblyReference.cache
+D:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2 Investment Tool.csprojAssemblyReference.cache
+D:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2 Investment Tool.csproj.CoreCompileInputs.cache
+D:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2 Investment Tool.csproj.CopyComplete

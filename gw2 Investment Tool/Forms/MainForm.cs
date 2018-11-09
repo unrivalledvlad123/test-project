@@ -15,6 +15,7 @@ using System.Windows.Forms;
 using System.Xml.Linq;
 using gw2_Investment_Tool.Classes;
 using gw2_Investment_Tool.ServiceAccess;
+using Newtonsoft.Json;
 
 
 namespace gw2_Investment_Tool.Forms
@@ -26,18 +27,22 @@ namespace gw2_Investment_Tool.Forms
         public static List<ItemFull> ItemNames = new List<ItemFull>();
         public Dictionary<int, int> ResultSet = new Dictionary<int, int>(); //key - itemId , value - quantity
         public List<int> AllItemIds = new List<int>();
-        public List<int> AllRecipeIds = new List<int>();
         public static List<WhiteListedItem> WhiteListedItems = new List<WhiteListedItem>();
-        List<Recipe> newRecipesFull = new List<Recipe>();
+        public List<Recipe> newRecipesFull = new List<Recipe>();
         public static int TotalGold = 0;
         public static float TotalKarma = 0;
+		
+		public List<Recipe> OldRecipeDataToCompare = new List<Recipe>();
+		public List<Recipe> NewRecipeDataToCompare = new List<Recipe>();
+
 
         public MainForm()
         {
             InitializeComponent();
             SetGridColumns();
             SetGuildIngridientsGridColumns();
-            SetIngridientsGridColumns();
+	        SetAllCompareGridsColumns();
+			SetIngridientsGridColumns();
             SetItemNameGridColumns();
 	        cbLists.DataSource = GetAllList();
 	        LoadDataInitially();
@@ -292,11 +297,58 @@ namespace gw2_Investment_Tool.Forms
             form.ShowDialog();
         }
 
-        #endregion
+	    private void btnFilter_Click(object sender, EventArgs e)
+	    {
+		    if (newRecipesFull.Count == 0)
+		    {
+				return;
+		    }
 
-        #region // < ================ Methodts ================>
+		    if (!string.IsNullOrWhiteSpace(tbFilter.Text))
+		    {
+			    newRecipesFull.PrepareForFilter();
+			    RadioButton checkedButton = groupBox1.Controls
+				    .OfType<RadioButton>().FirstOrDefault(x => x.Checked);
 
-	    public List<string> GetAllList()
+			    if (checkedButton != null)
+			    {
+				    dgvNewItems.DataSource = null;
+				    switch (checkedButton.Name)
+				    {
+					    case "radioName":
+						    dgvNewItems.DataSource = newRecipesFull.Where(p => p.OutputItemName.ToLower().Contains(tbFilter.Text.ToLower())).ToList();
+						    break;
+					    case "radioType":
+						    dgvNewItems.DataSource = newRecipesFull.Where(p => p.type.ToLower().Contains(tbFilter.Text.ToLower())).ToList();
+						    break;
+					    case "radioDisciplines":
+							dgvNewItems.DataSource = newRecipesFull.Where(p => p.DisciplinesString.ToLower().Contains(tbFilter.Text.ToLower())).ToList();
+						    break;
+					    case "radioFlags":
+						    dgvNewItems.DataSource = newRecipesFull.Where(p => p.FlagsString.ToLower().Contains(tbFilter.Text.ToLower())).ToList();
+						    break;
+				    }
+			    }
+			}
+		    else
+		    {
+			    dgvNewItems.DataSource = null;
+			    dgvNewItems.DataSource = newRecipesFull;
+		    }
+		}
+
+	    private void btnExport_Click(object sender, EventArgs e)
+	    {
+		    var data = dgvNewItems.DataSource as List<Recipe>;
+		    var json = JsonConvert.SerializeObject(data);
+		    File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\OldData.txt", json);
+	    }
+
+		#endregion
+
+		#region // < ================ Methodts ================>
+
+		public List<string> GetAllList()
 	    {
 		    try
 		    {
@@ -600,12 +652,8 @@ namespace gw2_Investment_Tool.Forms
         {
             dgvIngredients.DataSource = null;
             dgvGuildIngridients.DataSource = null;
-            int globalMissingItemIndex = 0;
             dgvNewItems.DataSource = null;
-            List<int> recipeItemIds = new List<int>();
-            List<int> recipeGuildItemIds = new List<int>();
-
-
+           
             if (tbOld.Text.Length != 0)
             {
                 List<int> itemIds = await SAItems.GetAllrecipeIdsAsync();
@@ -620,105 +668,128 @@ namespace gw2_Investment_Tool.Forms
                     newItemsIDsIndexes.Add(i);
                 }
                 newRecipesFull = await SAItems.GetRecipeFullAsync(newItemsIDsIndexes);
-
-                foreach (Recipe recipe in newRecipesFull)
-                {
-                    if (recipe.type == "GuildConsumable" || recipe.type == "GuildDecoration" ||
-                        recipe.type == "GuildConsumableWvw")
-                    {
-                        if (recipe.guild_ingredients != null)
-                        {
-                            recipeGuildItemIds.AddRange(
-                                recipe.guild_ingredients.Select(ingredients => ingredients.upgrade_id));
-                        }
-                        recipeGuildItemIds.Add(recipe.output_upgrade_id);
-                        if (recipe.ingredients != null)
-                        {
-                            recipeItemIds.AddRange(recipe.ingredients.Select(ingredients => ingredients.item_id));
-                        }
-                        recipeItemIds.Add(recipe.output_item_id);
-                    }
-                    else
-                    {
-                        recipeItemIds.AddRange(recipe.ingredients.Select(ingredients => ingredients.item_id));
-                        recipeItemIds.Add(recipe.output_item_id);
-                    }
-                }
-                // do mass calls
-                var allGuildItemsDetails = await SAItems.GetAllGuildItemsAsync(recipeGuildItemIds);
-                var allItemsDetails = await SAItems.GetAlItemsAsync(recipeItemIds);
-
-                foreach (var recipe in newRecipesFull)
-                {
-                    if (recipe.type == "GuildConsumable" || recipe.type == "GuildDecoration" ||
-                        recipe.type == "GuildConsumableWvw")
-                    {
-                        if (recipe.guild_ingredients != null)
-                        {
-                            foreach (var ingredients in recipe.guild_ingredients)
-                            {
-                                GuildItemFull ingData = allGuildItemsDetails.First(p => p.id == ingredients.upgrade_id);
-                                ingredients.name = ingData.name;
-                            }
-                        }
-                        if (recipe.ingredients != null)
-                        {
-                            foreach (var ingredients in recipe.ingredients)
-                            {
-                                ItemFull ingData = allItemsDetails.FirstOrDefault(p => p.id == ingredients.item_id);
-                                if (ingData != null) ingredients.name = ingData.name;
-                            }
-                        }
-                        GuildItemFull nameData =
-                            allGuildItemsDetails.FirstOrDefault(p => p.id == recipe.output_upgrade_id);
-                        if (nameData == null)
-                        {
-                            globalMissingItemIndex++;
-                            recipe.OutputItemName = "Missing Name" + globalMissingItemIndex;
-                            recipe.Description = "Missing Description";
-                            recipe.Rarity = "Common";
-                        }
-                        else
-                        {
-                            recipe.OutputItemName = nameData.name;
-                            recipe.Description = nameData.description;
-                            recipe.Rarity = "Common";
-                        }
-                    }
-                    else
-                    {
-                        foreach (var ingredients in recipe.ingredients)
-                        {
-                            ItemFull ingData = allItemsDetails.FirstOrDefault(p => p.id == ingredients.item_id);
-                            if (ingData != null)
-                            {
-                                ingredients.name = ingData.name;
-                            }
-                        }
-                        ItemFull nameData = allItemsDetails.FirstOrDefault(p => p.id == recipe.output_item_id);
-                        if (nameData != null)
-                        {
-                            recipe.OutputItemName = nameData.name;
-                            if (nameData.details != null)
-                            {
-                                recipe.Description = nameData.details.description ?? nameData.description;
-                            }
-                            else
-                            {
-                                recipe.Description = nameData.description;
-                            }
-                            recipe.Rarity = nameData.rarity;
-                            recipe.type = nameData.type;
-                            recipe.flags = nameData.flags;
-                        }
-                    }
-                }
-                dgvNewItems.DataSource = null;
+	            newRecipesFull = await CombineFullRecipeData(newRecipesFull);
+				dgvNewItems.DataSource = null;
                 dgvNewItems.DataSource = newRecipesFull;
             }
         }
 
-        private void dgvNewItems_CellSelected(object sender, EventArgs e)
+
+
+		private async Task<List<Recipe>> CombineFullRecipeData(List<Recipe> input)
+		{
+			List<int> recipeItemIds = new List<int>();
+			List<int> recipeGuildItemIds = new List<int>();
+			int globalMissingItemIndex = 0;
+
+			foreach (Recipe recipe in input)
+			{
+				if (recipe.type == "GuildConsumable" || recipe.type == "GuildDecoration" ||
+					recipe.type == "GuildConsumableWvw")
+				{
+					if (recipe.guild_ingredients != null)
+					{
+						recipeGuildItemIds.AddRange(
+							recipe.guild_ingredients.Select(ingredients => ingredients.upgrade_id));
+					}
+
+					recipeGuildItemIds.Add(recipe.output_upgrade_id);
+					if (recipe.ingredients != null)
+					{
+						recipeItemIds.AddRange(recipe.ingredients.Select(ingredients => ingredients.item_id));
+					}
+
+					recipeItemIds.Add(recipe.output_item_id);
+				}
+				else
+				{
+					recipeItemIds.AddRange(recipe.ingredients.Select(ingredients => ingredients.item_id));
+					recipeItemIds.Add(recipe.output_item_id);
+				}
+			}
+
+			//remove dublicate Ids to reduce apiCalls
+			var noDupesGuildItems = recipeGuildItemIds.Distinct().ToList();
+			var noDupesItems = recipeItemIds.Distinct().ToList();
+
+			// do mass calls
+			var allGuildItemsDetails = await SAItems.GetAllGuildItemsAsync(noDupesGuildItems);
+			var allItemsDetails = await SAItems.GetAlItemsAsync(noDupesItems);
+
+			foreach (var recipe in input)
+			{
+				if (recipe.type == "GuildConsumable" || recipe.type == "GuildDecoration" ||
+					recipe.type == "GuildConsumableWvw")
+				{
+					if (recipe.guild_ingredients != null)
+					{
+						foreach (var ingredients in recipe.guild_ingredients)
+						{
+							GuildItemFull ingData = allGuildItemsDetails.First(p => p.id == ingredients.upgrade_id);
+							ingredients.name = ingData.name;
+						}
+					}
+
+					if (recipe.ingredients != null)
+					{
+						foreach (var ingredients in recipe.ingredients)
+						{
+							ItemFull ingData = allItemsDetails.FirstOrDefault(p => p.id == ingredients.item_id);
+							if (ingData != null) ingredients.name = ingData.name;
+						}
+					}
+
+					GuildItemFull nameData =
+						allGuildItemsDetails.FirstOrDefault(p => p.id == recipe.output_upgrade_id);
+					if (nameData == null)
+					{
+						globalMissingItemIndex++;
+						recipe.OutputItemName = "Missing Name" + globalMissingItemIndex;
+						recipe.Description = "Missing Description";
+						recipe.Rarity = "Common";
+					}
+					else
+					{
+						recipe.OutputItemName = nameData.name;
+						recipe.Description = nameData.description;
+						recipe.Rarity = "Common";
+					}
+				}
+				else
+				{
+					foreach (var ingredients in recipe.ingredients)
+					{
+						ItemFull ingData = allItemsDetails.FirstOrDefault(p => p.id == ingredients.item_id);
+						if (ingData != null)
+						{
+							ingredients.name = ingData.name;
+						}
+					}
+
+					ItemFull nameData = allItemsDetails.FirstOrDefault(p => p.id == recipe.output_item_id);
+					if (nameData != null)
+					{
+						recipe.OutputItemName = nameData.name;
+						if (nameData.details != null)
+						{
+							recipe.Description = nameData.details.description ?? nameData.description;
+						}
+						else
+						{
+							recipe.Description = nameData.description;
+						}
+
+						recipe.Rarity = nameData.rarity;
+						recipe.type = nameData.type;
+						recipe.flags = nameData.flags;
+					}
+				}
+			}
+
+			return input;
+		}
+
+		private void dgvNewItems_CellSelected(object sender, EventArgs e)
         {
             if (dgvNewItems.SelectedCells[0].Value != null)
             {
@@ -770,7 +841,7 @@ namespace gw2_Investment_Tool.Forms
             dgvNewItems.AutoGenerateColumns = false;
             dgvNewItems.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
             dgvNewItems.RowHeadersVisible = false;
-
+			
             DataGridViewTextBoxColumn c1 = new DataGridViewTextBoxColumn();
             c1.Name = "OutputItemName";
             c1.HeaderText = @"Item Name";
@@ -850,9 +921,204 @@ namespace gw2_Investment_Tool.Forms
             dgvGuildIngridients.Columns.Add(c3);
 
         }
+	    private void SetAllCompareGridsColumns()
+	    {
+			//all grid
+		    dgvRecipeCompareAll.DataSource = null;
+		    dgvRecipeCompareAll.Columns.Clear();
+		    dgvRecipeCompareAll.AutoGenerateColumns = false;
+		    dgvRecipeCompareAll.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+		    dgvRecipeCompareAll.RowHeadersVisible = false;
+		    dgvRecipeCompareAll.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 
-        #endregion
 
+			DataGridViewTextBoxColumn c11 = new DataGridViewTextBoxColumn();
+		    c11.Name = "OutputItemName";
+		    c11.HeaderText = @"Item Name";
+		    c11.DataPropertyName = "OutputItemName";
+		    c11.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+		    dgvRecipeCompareAll.Columns.Add(c11);
+
+		    DataGridViewTextBoxColumn c21 = new DataGridViewTextBoxColumn();
+		    c21.Name = "id";
+		    c21.HeaderText = @"Item ID";
+		    c21.DataPropertyName = "id";
+		    c21.Visible = false;
+		    dgvRecipeCompareAll.Columns.Add(c21);
+
+
+			// both regular ingredients grids
+		    dgvCompareRecipesNewIngredients.DataSource = null;
+		    dgvCompareRecipesNewIngredients.Columns.Clear();
+		    dgvCompareRecipesNewIngredients.AutoGenerateColumns = false;
+		    dgvCompareRecipesNewIngredients.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+		    dgvCompareRecipesNewIngredients.RowHeadersVisible = false;
+
+		    dgvRecipeCompareOldIngredients.DataSource = null;
+		    dgvRecipeCompareOldIngredients.Columns.Clear();
+		    dgvRecipeCompareOldIngredients.AutoGenerateColumns = false;
+		    dgvRecipeCompareOldIngredients.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+		    dgvRecipeCompareOldIngredients.RowHeadersVisible = false;
+
+		    DataGridViewTextBoxColumn c1 = new DataGridViewTextBoxColumn();
+		    c1.Name = "name";
+		    c1.HeaderText = @"Item Name";
+		    c1.DataPropertyName = "name";
+		    c1.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+		    dgvCompareRecipesNewIngredients.Columns.Add(c1);
+		   
+
+		    DataGridViewTextBoxColumn c2 = new DataGridViewTextBoxColumn();
+		    c2.Name = "count";
+		    c2.HeaderText = @"Quantity";
+		    c2.DataPropertyName = "count";
+		    c2.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+		    c2.Width = 100;
+		    dgvCompareRecipesNewIngredients.Columns.Add(c2);
+		   
+
+		    DataGridViewTextBoxColumn c3 = new DataGridViewTextBoxColumn();
+		    c3.Name = "item_id";
+		    c3.HeaderText = @"Item ID";
+		    c3.DataPropertyName = "item_id";
+		    c3.Visible = false;
+		    dgvCompareRecipesNewIngredients.Columns.Add(c3);
+
+		    DataGridViewTextBoxColumn c12 = new DataGridViewTextBoxColumn();
+		    c12.Name = "name";
+		    c12.HeaderText = @"Item Name";
+		    c12.DataPropertyName = "name";
+		    c12.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+		    dgvRecipeCompareOldIngredients.Columns.Add(c12);
+
+
+		    DataGridViewTextBoxColumn c22 = new DataGridViewTextBoxColumn();
+		    c22.Name = "count";
+		    c22.HeaderText = @"Quantity";
+		    c22.DataPropertyName = "count";
+		    c22.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+		    c22.Width = 100;
+		    dgvRecipeCompareOldIngredients.Columns.Add(c22);
+
+
+		    DataGridViewTextBoxColumn c32 = new DataGridViewTextBoxColumn();
+		    c32.Name = "item_id";
+		    c32.HeaderText = @"Item ID";
+		    c32.DataPropertyName = "item_id";
+		    c32.Visible = false;
+		    dgvRecipeCompareOldIngredients.Columns.Add(c32);
+
+			//both guild ingredients grids
+		    dgvCompareRecipesNewGuildIngredients.DataSource = null;
+		    dgvCompareRecipesNewGuildIngredients.Columns.Clear();
+		    dgvCompareRecipesNewGuildIngredients.AutoGenerateColumns = false;
+		    dgvCompareRecipesNewGuildIngredients.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+		    dgvCompareRecipesNewGuildIngredients.RowHeadersVisible = false;
+
+		    dgvRecipeCompareOldGuildIngredients.DataSource = null;
+		    dgvRecipeCompareOldGuildIngredients.Columns.Clear();
+		    dgvRecipeCompareOldGuildIngredients.AutoGenerateColumns = false;
+		    dgvRecipeCompareOldGuildIngredients.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+		    dgvRecipeCompareOldGuildIngredients.RowHeadersVisible = false;
+
+		    DataGridViewTextBoxColumn c13 = new DataGridViewTextBoxColumn();
+		    c13.Name = "name";
+		    c13.HeaderText = "Item Name";
+		    c13.DataPropertyName = "name";
+		    c13.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+		    dgvCompareRecipesNewGuildIngredients.Columns.Add(c13);
+
+		    DataGridViewTextBoxColumn c23 = new DataGridViewTextBoxColumn();
+		    c23.Name = "count";
+		    c23.HeaderText = "Quantity";
+		    c23.DataPropertyName = "count";
+		    c23.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+		    c23.Width = 100;
+		    dgvCompareRecipesNewGuildIngredients.Columns.Add(c23);
+
+		    DataGridViewTextBoxColumn c33 = new DataGridViewTextBoxColumn();
+		    c33.Name = "upgrade_id";
+		    c33.HeaderText = "Item ID";
+		    c33.DataPropertyName = "upgrade_id";
+		    c33.Visible = false;
+		    dgvCompareRecipesNewGuildIngredients.Columns.Add(c33);
+
+			
+		    DataGridViewTextBoxColumn c41 = new DataGridViewTextBoxColumn();
+		    c41.Name = "name";
+		    c41.HeaderText = "Item Name";
+		    c41.DataPropertyName = "name";
+		    c41.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+		    dgvRecipeCompareOldGuildIngredients.Columns.Add(c41);
+
+		    DataGridViewTextBoxColumn c42 = new DataGridViewTextBoxColumn();
+		    c42.Name = "count";
+		    c42.HeaderText = "Quantity";
+		    c42.DataPropertyName = "count";
+		    c42.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+		    c42.Width = 100;
+		    dgvRecipeCompareOldGuildIngredients.Columns.Add(c42);
+
+		    DataGridViewTextBoxColumn c43 = new DataGridViewTextBoxColumn();
+		    c43.Name = "upgrade_id";
+		    c43.HeaderText = "Item ID";
+		    c43.DataPropertyName = "upgrade_id";
+		    c43.Visible = false;
+		    dgvRecipeCompareOldGuildIngredients.Columns.Add(c43);
+
+		}
+
+
+		#endregion
+
+		private async void btnLoadOldData_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog dialog = new OpenFileDialog();
+			if (dialog.ShowDialog() == DialogResult.OK)
+			{
+				string json = File.ReadAllText(dialog.FileName);
+				OldRecipeDataToCompare = JsonConvert.DeserializeObject<List<Recipe>>(json);
+
+				List<int> ids = OldRecipeDataToCompare.Select(p => p.id).ToList();
+				NewRecipeDataToCompare = await CombineFullRecipeData(await SAItems.GetRecipeFullAsync(ids));
+				
+				// display the data
+				dgvRecipeCompareAll.DataSource = OldRecipeDataToCompare;
+				
+			}
+			
+		}
+
+	    private void dgvRecipeCompareAll_SelectionChanged(object sender, EventArgs e)
+	    {
+		    if (dgvRecipeCompareAll.DataSource == null)
+		    {
+				return;
+		    }
+
+		    if (dgvRecipeCompareAll.SelectedRows.Count != 0)
+		    {
+				
+			    Recipe selectedItem = (Recipe) dgvRecipeCompareAll.SelectedRows[0].DataBoundItem;
+			    dgvCompareRecipesNewGuildIngredients.DataSource = null;
+			    dgvCompareRecipesNewIngredients.DataSource = null;
+			    dgvRecipeCompareOldGuildIngredients.DataSource = null;
+			    dgvRecipeCompareOldIngredients.DataSource = null;
+			    if (selectedItem != null)
+			    {
+				    dgvRecipeCompareOldIngredients.DataSource = selectedItem.ingredients;
+				    dgvRecipeCompareOldGuildIngredients.DataSource = selectedItem.guild_ingredients;
+				    // get the new recipe
+				    var newRecipe = NewRecipeDataToCompare.FirstOrDefault(p => p.id == selectedItem.id);
+				    if (newRecipe != null)
+				    {
+					    dgvCompareRecipesNewGuildIngredients.DataSource = newRecipe.guild_ingredients;
+					    dgvCompareRecipesNewIngredients.DataSource = newRecipe.ingredients;
+				    }
+			    }
+		    }
+
+	    }
     }
 }
 

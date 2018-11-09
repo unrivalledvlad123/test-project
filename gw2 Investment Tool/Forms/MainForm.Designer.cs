@@ -49,6 +49,15 @@ namespace gw2_Investment_Tool.Forms
 			this.btnLoadData = new System.Windows.Forms.Button();
 			this.dgvItemsToCalculate = new System.Windows.Forms.DataGridView();
 			this.NewItems = new System.Windows.Forms.TabPage();
+			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.btnExport = new System.Windows.Forms.Button();
+			this.btnFilter = new System.Windows.Forms.Button();
+			this.tbFilter = new System.Windows.Forms.TextBox();
+			this.radioFlags = new System.Windows.Forms.RadioButton();
+			this.radioDisciplines = new System.Windows.Forms.RadioButton();
+			this.radioType = new System.Windows.Forms.RadioButton();
+			this.radioName = new System.Windows.Forms.RadioButton();
+			this.label14 = new System.Windows.Forms.Label();
 			this.dgvGuildIngridients = new System.Windows.Forms.DataGridView();
 			this.gbItem = new System.Windows.Forms.GroupBox();
 			this.labelRecipeIdValue = new System.Windows.Forms.Label();
@@ -80,6 +89,15 @@ namespace gw2_Investment_Tool.Forms
 			this.label2 = new System.Windows.Forms.Label();
 			this.label1 = new System.Windows.Forms.Label();
 			this.TBD = new System.Windows.Forms.TabPage();
+			this.dgvRecipeCompareOldGuildIngredients = new System.Windows.Forms.DataGridView();
+			this.dgvCompareRecipesNewGuildIngredients = new System.Windows.Forms.DataGridView();
+			this.label17 = new System.Windows.Forms.Label();
+			this.label16 = new System.Windows.Forms.Label();
+			this.dgvRecipeCompareOldIngredients = new System.Windows.Forms.DataGridView();
+			this.dgvCompareRecipesNewIngredients = new System.Windows.Forms.DataGridView();
+			this.dgvRecipeCompareAll = new System.Windows.Forms.DataGridView();
+			this.label15 = new System.Windows.Forms.Label();
+			this.btnLoadOldData = new System.Windows.Forms.Button();
 			this.itemName = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.itemId = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.itemQuantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -92,10 +110,17 @@ namespace gw2_Investment_Tool.Forms
 			this.Crafting.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dgvItemsToCalculate)).BeginInit();
 			this.NewItems.SuspendLayout();
+			this.groupBox1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dgvGuildIngridients)).BeginInit();
 			this.gbItem.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dgvIngredients)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dgvNewItems)).BeginInit();
+			this.TBD.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.dgvRecipeCompareOldGuildIngredients)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.dgvCompareRecipesNewGuildIngredients)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.dgvRecipeCompareOldIngredients)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.dgvCompareRecipesNewIngredients)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.dgvRecipeCompareAll)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// tabControl1
@@ -271,12 +296,15 @@ namespace gw2_Investment_Tool.Forms
 			this.dgvItemsToCalculate.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dgvItemsToCalculate.Location = new System.Drawing.Point(0, 215);
 			this.dgvItemsToCalculate.Name = "dgvItemsToCalculate";
+			this.dgvItemsToCalculate.ReadOnly = true;
 			this.dgvItemsToCalculate.Size = new System.Drawing.Size(737, 443);
 			this.dgvItemsToCalculate.TabIndex = 1;
 			this.dgvItemsToCalculate.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvItemsToCalculate_OnCellValueChanged);
 			// 
 			// NewItems
 			// 
+			this.NewItems.Controls.Add(this.groupBox1);
+			this.NewItems.Controls.Add(this.label14);
 			this.NewItems.Controls.Add(this.dgvGuildIngridients);
 			this.NewItems.Controls.Add(this.gbItem);
 			this.NewItems.Controls.Add(this.dgvIngredients);
@@ -295,11 +323,108 @@ namespace gw2_Investment_Tool.Forms
 			this.NewItems.Text = "New Items";
 			this.NewItems.UseVisualStyleBackColor = true;
 			// 
+			// groupBox1
+			// 
+			this.groupBox1.Controls.Add(this.btnExport);
+			this.groupBox1.Controls.Add(this.btnFilter);
+			this.groupBox1.Controls.Add(this.tbFilter);
+			this.groupBox1.Controls.Add(this.radioFlags);
+			this.groupBox1.Controls.Add(this.radioDisciplines);
+			this.groupBox1.Controls.Add(this.radioType);
+			this.groupBox1.Controls.Add(this.radioName);
+			this.groupBox1.Location = new System.Drawing.Point(10, 120);
+			this.groupBox1.Name = "groupBox1";
+			this.groupBox1.Size = new System.Drawing.Size(720, 62);
+			this.groupBox1.TabIndex = 12;
+			this.groupBox1.TabStop = false;
+			this.groupBox1.Text = "Filters";
+			// 
+			// btnExport
+			// 
+			this.btnExport.Location = new System.Drawing.Point(639, 14);
+			this.btnExport.Name = "btnExport";
+			this.btnExport.Size = new System.Drawing.Size(75, 23);
+			this.btnExport.TabIndex = 6;
+			this.btnExport.Text = "Export";
+			this.btnExport.UseVisualStyleBackColor = true;
+			this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
+			// 
+			// btnFilter
+			// 
+			this.btnFilter.Location = new System.Drawing.Point(401, 15);
+			this.btnFilter.Name = "btnFilter";
+			this.btnFilter.Size = new System.Drawing.Size(75, 23);
+			this.btnFilter.TabIndex = 5;
+			this.btnFilter.Text = "Filter";
+			this.btnFilter.UseVisualStyleBackColor = true;
+			this.btnFilter.Click += new System.EventHandler(this.btnFilter_Click);
+			// 
+			// tbFilter
+			// 
+			this.tbFilter.Location = new System.Drawing.Point(9, 17);
+			this.tbFilter.Name = "tbFilter";
+			this.tbFilter.Size = new System.Drawing.Size(383, 20);
+			this.tbFilter.TabIndex = 4;
+			// 
+			// radioFlags
+			// 
+			this.radioFlags.AutoSize = true;
+			this.radioFlags.Location = new System.Drawing.Point(202, 38);
+			this.radioFlags.Name = "radioFlags";
+			this.radioFlags.Size = new System.Drawing.Size(50, 17);
+			this.radioFlags.TabIndex = 3;
+			this.radioFlags.TabStop = true;
+			this.radioFlags.Text = "Flags";
+			this.radioFlags.UseVisualStyleBackColor = true;
+			// 
+			// radioDisciplines
+			// 
+			this.radioDisciplines.AutoSize = true;
+			this.radioDisciplines.Location = new System.Drawing.Point(125, 38);
+			this.radioDisciplines.Name = "radioDisciplines";
+			this.radioDisciplines.Size = new System.Drawing.Size(70, 17);
+			this.radioDisciplines.TabIndex = 2;
+			this.radioDisciplines.TabStop = true;
+			this.radioDisciplines.Text = "Discipline";
+			this.radioDisciplines.UseVisualStyleBackColor = true;
+			// 
+			// radioType
+			// 
+			this.radioType.AutoSize = true;
+			this.radioType.Location = new System.Drawing.Point(69, 38);
+			this.radioType.Name = "radioType";
+			this.radioType.Size = new System.Drawing.Size(49, 17);
+			this.radioType.TabIndex = 1;
+			this.radioType.TabStop = true;
+			this.radioType.Text = "Type";
+			this.radioType.UseVisualStyleBackColor = true;
+			// 
+			// radioName
+			// 
+			this.radioName.AutoSize = true;
+			this.radioName.Location = new System.Drawing.Point(10, 38);
+			this.radioName.Name = "radioName";
+			this.radioName.Size = new System.Drawing.Size(53, 17);
+			this.radioName.TabIndex = 0;
+			this.radioName.TabStop = true;
+			this.radioName.Text = "Name";
+			this.radioName.UseVisualStyleBackColor = true;
+			// 
+			// label14
+			// 
+			this.label14.AutoSize = true;
+			this.label14.Location = new System.Drawing.Point(408, 330);
+			this.label14.Name = "label14";
+			this.label14.Size = new System.Drawing.Size(85, 13);
+			this.label14.TabIndex = 10;
+			this.label14.Text = "Guild ingredients";
+			// 
 			// dgvGuildIngridients
 			// 
 			this.dgvGuildIngridients.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dgvGuildIngridients.Location = new System.Drawing.Point(408, 262);
+			this.dgvGuildIngridients.Location = new System.Drawing.Point(408, 346);
 			this.dgvGuildIngridients.Name = "dgvGuildIngridients";
+			this.dgvGuildIngridients.ReadOnly = true;
 			this.dgvGuildIngridients.Size = new System.Drawing.Size(322, 140);
 			this.dgvGuildIngridients.TabIndex = 9;
 			// 
@@ -325,9 +450,9 @@ namespace gw2_Investment_Tool.Forms
 			this.gbItem.Controls.Add(this.label6);
 			this.gbItem.Controls.Add(this.labelName);
 			this.gbItem.Controls.Add(this.label4);
-			this.gbItem.Location = new System.Drawing.Point(10, 441);
+			this.gbItem.Location = new System.Drawing.Point(6, 492);
 			this.gbItem.Name = "gbItem";
-			this.gbItem.Size = new System.Drawing.Size(721, 211);
+			this.gbItem.Size = new System.Drawing.Size(721, 160);
 			this.gbItem.TabIndex = 8;
 			this.gbItem.TabStop = false;
 			this.gbItem.Text = "Item Details";
@@ -335,7 +460,7 @@ namespace gw2_Investment_Tool.Forms
 			// labelRecipeIdValue
 			// 
 			this.labelRecipeIdValue.AutoSize = true;
-			this.labelRecipeIdValue.Location = new System.Drawing.Point(460, 107);
+			this.labelRecipeIdValue.Location = new System.Drawing.Point(460, 79);
 			this.labelRecipeIdValue.Name = "labelRecipeIdValue";
 			this.labelRecipeIdValue.Size = new System.Drawing.Size(27, 13);
 			this.labelRecipeIdValue.TabIndex = 19;
@@ -344,7 +469,7 @@ namespace gw2_Investment_Tool.Forms
 			// label13
 			// 
 			this.label13.AutoSize = true;
-			this.label13.Location = new System.Drawing.Point(395, 107);
+			this.label13.Location = new System.Drawing.Point(395, 79);
 			this.label13.Name = "label13";
 			this.label13.Size = new System.Drawing.Size(55, 13);
 			this.label13.TabIndex = 18;
@@ -353,7 +478,7 @@ namespace gw2_Investment_Tool.Forms
 			// labelItemIdValue
 			// 
 			this.labelItemIdValue.AutoSize = true;
-			this.labelItemIdValue.Location = new System.Drawing.Point(460, 181);
+			this.labelItemIdValue.Location = new System.Drawing.Point(460, 133);
 			this.labelItemIdValue.Name = "labelItemIdValue";
 			this.labelItemIdValue.Size = new System.Drawing.Size(27, 13);
 			this.labelItemIdValue.TabIndex = 17;
@@ -362,7 +487,7 @@ namespace gw2_Investment_Tool.Forms
 			// label12
 			// 
 			this.label12.AutoSize = true;
-			this.label12.Location = new System.Drawing.Point(395, 181);
+			this.label12.Location = new System.Drawing.Point(395, 133);
 			this.label12.Name = "label12";
 			this.label12.Size = new System.Drawing.Size(41, 13);
 			this.label12.TabIndex = 16;
@@ -390,7 +515,7 @@ namespace gw2_Investment_Tool.Forms
 			// labelRarityValue
 			// 
 			this.labelRarityValue.AutoSize = true;
-			this.labelRarityValue.Location = new System.Drawing.Point(86, 181);
+			this.labelRarityValue.Location = new System.Drawing.Point(460, 50);
 			this.labelRarityValue.Name = "labelRarityValue";
 			this.labelRarityValue.Size = new System.Drawing.Size(27, 13);
 			this.labelRarityValue.TabIndex = 13;
@@ -399,7 +524,7 @@ namespace gw2_Investment_Tool.Forms
 			// label5
 			// 
 			this.label5.AutoSize = true;
-			this.label5.Location = new System.Drawing.Point(7, 181);
+			this.label5.Location = new System.Drawing.Point(395, 50);
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(37, 13);
 			this.label5.TabIndex = 12;
@@ -408,7 +533,7 @@ namespace gw2_Investment_Tool.Forms
 			// labelFlags
 			// 
 			this.labelFlags.AutoSize = true;
-			this.labelFlags.Location = new System.Drawing.Point(86, 157);
+			this.labelFlags.Location = new System.Drawing.Point(460, 107);
 			this.labelFlags.Name = "labelFlags";
 			this.labelFlags.Size = new System.Drawing.Size(27, 13);
 			this.labelFlags.TabIndex = 11;
@@ -453,7 +578,7 @@ namespace gw2_Investment_Tool.Forms
 			// label10
 			// 
 			this.label10.AutoSize = true;
-			this.label10.Location = new System.Drawing.Point(7, 157);
+			this.label10.Location = new System.Drawing.Point(395, 107);
 			this.label10.Name = "label10";
 			this.label10.Size = new System.Drawing.Size(35, 13);
 			this.label10.TabIndex = 6;
@@ -516,17 +641,19 @@ namespace gw2_Investment_Tool.Forms
 			// dgvIngredients
 			// 
 			this.dgvIngredients.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dgvIngredients.Location = new System.Drawing.Point(408, 117);
+			this.dgvIngredients.Location = new System.Drawing.Point(407, 188);
 			this.dgvIngredients.Name = "dgvIngredients";
+			this.dgvIngredients.ReadOnly = true;
 			this.dgvIngredients.Size = new System.Drawing.Size(323, 139);
 			this.dgvIngredients.TabIndex = 7;
 			// 
 			// dgvNewItems
 			// 
 			this.dgvNewItems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dgvNewItems.Location = new System.Drawing.Point(10, 117);
+			this.dgvNewItems.Location = new System.Drawing.Point(10, 188);
 			this.dgvNewItems.Name = "dgvNewItems";
-			this.dgvNewItems.Size = new System.Drawing.Size(392, 285);
+			this.dgvNewItems.ReadOnly = true;
+			this.dgvNewItems.Size = new System.Drawing.Size(392, 298);
 			this.dgvNewItems.TabIndex = 6;
 			this.dgvNewItems.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvNewItems_CellSelected);
 			// 
@@ -586,6 +713,15 @@ namespace gw2_Investment_Tool.Forms
 			// 
 			// TBD
 			// 
+			this.TBD.Controls.Add(this.dgvRecipeCompareOldGuildIngredients);
+			this.TBD.Controls.Add(this.dgvCompareRecipesNewGuildIngredients);
+			this.TBD.Controls.Add(this.label17);
+			this.TBD.Controls.Add(this.label16);
+			this.TBD.Controls.Add(this.dgvRecipeCompareOldIngredients);
+			this.TBD.Controls.Add(this.dgvCompareRecipesNewIngredients);
+			this.TBD.Controls.Add(this.dgvRecipeCompareAll);
+			this.TBD.Controls.Add(this.label15);
+			this.TBD.Controls.Add(this.btnLoadOldData);
 			this.TBD.Location = new System.Drawing.Point(4, 22);
 			this.TBD.Name = "TBD";
 			this.TBD.Padding = new System.Windows.Forms.Padding(3);
@@ -593,6 +729,90 @@ namespace gw2_Investment_Tool.Forms
 			this.TBD.TabIndex = 2;
 			this.TBD.Text = "TBD";
 			this.TBD.UseVisualStyleBackColor = true;
+			// 
+			// dgvRecipeCompareOldGuildIngredients
+			// 
+			this.dgvRecipeCompareOldGuildIngredients.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dgvRecipeCompareOldGuildIngredients.Location = new System.Drawing.Point(380, 496);
+			this.dgvRecipeCompareOldGuildIngredients.Name = "dgvRecipeCompareOldGuildIngredients";
+			this.dgvRecipeCompareOldGuildIngredients.ReadOnly = true;
+			this.dgvRecipeCompareOldGuildIngredients.Size = new System.Drawing.Size(351, 150);
+			this.dgvRecipeCompareOldGuildIngredients.TabIndex = 8;
+			// 
+			// dgvCompareRecipesNewGuildIngredients
+			// 
+			this.dgvCompareRecipesNewGuildIngredients.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dgvCompareRecipesNewGuildIngredients.Location = new System.Drawing.Point(6, 496);
+			this.dgvCompareRecipesNewGuildIngredients.Name = "dgvCompareRecipesNewGuildIngredients";
+			this.dgvCompareRecipesNewGuildIngredients.ReadOnly = true;
+			this.dgvCompareRecipesNewGuildIngredients.Size = new System.Drawing.Size(351, 150);
+			this.dgvCompareRecipesNewGuildIngredients.TabIndex = 7;
+			// 
+			// label17
+			// 
+			this.label17.AutoSize = true;
+			this.label17.Location = new System.Drawing.Point(378, 321);
+			this.label17.Name = "label17";
+			this.label17.Size = new System.Drawing.Size(109, 13);
+			this.label17.TabIndex = 6;
+			this.label17.Text = "Old recipe ingredients";
+			// 
+			// label16
+			// 
+			this.label16.AutoSize = true;
+			this.label16.Location = new System.Drawing.Point(3, 321);
+			this.label16.Name = "label16";
+			this.label16.Size = new System.Drawing.Size(115, 13);
+			this.label16.TabIndex = 5;
+			this.label16.Text = "New recipe ingredients";
+			// 
+			// dgvRecipeCompareOldIngredients
+			// 
+			this.dgvRecipeCompareOldIngredients.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dgvRecipeCompareOldIngredients.Location = new System.Drawing.Point(381, 340);
+			this.dgvRecipeCompareOldIngredients.Name = "dgvRecipeCompareOldIngredients";
+			this.dgvRecipeCompareOldIngredients.ReadOnly = true;
+			this.dgvRecipeCompareOldIngredients.Size = new System.Drawing.Size(350, 150);
+			this.dgvRecipeCompareOldIngredients.TabIndex = 4;
+			// 
+			// dgvCompareRecipesNewIngredients
+			// 
+			this.dgvCompareRecipesNewIngredients.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dgvCompareRecipesNewIngredients.Location = new System.Drawing.Point(6, 340);
+			this.dgvCompareRecipesNewIngredients.Name = "dgvCompareRecipesNewIngredients";
+			this.dgvCompareRecipesNewIngredients.ReadOnly = true;
+			this.dgvCompareRecipesNewIngredients.Size = new System.Drawing.Size(351, 150);
+			this.dgvCompareRecipesNewIngredients.TabIndex = 3;
+			// 
+			// dgvRecipeCompareAll
+			// 
+			this.dgvRecipeCompareAll.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dgvRecipeCompareAll.Location = new System.Drawing.Point(6, 75);
+			this.dgvRecipeCompareAll.Name = "dgvRecipeCompareAll";
+			this.dgvRecipeCompareAll.ReadOnly = true;
+			this.dgvRecipeCompareAll.Size = new System.Drawing.Size(725, 241);
+			this.dgvRecipeCompareAll.TabIndex = 2;
+			this.dgvRecipeCompareAll.SelectionChanged += new System.EventHandler(this.dgvRecipeCompareAll_SelectionChanged);
+			// 
+			// label15
+			// 
+			this.label15.Location = new System.Drawing.Point(7, 7);
+			this.label15.Name = "label15";
+			this.label15.Size = new System.Drawing.Size(724, 36);
+			this.label15.TabIndex = 1;
+			this.label15.Text = "Instructions: load the old data json with the button. This tool will show you the" +
+    " difference between the data you loaded and the current crafting recipe for the " +
+    "item";
+			// 
+			// btnLoadOldData
+			// 
+			this.btnLoadOldData.Location = new System.Drawing.Point(6, 46);
+			this.btnLoadOldData.Name = "btnLoadOldData";
+			this.btnLoadOldData.Size = new System.Drawing.Size(75, 23);
+			this.btnLoadOldData.TabIndex = 0;
+			this.btnLoadOldData.Text = "LoadOldData";
+			this.btnLoadOldData.UseVisualStyleBackColor = true;
+			this.btnLoadOldData.Click += new System.EventHandler(this.btnLoadOldData_Click);
 			// 
 			// itemName
 			// 
@@ -653,11 +873,20 @@ namespace gw2_Investment_Tool.Forms
 			((System.ComponentModel.ISupportInitialize)(this.dgvItemsToCalculate)).EndInit();
 			this.NewItems.ResumeLayout(false);
 			this.NewItems.PerformLayout();
+			this.groupBox1.ResumeLayout(false);
+			this.groupBox1.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dgvGuildIngridients)).EndInit();
 			this.gbItem.ResumeLayout(false);
 			this.gbItem.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dgvIngredients)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.dgvNewItems)).EndInit();
+			this.TBD.ResumeLayout(false);
+			this.TBD.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.dgvRecipeCompareOldGuildIngredients)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.dgvCompareRecipesNewGuildIngredients)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.dgvRecipeCompareOldIngredients)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.dgvCompareRecipesNewIngredients)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.dgvRecipeCompareAll)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -726,5 +955,23 @@ namespace gw2_Investment_Tool.Forms
         private Label labelRecipeIdValue;
         private Label label13;
 		private ComboBox cbLists;
+		private GroupBox groupBox1;
+		private TextBox tbFilter;
+		private RadioButton radioFlags;
+		private RadioButton radioDisciplines;
+		private RadioButton radioType;
+		private RadioButton radioName;
+		private Label label14;
+		private Button btnFilter;
+		private Button btnExport;
+		private Button btnLoadOldData;
+		protected internal Label label15;
+		private DataGridView dgvRecipeCompareAll;
+		private Label label17;
+		private Label label16;
+		private DataGridView dgvRecipeCompareOldIngredients;
+		private DataGridView dgvCompareRecipesNewIngredients;
+		private DataGridView dgvRecipeCompareOldGuildIngredients;
+		private DataGridView dgvCompareRecipesNewGuildIngredients;
 	}
 }

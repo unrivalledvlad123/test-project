@@ -66,19 +66,20 @@ namespace gw2_Investment_Tool.ServiceAccess
 
 	    public static async Task<List<ItemPrices>> GetAllItemPrices(List<int> itemIds)
 	    {
+		    List<int> newCollection = itemIds.Distinct().ToList();
 			using (HttpClient client = new HttpClient())
 			{
 				List<ItemPrices> results = new List<ItemPrices>();
 				client.BaseAddress = new Uri("https://api.guildwars2.com");
 				int counter = 0;
-				while (counter <= itemIds.Count)
+				while (counter <= newCollection.Count)
 				{
 					List<int> currentLoop = new List<int>();
 					for (int i = counter; i < counter + 100; i++)
 					{
-						if (i < itemIds.Count)
+						if (i < newCollection.Count)
 						{
-							currentLoop.Add(itemIds[i]);
+							currentLoop.Add(newCollection[i]);
 						}
 					}
 					counter += 100;
@@ -101,19 +102,20 @@ namespace gw2_Investment_Tool.ServiceAccess
 
         public static async Task<List<ItemListings>> GetAllItemListnings(List<int> itemIds)
         {
-            using (HttpClient client = new HttpClient())
+	        List<int> newCollection = itemIds.Distinct().ToList();
+			using (HttpClient client = new HttpClient())
             {
                 List<ItemListings> results = new List<ItemListings>();
                 client.BaseAddress = new Uri("https://api.guildwars2.com");
                 int counter = 0;
-                while (counter <= itemIds.Count)
+                while (counter <= newCollection.Count)
                 {
                     List<int> currentLoop = new List<int>();
                     for (int i = counter; i < counter + 100; i++)
                     {
-                        if (i < itemIds.Count)
+                        if (i < newCollection.Count)
                         {
-                            currentLoop.Add(itemIds[i]);
+                            currentLoop.Add(newCollection[i]);
                         }
                     }
                     counter += 100;
@@ -155,19 +157,20 @@ namespace gw2_Investment_Tool.ServiceAccess
 
         public static async Task<List<OutputItemId>> GetRecipeOutputIdAsync(List<int> itemIds)
         {
-            using (HttpClient client = new HttpClient())
+	        List<int> newCollection = itemIds.Distinct().ToList();
+			using (HttpClient client = new HttpClient())
             {
                 List<OutputItemId> results = new List<OutputItemId>();
                 client.BaseAddress = new Uri("https://api.guildwars2.com");
                 int counter = 0;
-                while (counter <= itemIds.Count)
+                while (counter <= newCollection.Count)
                 {
                     List<int> currentLoop = new List<int>();
                     for (int i = counter; i < counter + 100; i++)
                     {
-                        if (i < itemIds.Count)
+                        if (i < newCollection.Count)
                         {
-                            currentLoop.Add(itemIds[i]);
+                            currentLoop.Add(newCollection[i]);
                         }
                     }
                     counter += 100;
@@ -231,20 +234,21 @@ namespace gw2_Investment_Tool.ServiceAccess
 
         public static async Task<List<Recipe>> GetRecipeFullAsync(List<int> itemIds)
         {
-            using (HttpClient client = new HttpClient())
+	        List<int> newCollection = itemIds.Distinct().ToList();
+			using (HttpClient client = new HttpClient())
             {
                 List<Recipe> results = new List<Recipe>();
                 client.BaseAddress = new Uri("https://api.guildwars2.com");
                 int counter = 0;
-                while (counter <= itemIds.Count)
+                while (counter <= newCollection.Count)
                 {
                     List<int> currentLoop = new List<int>();
                     for (int i = counter; i < counter + 100; i++)
                     {
 
-                        if (i < itemIds.Count)
+                        if (i < newCollection.Count)
                         {
-                            currentLoop.Add(itemIds[i]);
+                            currentLoop.Add(newCollection[i]);
                         }
                     }
                     counter += 100;
@@ -273,19 +277,20 @@ namespace gw2_Investment_Tool.ServiceAccess
 
 		public static async Task<List<GuildItemFull>> GetAllGuildItemsAsync(List<int> itemIds)
         {
-            using (HttpClient client = new HttpClient())
+	        List<int> newCollection = itemIds.Distinct().ToList();
+			using (HttpClient client = new HttpClient())
             {
                 List<GuildItemFull> results = new List<GuildItemFull>();
                 client.BaseAddress = new Uri("https://api.guildwars2.com");
                 int counter = 0;
-                while (counter <= itemIds.Count)
+                while (counter <= newCollection.Count)
                 {
                     List<int> currentLoop = new List<int>();
                     for (int i = counter; i < counter + 100; i++)
                     {
-                        if (i < itemIds.Count)
+                        if (i < newCollection.Count)
                         {
-                            currentLoop.Add(itemIds[i]);
+                            currentLoop.Add(newCollection[i]);
                         }
                     }
                     counter += 100;
@@ -307,19 +312,20 @@ namespace gw2_Investment_Tool.ServiceAccess
         }
         public static async Task<List<ItemFull>> GetAlItemsAsync(List<int> itemIds)
         {
-            using (HttpClient client = new HttpClient())
+	        List<int> newCollection = itemIds.Distinct().ToList();
+			using (HttpClient client = new HttpClient())
             {
                 List<ItemFull> results = new List<ItemFull>();
                 client.BaseAddress = new Uri("https://api.guildwars2.com");
                 int counter = 0;
-                while (counter <= itemIds.Count)
+                while (counter <= newCollection.Count)
                 {
                     List<int> currentLoop = new List<int>();
                     for (int i = counter; i < counter + 100; i++)
                     {
-                        if (i < itemIds.Count)
+                        if (i < newCollection.Count)
                         {
-                            currentLoop.Add(itemIds[i]);
+                            currentLoop.Add(newCollection[i]);
                         }
                     }
                     counter += 100;
