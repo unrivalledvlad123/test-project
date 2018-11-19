@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using gw2_Investment_Tool.Classes;
 using gw2_Investment_Tool.Controls;
+using gw2_Investment_Tool.Models;
 using gw2_Investment_Tool.ServiceAccess;
 
 namespace gw2_Investment_Tool.Forms
@@ -43,9 +44,9 @@ namespace gw2_Investment_Tool.Forms
             }
 			
 	        
-	        ParsePriceInControl((int) ((MainForm.TotalGold - CalculateTotal(items))*0.85),gvcProfitValue);
+	        ParsePriceInControl((int) ((GlobalDataHolder.TotalGold - CalculateTotal(items))*0.85),gvcProfitValue);
             ParsePriceInControl(CalculateTotal(items),gvcTotalValue);
-			if (MainForm.TotalKarma < 1)
+			if (GlobalDataHolder.TotalKarma < 1)
 	        {
 		        labelTotalPerKarmaValue.Text = "No Karma Used!";
 		        gvcTotalPerKarmaValue.Visible = false;
@@ -54,10 +55,10 @@ namespace gw2_Investment_Tool.Forms
 	        {
 		        labelTotalPerKarmaValue.Visible = false;
 		        gvcTotalPerKarmaValue.Visible = true;
-				ParsePriceInControl((int)((int)((MainForm.TotalGold - CalculateTotal(items)) * 0.85) / (MainForm.TotalKarma / 1000)),gvcTotalPerKarmaValue);
+				ParsePriceInControl((int)((int)((GlobalDataHolder.TotalGold - CalculateTotal(items)) * 0.85) / (GlobalDataHolder.TotalKarma / 1000)),gvcTotalPerKarmaValue);
 	        }
 
-			labelROI.Text = (((MainForm.TotalGold - CalculateTotal(items)) * 0.85) / (CalculateTotal(items))).ToString("#.##" + "%");
+			labelROI.Text = (((GlobalDataHolder.TotalGold - CalculateTotal(items)) * 0.85) / (CalculateTotal(items))).ToString("#.##" + "%");
             dgvResults.DataSource = null;
             dgvResults.DataSource = SortResult(tempList);
         }

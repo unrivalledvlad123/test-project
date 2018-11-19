@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using gw2_Investment_Tool.Classes;
+using gw2_Investment_Tool.Models;
 
 namespace gw2_Investment_Tool.Forms
 {
@@ -61,8 +62,7 @@ namespace gw2_Investment_Tool.Forms
             if (tbSearch.Text.Length>=4)
             {
                 dgvSearchResults.DataSource = null;
-	            string test = tbSearch.Text;
-                dgvSearchResults.DataSource = MainForm.ItemNames.Where(p => p.name.ToLower().Contains(tbSearch.Text.ToLower())).ToList();
+	            dgvSearchResults.DataSource = MainForm.ItemNames.Where(p => p.name.ToLower().Contains(tbSearch.Text.ToLower())).ToList();
             }
         }
 

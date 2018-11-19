@@ -117,7 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="label1.Text" xml:space="preserve">
-    <value>This will enable you to search items by their names. To enable this option, first you have to generate a local Database with "Generate" button, then fill the Name Search field. You have to generate the DB everytime new patch is released, so the base can update itself, otherwise you wont be able to see the new items. Generating a Database may take few minutes!</value>
-  </data>
 </root>

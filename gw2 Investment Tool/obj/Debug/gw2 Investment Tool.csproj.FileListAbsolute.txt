@@ -77,7 +77,6 @@ D:\Projects\test-project\gw2 Investment Tool\bin\Debug\System.Net.Http.Formattin
 D:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Forms.AddOrEditForm.resources
 D:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Forms.MainForm.resources
 D:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Forms.ResultForm.resources
-D:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Forms.SettingsForm.resources
 D:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Forms.WhiteListForm.resources
 D:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Properties.Resources.resources
 D:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2 Investment Tool.csproj.GenerateResource.Cache
@@ -103,3 +102,6 @@ C:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2 Investment Tool.cspro
 D:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2 Investment Tool.csprojAssemblyReference.cache
 D:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2 Investment Tool.csproj.CoreCompileInputs.cache
 D:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2 Investment Tool.csproj.CopyComplete
+D:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Controls.CraftingControl.resources
+D:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Controls.NewItemsControl.resources
+D:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Controls.RecipeCompareControl.resources

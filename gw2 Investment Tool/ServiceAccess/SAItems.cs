@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms.VisualStyles;
 using gw2_Investment_Tool.Classes;
+using gw2_Investment_Tool.Models;
 
 namespace gw2_Investment_Tool.ServiceAccess
 {

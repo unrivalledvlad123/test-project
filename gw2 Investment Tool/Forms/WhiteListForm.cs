@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using gw2_Investment_Tool.Classes;
-using gw2_Investment_Tool.ServiceAccess;
+using gw2_Investment_Tool.Models;
+
 
 namespace gw2_Investment_Tool.Forms
 {
@@ -23,7 +18,7 @@ namespace gw2_Investment_Tool.Forms
             InitializeComponent();
             SetGridColumns();
             SetSearchGridColumns();
-            this.AllItems = allItems;
+            AllItems = allItems;
             dgvWhiteListedItems.DataSource = allItems;
         }
 
@@ -46,7 +41,7 @@ namespace gw2_Investment_Tool.Forms
             {
                 WhiteListedItem newItem = new WhiteListedItem();
                 int id;
-                decimal price = Decimal.Parse(tbPrice.Text, NumberStyles.Currency, CultureInfo.InvariantCulture);
+                decimal price = decimal.Parse(tbPrice.Text, NumberStyles.Currency, CultureInfo.InvariantCulture);
                 int.TryParse(tbItemId.Text, out id);
 
                 newItem.Price = (int)price;

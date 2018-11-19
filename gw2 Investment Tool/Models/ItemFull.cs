@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using gw2_Investment_Tool.Classes;
 
-namespace gw2_Investment_Tool.Classes
+namespace gw2_Investment_Tool.Models
 {
 	public class ItemFull
     {
