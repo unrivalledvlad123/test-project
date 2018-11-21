@@ -28,14 +28,9 @@ namespace gw2_Investment_Tool.Controls
 
 		private async void btnGenerateLocalData_Click(object sender, EventArgs e)
 		{
-			string directory = string.Empty;
-			var directoryInfo = Directory.GetParent(Directory.GetCurrentDirectory()).Parent;
-			if (directoryInfo != null)
-			{
-				directory = directoryInfo.FullName;
-			}
-
-			List<int> itemIds = await SAItems.GetAllrecipeIdsAsync();
+			var directory = Directory.GetCurrentDirectory();
+		    
+		    List<int> itemIds = await SAItems.GetAllrecipeIdsAsync();
 			List<OutputItemId> outputItemIds = await SAItems.GetRecipeOutputIdAsync(itemIds);
 			List<ItemFull> namedItems = await SAItems.GetItemNamesAsync(outputItemIds);
 
@@ -114,14 +109,9 @@ namespace gw2_Investment_Tool.Controls
 			AllItems.Clear();
 			try
 			{
-				string directory = string.Empty;
-				var directoryInfo = Directory.GetParent(Directory.GetCurrentDirectory()).Parent;
-				if (directoryInfo != null)
-				{
-					directory = directoryInfo.FullName;
-				}
+                var directory = Directory.GetCurrentDirectory();
 
-				string line;
+                string line;
 				StreamReader file = new StreamReader(directory + "\\DataFiles\\Lists" + @"\" + cbLists.SelectedItem + ".txt");
 				while ((line = file.ReadLine()) != null)
 				{
@@ -169,14 +159,9 @@ namespace gw2_Investment_Tool.Controls
 				GlobalDataHolder.WhiteListedItems.Clear();
 				GlobalDataHolder.WhiteListedItems = form.ItemsToSave;
 
-				string directory = string.Empty;
-				var directoryInfo = Directory.GetParent(Directory.GetCurrentDirectory()).Parent;
-				if (directoryInfo != null)
-				{
-					directory = directoryInfo.FullName;
-				}
+                var directory = Directory.GetCurrentDirectory();
 
-				List<string> lines = new List<string>();
+                List<string> lines = new List<string>();
 				foreach (var item in GlobalDataHolder.WhiteListedItems)
 				{
 					StringBuilder sb = new StringBuilder();
@@ -236,14 +221,9 @@ namespace gw2_Investment_Tool.Controls
 			}
 			if (lines.Count != 0)
 			{
-				string directory = string.Empty;
-				var directoryInfo = Directory.GetParent(Directory.GetCurrentDirectory()).Parent;
-				if (directoryInfo != null)
-				{
-					directory = directoryInfo.FullName;
-				}
+                var directory = Directory.GetCurrentDirectory();
 
-				File.WriteAllLines(directory + "\\DataFiles\\Lists" + @"\" + cbLists.SelectedItem + ".txt", lines);
+                File.WriteAllLines(directory + "\\DataFiles\\Lists" + @"\" + cbLists.SelectedItem + ".txt", lines);
 			}
 		}
 

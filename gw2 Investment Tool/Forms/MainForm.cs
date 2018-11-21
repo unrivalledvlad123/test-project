@@ -38,10 +38,11 @@ namespace gw2_Investment_Tool.Forms
 		public static List<string> GetAllList()
 		{
 			string directory = string.Empty;
-			var directoryInfo = Directory.GetParent(Directory.GetCurrentDirectory()).Parent;
-			if (directoryInfo != null)
+		    
+		    var directoryInfo = Directory.GetCurrentDirectory();
+            if (directoryInfo != null)
 			{
-				directory = directoryInfo.FullName;
+				directory = directoryInfo;
 			}
 
 			List<string> alLists = new List<string>();
@@ -66,14 +67,9 @@ namespace gw2_Investment_Tool.Forms
 	    {
 		    try
 		    {
-			    string directory = string.Empty;
-			    var directoryInfo = Directory.GetParent(Directory.GetCurrentDirectory()).Parent;
-			    if (directoryInfo != null)
-			    {
-				    directory = directoryInfo.FullName;
-			    }
+                var directory = Directory.GetCurrentDirectory();
 
-			    if (File.Exists(directory + "\\DataFiles\\System\\WhiteListedItems.txt"))
+                if (File.Exists(directory + "\\DataFiles\\System\\WhiteListedItems.txt"))
 			    {
 				    StreamReader file2 = new StreamReader(directory + "\\DataFiles\\System\\WhiteListedItems.txt");
 				    string line2;

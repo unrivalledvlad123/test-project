@@ -1,0 +1,15 @@
+9459%10%Weaponsmith%0%True
+9462%5%Weaponsmith%0%True
+9451%5%Weaponsmith%0%True
+9423%40%Weaponsmith%0%True
+9585%10%Leatherworker%0%True
+9580%10%Leatherworker%0%True
+9449%10%Leatherworker%0%True
+9576%40%Leatherworker%0%True
+9569%15%Tailor%0%True
+9494%10%Tailor%0%True
+9491%10%Tailor%0%True
+9486%5%Tailor%0%False
+9488%5%Tailor%0%False
+9413%25%Tailor%0%False
+9411%50%Tailor%0%True

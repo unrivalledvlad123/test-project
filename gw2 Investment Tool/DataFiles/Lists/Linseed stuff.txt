@@ -1,0 +1,3 @@
+73034%100%Weaponsmith%0%False
+82796%100%Weaponsmith%0%True
+72224%30%Weaponsmith%0%True

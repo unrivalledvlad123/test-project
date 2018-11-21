@@ -1,0 +1,10 @@
+45758%10%Leatherworker%0%True
+11981%5%Leatherworker%0%True
+11627%10%Leatherworker%0%True
+11670%30%Leatherworker%0%True
+11640%60%Leatherworker%0%True
+11513%30%Leatherworker%0%True
+11573%40%Leatherworker%0%True
+11603%30%Leatherworker%0%True
+11509%10%Leatherworker%0%True
+11596%50%Leatherworker%0%True
