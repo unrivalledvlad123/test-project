@@ -1,0 +1,20 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace gw2_Investment_Tool.Models
+{
+	public class ExtractableItems
+	{
+		public int id { get; set; }
+		public int buy_price { get; set; }
+		public int sell_price { get; set; }
+		public string name { get; set; }
+		public int upgrade1 { get; set; }//upgradeId
+		public int BuyoutProfit { get; set; }
+		public int OrderProfit { get; set; }
+		public ExtractableUpgradeComponents UpgradeComponent { get; set; }
+	}
+}

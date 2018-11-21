@@ -17,5 +17,7 @@ namespace gw2_Investment_Tool.Classes
 				.Concat(controls)
 				.Where(c => c.GetType() == type);
 		}
+
+		
 	}
 }

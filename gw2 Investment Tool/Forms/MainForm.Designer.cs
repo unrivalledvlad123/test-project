@@ -34,28 +34,32 @@ namespace gw2_Investment_Tool.Forms
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabCrafting = new System.Windows.Forms.TabPage();
 			this.label18 = new System.Windows.Forms.Label();
+			this.craftingControl1 = new gw2_Investment_Tool.Controls.CraftingControl();
 			this.NewItems = new System.Windows.Forms.TabPage();
-			this.TBD = new System.Windows.Forms.TabPage();
+			this.newItemsControl1 = new gw2_Investment_Tool.Controls.NewItemsControl();
+			this.compareRecipes = new System.Windows.Forms.TabPage();
+			this.recipeCompareControl1 = new gw2_Investment_Tool.Controls.RecipeCompareControl();
+			this.extractorTab = new System.Windows.Forms.TabPage();
 			this.itemName = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.itemId = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.itemQuantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.discipline = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.karmaPerItem = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.karmaTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.craftingControl1 = new gw2_Investment_Tool.Controls.CraftingControl();
-			this.newItemsControl1 = new gw2_Investment_Tool.Controls.NewItemsControl();
-			this.recipeCompareControl1 = new gw2_Investment_Tool.Controls.RecipeCompareControl();
+			this.extractorControl1 = new gw2_Investment_Tool.Controls.ExtractorControl();
 			this.tabControl1.SuspendLayout();
 			this.tabCrafting.SuspendLayout();
 			this.NewItems.SuspendLayout();
-			this.TBD.SuspendLayout();
+			this.compareRecipes.SuspendLayout();
+			this.extractorTab.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tabControl1
 			// 
 			this.tabControl1.Controls.Add(this.tabCrafting);
 			this.tabControl1.Controls.Add(this.NewItems);
-			this.tabControl1.Controls.Add(this.TBD);
+			this.tabControl1.Controls.Add(this.compareRecipes);
+			this.tabControl1.Controls.Add(this.extractorTab);
 			this.tabControl1.Location = new System.Drawing.Point(4, 2);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
@@ -83,6 +87,16 @@ namespace gw2_Investment_Tool.Forms
 			this.label18.TabIndex = 1;
 			this.label18.Text = "use \"Generate Local Data\" to generate da";
 			// 
+			// craftingControl1
+			// 
+			this.craftingControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.craftingControl1.Location = new System.Drawing.Point(3, 3);
+			this.craftingControl1.Name = "craftingControl1";
+			this.craftingControl1.Size = new System.Drawing.Size(745, 674);
+			this.craftingControl1.TabIndex = 0;
+			// 
 			// NewItems
 			// 
 			this.NewItems.Controls.Add(this.newItemsControl1);
@@ -94,16 +108,47 @@ namespace gw2_Investment_Tool.Forms
 			this.NewItems.Text = "New Items";
 			this.NewItems.UseVisualStyleBackColor = true;
 			// 
-			// TBD
+			// newItemsControl1
 			// 
-			this.TBD.Controls.Add(this.recipeCompareControl1);
-			this.TBD.Location = new System.Drawing.Point(4, 22);
-			this.TBD.Name = "TBD";
-			this.TBD.Padding = new System.Windows.Forms.Padding(3);
-			this.TBD.Size = new System.Drawing.Size(751, 680);
-			this.TBD.TabIndex = 2;
-			this.TBD.Text = "Compare recipes";
-			this.TBD.UseVisualStyleBackColor = true;
+			this.newItemsControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.newItemsControl1.Location = new System.Drawing.Point(3, 3);
+			this.newItemsControl1.Name = "newItemsControl1";
+			this.newItemsControl1.Size = new System.Drawing.Size(745, 674);
+			this.newItemsControl1.TabIndex = 0;
+			// 
+			// compareRecipes
+			// 
+			this.compareRecipes.Controls.Add(this.recipeCompareControl1);
+			this.compareRecipes.Location = new System.Drawing.Point(4, 22);
+			this.compareRecipes.Name = "compareRecipes";
+			this.compareRecipes.Padding = new System.Windows.Forms.Padding(3);
+			this.compareRecipes.Size = new System.Drawing.Size(751, 680);
+			this.compareRecipes.TabIndex = 2;
+			this.compareRecipes.Text = "Compare recipes";
+			this.compareRecipes.UseVisualStyleBackColor = true;
+			// 
+			// recipeCompareControl1
+			// 
+			this.recipeCompareControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.recipeCompareControl1.Location = new System.Drawing.Point(3, 3);
+			this.recipeCompareControl1.Name = "recipeCompareControl1";
+			this.recipeCompareControl1.Size = new System.Drawing.Size(745, 674);
+			this.recipeCompareControl1.TabIndex = 0;
+			// 
+			// extractorTab
+			// 
+			this.extractorTab.Controls.Add(this.extractorControl1);
+			this.extractorTab.Location = new System.Drawing.Point(4, 22);
+			this.extractorTab.Name = "extractorTab";
+			this.extractorTab.Padding = new System.Windows.Forms.Padding(3);
+			this.extractorTab.Size = new System.Drawing.Size(751, 680);
+			this.extractorTab.TabIndex = 4;
+			this.extractorTab.Text = "Extraction Profitablility";
+			this.extractorTab.UseVisualStyleBackColor = true;
 			// 
 			// itemName
 			// 
@@ -129,35 +174,13 @@ namespace gw2_Investment_Tool.Forms
 			// 
 			this.karmaTotal.Name = "karmaTotal";
 			// 
-			// craftingControl1
+			// extractorControl1
 			// 
-			this.craftingControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.craftingControl1.Location = new System.Drawing.Point(3, 3);
-			this.craftingControl1.Name = "craftingControl1";
-			this.craftingControl1.Size = new System.Drawing.Size(745, 674);
-			this.craftingControl1.TabIndex = 0;
-			// 
-			// newItemsControl1
-			// 
-			this.newItemsControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.newItemsControl1.Location = new System.Drawing.Point(3, 3);
-			this.newItemsControl1.Name = "newItemsControl1";
-			this.newItemsControl1.Size = new System.Drawing.Size(745, 674);
-			this.newItemsControl1.TabIndex = 0;
-			// 
-			// recipeCompareControl1
-			// 
-			this.recipeCompareControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.recipeCompareControl1.Location = new System.Drawing.Point(3, 3);
-			this.recipeCompareControl1.Name = "recipeCompareControl1";
-			this.recipeCompareControl1.Size = new System.Drawing.Size(745, 674);
-			this.recipeCompareControl1.TabIndex = 0;
+			this.extractorControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.extractorControl1.Location = new System.Drawing.Point(3, 3);
+			this.extractorControl1.Name = "extractorControl1";
+			this.extractorControl1.Size = new System.Drawing.Size(745, 674);
+			this.extractorControl1.TabIndex = 0;
 			// 
 			// MainForm
 			// 
@@ -172,7 +195,8 @@ namespace gw2_Investment_Tool.Forms
 			this.tabCrafting.ResumeLayout(false);
 			this.tabCrafting.PerformLayout();
 			this.NewItems.ResumeLayout(false);
-			this.TBD.ResumeLayout(false);
+			this.compareRecipes.ResumeLayout(false);
+			this.extractorTab.ResumeLayout(false);
 			this.ResumeLayout(false);
 
         }
@@ -187,11 +211,13 @@ namespace gw2_Investment_Tool.Forms
         private DataGridViewTextBoxColumn karmaTotal;
 
         #endregion
-        private TabPage TBD;
+        private TabPage compareRecipes;
 		private TabPage tabCrafting;
 		private Controls.CraftingControl craftingControl1;
 		private Label label18;
 		private Controls.NewItemsControl newItemsControl1;
 		private Controls.RecipeCompareControl recipeCompareControl1;
+		private TabPage extractorTab;
+		private Controls.ExtractorControl extractorControl1;
 	}
 }

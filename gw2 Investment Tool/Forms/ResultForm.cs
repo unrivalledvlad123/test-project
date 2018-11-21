@@ -82,27 +82,7 @@ namespace gw2_Investment_Tool.Forms
 			control.BindValues(gold,silver,copper);
 		}
 
-        public string ParsePrices(int price)
-        {
-            string result;
-            int copper = price%100;
-            int left = price/100;
-            int silver = left%100;
-            int gold = left/100;
-            if (gold == 0 && silver != 0)
-            {
-                result = $"{silver}s, {copper}c";
-            }
-            else if (gold == 0 && silver == 0)
-            {
-                result = $"{copper}c";
-            }
-            else
-            {
-                result = $"{gold}g, {silver}s, {copper}c";
-            }
-            return result;
-        }
+       
 
         private async void btnRecalculate_Click(object sender, EventArgs e)
         {
@@ -142,8 +122,8 @@ namespace gw2_Investment_Tool.Forms
                         ? pr.buys.unit_price
                         : pr.sells.unit_price;
                     item.PriceEach = determinedPrice;
-                    item.PriceFormated = ParsePrices(determinedPrice);
-                    item.PriceTotalFormated = ParsePrices(item.Quantity * determinedPrice);
+                    item.PriceFormated = determinedPrice.ToGoldFormat();
+                    item.PriceTotalFormated = (item.Quantity * determinedPrice).ToGoldFormat();
                     item.Name = item.CraftingPrice <= pr.sells.unit_price
                         ? item.Name
                         : AdjustName(item.CraftingPrice, item.Name);
@@ -151,7 +131,7 @@ namespace gw2_Investment_Tool.Forms
                 }
                 else
                 {
-                    item.PriceTotalFormated = ParsePrices(item.Quantity * item.PriceEach.Value);
+                    item.PriceTotalFormated = (item.Quantity * item.PriceEach.Value).ToGoldFormat();
                 }
 
             }
@@ -161,7 +141,7 @@ namespace gw2_Investment_Tool.Forms
 
         public string AdjustName(int price, string name)
         {
-            return name.Contains("Instabuy") ? name : name + $" - Instabuy ( {ParsePrices(price)} )";
+            return name.Contains("Instabuy") ? name : name + $" - Instabuy ( {price.ToGoldFormat()} )";
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -444,8 +424,8 @@ namespace gw2_Investment_Tool.Forms
                     resultItem.Name = item.name;
 					resultItem.PriceEach = prices.buys.unit_price != 0 ? prices.buys.unit_price + 1 : prices.sells.unit_price + 1;
 	                resultItem.Total = resultItem.PriceEach * result.Quantity;
-	                resultItem.PriceFormated = ParsePrices(prices.buys.unit_price != 0 ? prices.buys.unit_price + 1 : prices.sells.unit_price + 1);
-	                resultItem.PriceTotalFormated = ParsePrices((prices.buys.unit_price != 0 ? prices.buys.unit_price + 1 : prices.sells.unit_price + 1) * result.Quantity);
+	                resultItem.PriceFormated = (prices.buys.unit_price != 0 ? prices.buys.unit_price + 1 : prices.sells.unit_price + 1).ToGoldFormat();
+	                resultItem.PriceTotalFormated = ((prices.buys.unit_price != 0 ? prices.buys.unit_price + 1 : prices.sells.unit_price + 1) * result.Quantity).ToGoldFormat();
 					resultItem.RecalculateChecked = false;
                     result.CraftingPrice = result.CraftingPrice ?? 0;
                     ResultItem check = ItemsToKeep.FirstOrDefault(p => p.ItemId == resultItem.ItemId);
@@ -453,8 +433,8 @@ namespace gw2_Investment_Tool.Forms
                     {
                         check.Quantity = check.Quantity + resultItem.Quantity;
                         check.Total = check.Total + resultItem.Total;
-                        check.PriceFormated = ParsePrices(prices.buys.unit_price != 0 ? prices.buys.unit_price + 1 : prices.sells.unit_price + 1);
-						check.PriceTotalFormated = ParsePrices((prices.buys.unit_price != 0 ? prices.buys.unit_price + 1 : prices.sells.unit_price + 1) * result.Quantity);
+                        check.PriceFormated = (prices.buys.unit_price != 0 ? prices.buys.unit_price + 1 : prices.sells.unit_price + 1).ToGoldFormat();
+						check.PriceTotalFormated =((prices.buys.unit_price != 0 ? prices.buys.unit_price + 1 : prices.sells.unit_price + 1) * result.Quantity).ToGoldFormat();
 					}
                     else
                     {

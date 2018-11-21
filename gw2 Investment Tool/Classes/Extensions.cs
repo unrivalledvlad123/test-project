@@ -21,5 +21,27 @@ namespace gw2_Investment_Tool.Classes
 
 			return recipes;
 		}
+
+		public static string ToGoldFormat(this int price)
+		{
+			string result;
+			int copper = price % 100;
+			int left = price / 100;
+			int silver = left % 100;
+			int gold = left / 100;
+			if (gold == 0 && silver != 0)
+			{
+				result = $"{silver}s, {copper}c";
+			}
+			else if (gold == 0 && silver == 0)
+			{
+				result = $"{copper}c";
+			}
+			else
+			{
+				result = $"{gold}g, {silver}s, {copper}c";
+			}
+			return result;
+		}
 	}
 }

@@ -5,9 +5,6 @@ using System.Linq;
 using System.Windows.Forms;
 using gw2_Investment_Tool.Classes;
 using gw2_Investment_Tool.Models;
-using gw2_Investment_Tool.ServiceAccess;
-using Newtonsoft.Json;
-
 
 namespace gw2_Investment_Tool.Forms
 {
@@ -28,7 +25,7 @@ namespace gw2_Investment_Tool.Forms
 		#region // < =========== Metods used in controls that CANNOT be moved to the control =========> //
 
 		// Due to some designer error, form editor cannot be initialized when these methods are defined in the control itself,
-		// as the editor is trying to connect to the path in debug time, when the directory doesnt exist in the context.
+		// as the editor is trying to connect to the path in debug time, when the directory doesn't exist in the context.
 	
 		public void LoadControlData()
 		{
@@ -48,8 +45,7 @@ namespace gw2_Investment_Tool.Forms
 			}
 
 			List<string> alLists = new List<string>();
-			var t = directory + "\\DataFiles\\Lists";
-			string[] files = Directory.GetFiles(t);
+			string[] files = Directory.GetFiles(directory + "\\DataFiles\\Lists");
 			foreach (string list in files)
 			{
 				var temp = list.Replace(directory + "\\DataFiles\\Lists", "");

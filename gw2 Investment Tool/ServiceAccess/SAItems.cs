@@ -346,5 +346,39 @@ namespace gw2_Investment_Tool.ServiceAccess
                 return results;
             }
         }
-    }
+
+	    public static async Task<List<ExtractableItems>> GetAllExtractableItems()
+	    {
+		    using (HttpClient client = new HttpClient())
+		    {
+			    client.BaseAddress = new Uri("https://api.silveress.ie");
+
+			    HttpResponseMessage response = await client.GetAsync("/gw2/v1/items/json?fields=id,name,upgrade1,buy_price,sell_price");
+			    if (response.IsSuccessStatusCode)
+			    {
+				    var items = await response.Content.ReadAsAsync<List<ExtractableItems>>();
+				    return items.Where(p => p.upgrade1 != 0).ToList();
+				}
+
+			    return null;
+		    }
+	    }
+
+	    public static async Task<List<ExtractableUpgradeComponents>> GetAllUpgradeComponents()
+	    {
+		    using (HttpClient client = new HttpClient())
+		    {
+			    client.BaseAddress = new Uri("https://api.silveress.ie");
+
+			    HttpResponseMessage response = await client.GetAsync("/gw2/v1/items/json?filter=type:UpgradeComponent ");
+			    if (response.IsSuccessStatusCode)
+			    {
+				   var items = await response.Content.ReadAsAsync<List<ExtractableUpgradeComponents>>();
+				    return items.Where(p => p.buy_price > 0).ToList();
+			    }
+
+			    return null;
+		    }
+	    }
+	}
 }

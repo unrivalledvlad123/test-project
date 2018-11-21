@@ -105,3 +105,4 @@ D:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2 Investment Tool.cspro
 D:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Controls.CraftingControl.resources
 D:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Controls.NewItemsControl.resources
 D:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Controls.RecipeCompareControl.resources
+D:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Controls.ExtractorControl.resources
