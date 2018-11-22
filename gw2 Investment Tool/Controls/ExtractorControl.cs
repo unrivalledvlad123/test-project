@@ -15,6 +15,7 @@ namespace gw2_Investment_Tool.Controls
 {
 	public partial class ExtractorControl : UserControl
 	{
+	    public List<GridData> Data = new List<GridData>();
 		public ExtractorControl()
 		{
 			InitializeComponent();
@@ -23,6 +24,12 @@ namespace gw2_Investment_Tool.Controls
 
 		private async void btnSearch_Click(object sender, EventArgs e)
 		{
+		    if (Data.Count != 0)//already have data, apply filtering only
+		    {
+                dgvExtractableitems.DataSource = null;
+                dgvExtractableitems.DataSource = FilterResults(Data).OrderByDescending(p => p.InstantProfit).ToList(); 
+            }
+            
 			// database objects 
 			List<ExtractableItems> allItems = await SAItems.GetAllExtractableItems();
 			List<ExtractableUpgradeComponents> upgrades = await SAItems.GetAllUpgradeComponents();
@@ -45,6 +52,9 @@ namespace gw2_Investment_Tool.Controls
 			//get listings for profitable items
 			List<ItemListings>  allListings = await SAItems.GetAllItemListnings(refinedItems.Select( p => p.id).ToList());
 
+		    int totalQuantity = 0;
+		    int totalGold = 0;
+		    int goldToBuyout = 0;
 			//construct the data
 			foreach (var item in refinedItems)
 			{
@@ -63,48 +73,65 @@ namespace gw2_Investment_Tool.Controls
 				
 				int quantity = 0;
 				int profit = 0;
-				var goodListings = itemListings.sells.Where(p => p.unit_price <= (item.UpgradeComponent.sell_price *0.85)).ToList();
-				foreach (var listing in goodListings)
-				{
-					quantity = quantity + listing.quantity;
-					profit = profit + listing.quantity * (item.UpgradeComponent.sell_price - listing.unit_price);
-				}
+                var goodListings = itemListings.sells.Where(p => p.unit_price <= (item.UpgradeComponent.sell_price *0.85)).OrderBy(p => p.unit_price).ToList();
+			    if (goodListings.Count != 0)
+			    {
+                    foreach (var listing in goodListings)
+                    {
+                        quantity = quantity + listing.quantity;
+                        profit = profit + listing.quantity * (item.UpgradeComponent.sell_price - listing.unit_price);
+                        goldToBuyout = goldToBuyout + listing.unit_price * listing.quantity;
+                    }
 
-				data.TotalBuyoutProfit = profit.ToGoldFormat();
-				data.InstantProfit = profit;
-				data.QuanityToBuyout = quantity;
+                    data.TotalBuyoutProfit = profit.ToGoldFormat();
+                    data.InstantProfit = profit;
+                    data.QuanityToBuyout = quantity;
+                    data.BuyoutTill = goodListings.Last().unit_price.ToGoldFormat();
+
+			        totalQuantity = totalQuantity + quantity;
+			        totalGold = totalGold + profit;
+			    }
+				
 				refinedResults.Add(data);
 			}
+		    Data = refinedResults;
 
-			//apply Filtering
-			if (rbMinor.Checked)
-			{
-				refinedResults = refinedResults.Where(p => p.UpgradeName.Contains("Minor")).ToList();
-			}
-			if (rbMajors.Checked)
-			{
-				refinedResults = refinedResults.Where(p => p.UpgradeName.Contains("Major")).ToList();
-			}
-			if (rbSupperiors.Checked)
-			{
-				refinedResults = refinedResults.Where(p => p.UpgradeName.Contains("Superior")).ToList();
-			}
+		    //labelTotalGold.Text = totalGold.ToGoldFormat();
+		    //labelTotalItems.Text = totalQuantity.ToString();
+		    //labelGoldToBuyout.Text = goldToBuyout.ToGoldFormat();
 
 
-			if (rbRunes.Checked)
-			{
-				refinedResults = refinedResults.Where(p => p.UpgradeName.Contains("Rune")).ToList();
-			}
-			if (rbSigils.Checked)
-			{
-				refinedResults = refinedResults.Where(p => p.UpgradeName.Contains("Sigil")).ToList();
-			}
-			
-			dgvExtractableitems.DataSource = null;
-			var temp = refinedResults.OrderByDescending(p => p.InstantProfit).ToList();
-			dgvExtractableitems.DataSource = temp;
+            dgvExtractableitems.DataSource = null;
+			dgvExtractableitems.DataSource = FilterResults(refinedResults).OrderByDescending(p => p.InstantProfit).ToList();
 
-		}
+        }
+
+	    public List<GridData> FilterResults(List<GridData> data )
+	    {
+            //apply Filtering
+            if (rbMinor.Checked)
+            {
+                data = data.Where(p => p.UpgradeName.Contains("Minor")).ToList();
+            }
+            if (rbMajors.Checked)
+            {
+                data = data.Where(p => p.UpgradeName.Contains("Major")).ToList();
+            }
+            if (rbSupperiors.Checked)
+            {
+                data = data.Where(p => p.UpgradeName.Contains("Superior")).ToList();
+            }
+
+            if (rbRunes.Checked)
+            {
+                data = data.Where(p => p.UpgradeName.Contains("Rune")).ToList();
+            }
+            if (rbSigils.Checked)
+            {
+                data = data.Where(p => p.UpgradeName.Contains("Sigil")).ToList();
+            }
+	        return data;
+	    }
 
 		private void SetGridColumns()
 		{
@@ -138,15 +165,7 @@ namespace gw2_Investment_Tool.Controls
 			c5.Width = 80;
 			dgvExtractableitems.Columns.Add(c5);
 
-			//DataGridViewTextBoxColumn c4 = new DataGridViewTextBoxColumn();
-			//c4.Name = "InstantProfit";
-			//c4.HeaderText = "Instant Profit";
-			//c4.DataPropertyName = "InstantProfit";
-			//c4.AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
-			//c4.Width = 80;
-			//dgvExtractableitems.Columns.Add(c4);
-
-			DataGridViewTextBoxColumn c6 = new DataGridViewTextBoxColumn();
+		    DataGridViewTextBoxColumn c6 = new DataGridViewTextBoxColumn();
 			c6.Name = "TotalBuyoutProfit";
 			c6.HeaderText = "Total Profit";
 			c6.DataPropertyName = "TotalBuyoutProfit";
@@ -162,7 +181,15 @@ namespace gw2_Investment_Tool.Controls
 			c7.Width = 50;
 			dgvExtractableitems.Columns.Add(c7);
 
-		}
+            DataGridViewTextBoxColumn c8 = new DataGridViewTextBoxColumn();
+            c8.Name = "Buyouttill";
+            c8.HeaderText = "Buyout till";
+            c8.DataPropertyName = "BuyoutTill";
+            c8.AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
+            c8.Width = 80;
+            dgvExtractableitems.Columns.Add(c8);
+
+        }
 
 		public class GridData
 		{
@@ -174,9 +201,14 @@ namespace gw2_Investment_Tool.Controls
 			public string OrderProfit { get; set; }
 			public string TotalBuyoutProfit { get; set; }
 			public int QuanityToBuyout { get; set; }
-
+            public string BuyoutTill { get; set; }
 		}
-	}
+
+        private void btnReload_Click(object sender, EventArgs e)
+        {
+            Data.Clear();
+        }
+    }
 
 
 }

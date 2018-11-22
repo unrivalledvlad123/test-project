@@ -25,24 +25,56 @@ namespace gw2_Investment_Tool.Controls
 			SetAllCompareGridsColumns();
 		}
 
-		private async void btnLoadOldData_Click(object sender, EventArgs e)
-		{
-			OpenFileDialog dialog = new OpenFileDialog();
-			if (dialog.ShowDialog() == DialogResult.OK)
-			{
-				string json = File.ReadAllText(dialog.FileName);
-				OldRecipeDataToCompare = JsonConvert.DeserializeObject<List<Recipe>>(json);
+	    private async void btnLoadOldData_Click(object sender, EventArgs e)
+	    {
+	        OpenFileDialog dialog = new OpenFileDialog();
+	        if (dialog.ShowDialog() == DialogResult.OK)
+	        {
+	            string json = File.ReadAllText(dialog.FileName);
+	            OldRecipeDataToCompare = JsonConvert.DeserializeObject<List<Recipe>>(json);
 
-				List<int> ids = OldRecipeDataToCompare.Select(p => p.id).ToList();
-				NewRecipeDataToCompare = await Shared.CombineFullRecipeData(await SAItems.GetRecipeFullAsync(ids));
+	            List<int> ids = OldRecipeDataToCompare.Select(p => p.id).ToList();
+	            NewRecipeDataToCompare = await Shared.CombineFullRecipeData(await SAItems.GetRecipeFullAsync(ids));
 
-				// display the data
-				dgvRecipeCompareAll.DataSource = OldRecipeDataToCompare;
 
-			}
-		}
+	            List<Recipe> differences = new List<Recipe>();
+	            foreach (var newRecipe in NewRecipeDataToCompare)
+	            {
+	                var oldRecipe = OldRecipeDataToCompare.FirstOrDefault(p => p.id == newRecipe.id);
+	                foreach (var ingredient in newRecipe.ingredients)
+	                {
+	                    var check = oldRecipe.ingredients.FirstOrDefault(p => p.item_id == ingredient.item_id);
+	                    if (check == null)
+	                    {
+	                        //has change
+	                        differences.Add(newRecipe);
+	                        break;
+	                    }
+	                }
 
-		private void SetAllCompareGridsColumns()
+	                if (newRecipe.guild_ingredients != null)
+	                {
+	                    foreach (var ingredient in newRecipe.guild_ingredients)
+	                    {
+	                        var check =
+	                            oldRecipe.guild_ingredients.FirstOrDefault(p => p.upgrade_id == ingredient.upgrade_id);
+	                        if (check == null)
+	                        {
+	                            //has change
+	                            differences.Add(newRecipe);
+	                            break;
+	                        }
+	                    }
+	                }
+
+	            }
+	            // display the data
+	            dgvRecipeCompareAll.DataSource = differences;
+
+	        }
+	    }
+
+	    private void SetAllCompareGridsColumns()
 		{
 			//all grid
 			dgvRecipeCompareAll.DataSource = null;

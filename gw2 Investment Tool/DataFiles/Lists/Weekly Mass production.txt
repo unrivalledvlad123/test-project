@@ -1,0 +1,9 @@
+38167%150%Tailor%0%True
+62975%150%Tailor%0%True
+62951%100%Weaponsmith%0%True
+62950%250%Weaponsmith%0%True
+62967%150%Huntsman%0%True
+62963%200%Armorsmith%0%True
+62962%250%Armorsmith%0%True
+62955%120%Leatherworker%0%True
+38433%100%Weaponsmith%0%True

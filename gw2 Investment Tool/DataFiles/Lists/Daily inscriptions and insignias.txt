@@ -1,0 +1,13 @@
+19920%20%Weaponsmith%0%True
+19919%20%Weaponsmith%0%True
+19917%10%Weaponsmith%0%True
+19918%10%Weaponsmith%0%True
+38434%15%Weaponsmith%0%True
+19921%10%Weaponsmith%0%True
+19923%10%Weaponsmith%0%True
+19912%10%Armorsmith%0%True
+19910%10%Armorsmith%0%True
+19911%15%Armorsmith%0%True
+19915%10%Armorsmith%0%True
+19914%10%Armorsmith%0%True
+19916%10%Armorsmith%0%True

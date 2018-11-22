@@ -92,7 +92,6 @@ C:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Contr
 C:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Forms.AddOrEditForm.resources
 C:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Forms.MainForm.resources
 C:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Forms.ResultForm.resources
-C:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Forms.SettingsForm.resources
 C:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Forms.WhiteListForm.resources
 C:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Properties.Resources.resources
 C:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2 Investment Tool.csproj.GenerateResource.Cache
@@ -106,3 +105,7 @@ D:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Contr
 D:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Controls.NewItemsControl.resources
 D:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Controls.RecipeCompareControl.resources
 D:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Controls.ExtractorControl.resources
+C:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Controls.CraftingControl.resources
+C:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Controls.ExtractorControl.resources
+C:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Controls.NewItemsControl.resources
+C:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Controls.RecipeCompareControl.resources
