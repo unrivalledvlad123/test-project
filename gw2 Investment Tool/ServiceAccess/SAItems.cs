@@ -353,7 +353,7 @@ namespace gw2_Investment_Tool.ServiceAccess
 		    {
 			    client.BaseAddress = new Uri("https://api.silveress.ie");
 
-			    HttpResponseMessage response = await client.GetAsync("/gw2/v1/items/json?fields=id,name,upgrade1,buy_price,sell_price");
+			    HttpResponseMessage response = await client.GetAsync("/gw2/v1/items/json?fields=id,name,upgrade1,buy_price,sell_price,charm");
 			    if (response.IsSuccessStatusCode)
 			    {
 				    var items = await response.Content.ReadAsAsync<List<ExtractableItems>>();
@@ -374,6 +374,23 @@ namespace gw2_Investment_Tool.ServiceAccess
 			    if (response.IsSuccessStatusCode)
 			    {
 				   var items = await response.Content.ReadAsAsync<List<ExtractableUpgradeComponents>>();
+				    return items.Where(p => p.buy_price > 0).ToList();
+			    }
+
+			    return null;
+		    }
+	    }
+
+	    public static async Task<List<SalvageItemsFull>> GetAllSalvagableItems()
+	    {
+		    using (HttpClient client = new HttpClient())
+		    {
+			    client.BaseAddress = new Uri("https://api.silveress.ie");
+
+			    HttpResponseMessage response = await client.GetAsync("/gw2/v1/items/json?fields=id,name,upgrade1,buy_price,sell_price,type,level,rarity,NoSalvage,charm,statID,statName,weaponType");
+			    if (response.IsSuccessStatusCode)
+			    {
+				    var items = await response.Content.ReadAsAsync<List<SalvageItemsFull>>();
 				    return items.Where(p => p.buy_price > 0).ToList();
 			    }
 

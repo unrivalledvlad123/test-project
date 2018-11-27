@@ -52,9 +52,9 @@ namespace gw2_Investment_Tool.Controls
 			//get listings for profitable items
 			List<ItemListings>  allListings = await SAItems.GetAllItemListnings(refinedItems.Select( p => p.id).ToList());
 
-		    int totalQuantity = 0;
-		    int totalGold = 0;
-		    int goldToBuyout = 0;
+		    //int totalQuantity = 0;
+		    //int totalGold = 0;
+		    //int goldToBuyout = 0;
 			//construct the data
 			foreach (var item in refinedItems)
 			{
@@ -80,7 +80,7 @@ namespace gw2_Investment_Tool.Controls
                     {
                         quantity = quantity + listing.quantity;
                         profit = profit + listing.quantity * (item.UpgradeComponent.sell_price - listing.unit_price);
-                        goldToBuyout = goldToBuyout + listing.unit_price * listing.quantity;
+                        //goldToBuyout = goldToBuyout + listing.unit_price * listing.quantity;
                     }
 
                     data.TotalBuyoutProfit = profit.ToGoldFormat();
@@ -88,19 +88,14 @@ namespace gw2_Investment_Tool.Controls
                     data.QuanityToBuyout = quantity;
                     data.BuyoutTill = goodListings.Last().unit_price.ToGoldFormat();
 
-			        totalQuantity = totalQuantity + quantity;
-			        totalGold = totalGold + profit;
+			       // totalQuantity = totalQuantity + quantity;
+			       // totalGold = totalGold + profit;
 			    }
 				
 				refinedResults.Add(data);
 			}
 		    Data = refinedResults;
-
-		    //labelTotalGold.Text = totalGold.ToGoldFormat();
-		    //labelTotalItems.Text = totalQuantity.ToString();
-		    //labelGoldToBuyout.Text = goldToBuyout.ToGoldFormat();
-
-
+			
             dgvExtractableitems.DataSource = null;
 			dgvExtractableitems.DataSource = FilterResults(refinedResults).OrderByDescending(p => p.InstantProfit).ToList();
 

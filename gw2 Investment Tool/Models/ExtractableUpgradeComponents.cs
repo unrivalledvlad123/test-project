@@ -14,6 +14,7 @@ namespace gw2_Investment_Tool.Models
 		public int sell_quantity { get; set; }
 		public int sell_price { get; set; }
 		public string name { get; set; }
+		public string Charm { get; set; }
 
 	}
 }

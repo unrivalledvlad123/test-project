@@ -70,6 +70,12 @@
     <Compile Include="Controls\CraftingControl.Designer.cs">
       <DependentUpon>CraftingControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ExoticAndRareSalvageControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ExoticAndRareSalvageControl.Designer.cs">
+      <DependentUpon>ExoticAndRareSalvageControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ExtractorControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -88,6 +94,7 @@
     <Compile Include="Controls\RecipeCompareControl.Designer.cs">
       <DependentUpon>RecipeCompareControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\ExoticAndRareSalvageModels\UpgradeComponent.cs" />
     <Compile Include="Models\ExtractableItems.cs" />
     <Compile Include="Models\ExtractableUpgradeComponents.cs" />
     <Compile Include="Models\GuildIngridient.cs" />
@@ -101,6 +108,7 @@
     <Compile Include="Models\Prices.cs" />
     <Compile Include="Models\Recipe.cs" />
     <Compile Include="Models\ResultItem.cs" />
+    <Compile Include="Models\SalvageItemsFull.cs" />
     <Compile Include="Models\WhiteListedItem.cs" />
     <Compile Include="Controls\GoldValueControl.cs">
       <SubType>UserControl</SubType>
@@ -137,6 +145,9 @@
     <Compile Include="ServiceAccess\SAItems.cs" />
     <EmbeddedResource Include="Controls\CraftingControl.resx">
       <DependentUpon>CraftingControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ExoticAndRareSalvageControl.resx">
+      <DependentUpon>ExoticAndRareSalvageControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ExtractorControl.resx">
       <DependentUpon>ExtractorControl.cs</DependentUpon>

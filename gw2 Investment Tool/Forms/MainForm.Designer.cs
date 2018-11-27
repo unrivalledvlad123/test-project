@@ -40,18 +40,21 @@ namespace gw2_Investment_Tool.Forms
 			this.compareRecipes = new System.Windows.Forms.TabPage();
 			this.recipeCompareControl1 = new gw2_Investment_Tool.Controls.RecipeCompareControl();
 			this.extractorTab = new System.Windows.Forms.TabPage();
+			this.extractorControl1 = new gw2_Investment_Tool.Controls.ExtractorControl();
+			this.tabPage1 = new System.Windows.Forms.TabPage();
+			this.exoticAndRareSalvageControl1 = new gw2_Investment_Tool.Controls.ExoticAndRareSalvageControl();
 			this.itemName = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.itemId = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.itemQuantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.discipline = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.karmaPerItem = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.karmaTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.extractorControl1 = new gw2_Investment_Tool.Controls.ExtractorControl();
 			this.tabControl1.SuspendLayout();
 			this.tabCrafting.SuspendLayout();
 			this.NewItems.SuspendLayout();
 			this.compareRecipes.SuspendLayout();
 			this.extractorTab.SuspendLayout();
+			this.tabPage1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tabControl1
@@ -60,6 +63,7 @@ namespace gw2_Investment_Tool.Forms
 			this.tabControl1.Controls.Add(this.NewItems);
 			this.tabControl1.Controls.Add(this.compareRecipes);
 			this.tabControl1.Controls.Add(this.extractorTab);
+			this.tabControl1.Controls.Add(this.tabPage1);
 			this.tabControl1.Location = new System.Drawing.Point(4, 2);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
@@ -83,9 +87,10 @@ namespace gw2_Investment_Tool.Forms
 			this.label18.AutoSize = true;
 			this.label18.Location = new System.Drawing.Point(6, 3);
 			this.label18.Name = "label18";
-			this.label18.Size = new System.Drawing.Size(208, 13);
+			this.label18.Size = new System.Drawing.Size(464, 13);
 			this.label18.TabIndex = 1;
-			this.label18.Text = "use \"Generate Local Data\" to generate da";
+			this.label18.Text = "use \"Generate Local Data\" to generate local data to be used in the future (Reduce" +
+    " waiting times)";
 			// 
 			// craftingControl1
 			// 
@@ -150,6 +155,33 @@ namespace gw2_Investment_Tool.Forms
 			this.extractorTab.Text = "Extraction Profitablility";
 			this.extractorTab.UseVisualStyleBackColor = true;
 			// 
+			// extractorControl1
+			// 
+			this.extractorControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.extractorControl1.Location = new System.Drawing.Point(3, 3);
+			this.extractorControl1.Name = "extractorControl1";
+			this.extractorControl1.Size = new System.Drawing.Size(745, 674);
+			this.extractorControl1.TabIndex = 0;
+			// 
+			// tabPage1
+			// 
+			this.tabPage1.Controls.Add(this.exoticAndRareSalvageControl1);
+			this.tabPage1.Location = new System.Drawing.Point(4, 22);
+			this.tabPage1.Name = "tabPage1";
+			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage1.Size = new System.Drawing.Size(751, 680);
+			this.tabPage1.TabIndex = 5;
+			this.tabPage1.Text = "Exotic Salvage";
+			this.tabPage1.UseVisualStyleBackColor = true;
+			// 
+			// exoticAndRareSalvageControl1
+			// 
+			this.exoticAndRareSalvageControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.exoticAndRareSalvageControl1.Location = new System.Drawing.Point(3, 3);
+			this.exoticAndRareSalvageControl1.Name = "exoticAndRareSalvageControl1";
+			this.exoticAndRareSalvageControl1.Size = new System.Drawing.Size(745, 674);
+			this.exoticAndRareSalvageControl1.TabIndex = 0;
+			// 
 			// itemName
 			// 
 			this.itemName.Name = "itemName";
@@ -174,14 +206,6 @@ namespace gw2_Investment_Tool.Forms
 			// 
 			this.karmaTotal.Name = "karmaTotal";
 			// 
-			// extractorControl1
-			// 
-			this.extractorControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.extractorControl1.Location = new System.Drawing.Point(3, 3);
-			this.extractorControl1.Name = "extractorControl1";
-			this.extractorControl1.Size = new System.Drawing.Size(745, 674);
-			this.extractorControl1.TabIndex = 0;
-			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -197,6 +221,7 @@ namespace gw2_Investment_Tool.Forms
 			this.NewItems.ResumeLayout(false);
 			this.compareRecipes.ResumeLayout(false);
 			this.extractorTab.ResumeLayout(false);
+			this.tabPage1.ResumeLayout(false);
 			this.ResumeLayout(false);
 
         }
@@ -219,5 +244,7 @@ namespace gw2_Investment_Tool.Forms
 		private Controls.RecipeCompareControl recipeCompareControl1;
 		private TabPage extractorTab;
 		private Controls.ExtractorControl extractorControl1;
+		private TabPage tabPage1;
+		private Controls.ExoticAndRareSalvageControl exoticAndRareSalvageControl1;
 	}
 }
