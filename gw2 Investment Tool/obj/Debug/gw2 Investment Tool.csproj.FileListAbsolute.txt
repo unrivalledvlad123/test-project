@@ -110,3 +110,4 @@ C:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Contr
 C:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Controls.NewItemsControl.resources
 C:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Controls.RecipeCompareControl.resources
 D:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Controls.ExoticAndRareSalvageControl.resources
+C:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Controls.ExoticAndRareSalvageControl.resources

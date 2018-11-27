@@ -59,138 +59,7 @@ namespace gw2_Investment_Tool.Controls
 			
 		}
 
-		public async Task InitializeCollections()
-		{
-			// making the collections and sorting them
-			AllItems = await SAItems.GetAllSalvagableItems();
-			GlobOfEctoplasm = AllItems.SingleOrDefault(p => p.id == 19721);
-			LucentMote = AllItems.SingleOrDefault(p => p.id == 89140);
 
-			Upgrades = await SAItems.GetAllUpgradeComponents();
-			foreach (var upd in Upgrades)
-			{
-				var temp = AllItems.FirstOrDefault(p => p.id == upd.id);
-				if (temp != null) upd.Charm = temp.charm;
-			}
-
-			foreach (var id in _extractableInscriptionIds)
-			{
-				var inscriptionMatch = AllItems.FirstOrDefault(p => p.id == id);
-				if (inscriptionMatch != null)
-				{
-					var parts = inscriptionMatch.name.Split(' ');
-					var itemMatch = AllItems.FirstOrDefault(p => p.statName == parts[0]);
-					UpgradeComponent uc = new UpgradeComponent
-					{
-						Name = inscriptionMatch.name,
-						BuyPrice = inscriptionMatch.buy_price,
-						Id = inscriptionMatch.id,
-						Rarity = inscriptionMatch.rarity,
-						SellPrice = inscriptionMatch.sell_price,
-						StatId = itemMatch.statID
-					};
-					Inscriptions.Add(uc);
-				}
-			}
-
-			foreach (var id in _extractableInsigniasIds)
-			{
-				var inscriptionMatch = AllItems.FirstOrDefault(p => p.id == id);
-				if (inscriptionMatch != null)
-				{
-					var parts = inscriptionMatch.name.Split(' ');
-					var itemMatch = AllItems.FirstOrDefault(p => p.statName == parts[0]);
-
-					UpgradeComponent uc = new UpgradeComponent
-					{
-						Name = inscriptionMatch.name,
-						BuyPrice = inscriptionMatch.buy_price,
-						Id = inscriptionMatch.id,
-						Rarity = inscriptionMatch.rarity,
-						SellPrice = inscriptionMatch.sell_price,
-						StatId = itemMatch.statID
-					};
-
-					Insignias.Add(uc);
-				}
-			}
-
-			foreach (var el in _elements)
-			{
-				if (el == "Any")
-				{
-					continue;
-				}
-				var charm = AllItems.FirstOrDefault(p => p.name == el);
-				CharmsAndSymbols.Add(charm);
-			}
-		}
-
-
-		private void SetGridColumns()
-		{
-			dgvItems.DataSource = null;
-			dgvItems.Columns.Clear();
-			dgvItems.AutoGenerateColumns = false;
-			dgvItems.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
-			dgvItems.RowHeadersVisible = false;
-			
-			DataGridViewTextBoxColumn c2 = new DataGridViewTextBoxColumn();
-			c2.Name = "Name";
-			c2.HeaderText = "Item Name";
-			c2.DataPropertyName = "Name";
-			c2.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-			dgvItems.Columns.Add(c2);
-
-			DataGridViewTextBoxColumn c3 = new DataGridViewTextBoxColumn();
-			c3.Name = "StatName";
-			c3.HeaderText = "Stat Name";
-			c3.DataPropertyName = "StatName";
-			c3.AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
-			c3.Width = 200;
-			dgvItems.Columns.Add(c3);
-
-			DataGridViewTextBoxColumn c22 = new DataGridViewTextBoxColumn();
-			c22.Name = "CharmName";
-			c22.HeaderText = "Charm Name";
-			c22.DataPropertyName = "CharmName";
-			c22.AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
-			c3.Width = 100;
-			dgvItems.Columns.Add(c22);
-
-			DataGridViewTextBoxColumn c5 = new DataGridViewTextBoxColumn();
-			c5.Name = "OrderProfit";
-			c5.HeaderText = "Order Profit";
-			c5.DataPropertyName = "OrderProfit";
-			c5.AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
-			c5.Width = 80;
-			dgvItems.Columns.Add(c5);
-
-			DataGridViewTextBoxColumn c7 = new DataGridViewTextBoxColumn();
-			c7.Name = "QuanityToBuyout";
-			c7.HeaderText = "Quantity To Buyout";
-			c7.DataPropertyName = "QuanityToBuyout";
-			c7.AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
-			c7.Width = 50;
-			dgvItems.Columns.Add(c7);
-
-			DataGridViewTextBoxColumn c6 = new DataGridViewTextBoxColumn();
-			c6.Name = "TotalBuyoutProfit";
-			c6.HeaderText = "Total Profit";
-			c6.DataPropertyName = "TotalBuyoutProfit";
-			c6.AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
-			c6.Width = 80;
-			dgvItems.Columns.Add(c6);
-			
-			DataGridViewTextBoxColumn c8 = new DataGridViewTextBoxColumn();
-			c8.Name = "Buyouttill";
-			c8.HeaderText = "Buyout till";
-			c8.DataPropertyName = "BuyoutTill";
-			c8.AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
-			c8.Width = 80;
-			dgvItems.Columns.Add(c8);
-
-		}
 
 		#region Events
 		private void btnSaveSettings_Click(object sender, EventArgs e)
@@ -256,11 +125,13 @@ namespace gw2_Investment_Tool.Controls
 						int totalProfit = 0;
 						foreach (var listing in goodListings)
 						{
-							if (item.ValueOfItem/listing.unit_price*100 <= numMinProfit.Value*100)// calculate min ROI
+						    decimal t1 = (decimal) item.ValueOfItem /(decimal) listing.unit_price;
+						   
+                            if (t1 >= numMinProfit.Value)// calculate min ROI
 							{
 								totalQuantity = totalQuantity + listing.quantity;
 								totalProfit = totalProfit + listing.quantity * item.ValueOfItem - listing.unit_price;
-								item.BuyoutTill = goodListings.Last().unit_price.ToGoldFormat();
+								item.BuyoutTill = listing.unit_price.ToGoldFormat();
 							}						
 						}
 
@@ -272,8 +143,9 @@ namespace gw2_Investment_Tool.Controls
 
 			}
 
+		    var result = FilterResults(profitableItems);
 			dgvItems.DataSource = null;
-			dgvItems.DataSource = profitableItems.OrderByDescending(p => p.InstantProfit).ToList();
+			dgvItems.DataSource = result.OrderByDescending(p => p.InstantProfit).ToList();
 
 		}
 
@@ -373,11 +245,8 @@ namespace gw2_Investment_Tool.Controls
 						var parts = charmHolder.name.Split(' ');
 						result.CharmName = parts[2];
 					}
-
-					if ((int) (total * 0.85 - item.buy_price) >= 0)
-					{
-						profitableItems.Add(result);
-					}
+                    profitableItems.Add(result);
+                   
 				}
 
 				if (item.sell_price < total)
@@ -396,11 +265,141 @@ namespace gw2_Investment_Tool.Controls
 			AllItems.Clear();
 		}
 
-		#endregion
+        #endregion
 
-		#region methods
+        #region methods
+        public async Task InitializeCollections()
+        {
+            // making the collections and sorting them
+            AllItems = await SAItems.GetAllSalvagableItems();
+            GlobOfEctoplasm = AllItems.SingleOrDefault(p => p.id == 19721);
+            LucentMote = AllItems.SingleOrDefault(p => p.id == 89140);
 
-		private void LoadSettings()
+            Upgrades = await SAItems.GetAllUpgradeComponents();
+            foreach (var upd in Upgrades)
+            {
+                var temp = AllItems.FirstOrDefault(p => p.id == upd.id);
+                if (temp != null) upd.Charm = temp.charm;
+            }
+
+            foreach (var id in _extractableInscriptionIds)
+            {
+                var inscriptionMatch = AllItems.FirstOrDefault(p => p.id == id);
+                if (inscriptionMatch != null)
+                {
+                    var parts = inscriptionMatch.name.Split(' ');
+                    var itemMatch = AllItems.FirstOrDefault(p => p.statName == parts[0]);
+                    UpgradeComponent uc = new UpgradeComponent
+                    {
+                        Name = inscriptionMatch.name,
+                        BuyPrice = inscriptionMatch.buy_price,
+                        Id = inscriptionMatch.id,
+                        Rarity = inscriptionMatch.rarity,
+                        SellPrice = inscriptionMatch.sell_price,
+                        StatId = itemMatch.statID
+                    };
+                    Inscriptions.Add(uc);
+                }
+            }
+
+            foreach (var id in _extractableInsigniasIds)
+            {
+                var inscriptionMatch = AllItems.FirstOrDefault(p => p.id == id);
+                if (inscriptionMatch != null)
+                {
+                    var parts = inscriptionMatch.name.Split(' ');
+                    var itemMatch = AllItems.FirstOrDefault(p => p.statName == parts[0]);
+
+                    UpgradeComponent uc = new UpgradeComponent
+                    {
+                        Name = inscriptionMatch.name,
+                        BuyPrice = inscriptionMatch.buy_price,
+                        Id = inscriptionMatch.id,
+                        Rarity = inscriptionMatch.rarity,
+                        SellPrice = inscriptionMatch.sell_price,
+                        StatId = itemMatch.statID
+                    };
+
+                    Insignias.Add(uc);
+                }
+            }
+
+            foreach (var el in _elements)
+            {
+                if (el == "Any")
+                {
+                    continue;
+                }
+                var charm = AllItems.FirstOrDefault(p => p.name == el);
+                CharmsAndSymbols.Add(charm);
+            }
+        }
+
+        private void SetGridColumns()
+        {
+            dgvItems.DataSource = null;
+            dgvItems.Columns.Clear();
+            dgvItems.AutoGenerateColumns = false;
+            dgvItems.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+            dgvItems.RowHeadersVisible = false;
+
+            DataGridViewTextBoxColumn c2 = new DataGridViewTextBoxColumn();
+            c2.Name = "Name";
+            c2.HeaderText = "Item Name";
+            c2.DataPropertyName = "Name";
+            c2.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dgvItems.Columns.Add(c2);
+
+            DataGridViewTextBoxColumn c3 = new DataGridViewTextBoxColumn();
+            c3.Name = "StatName";
+            c3.HeaderText = "Stat Name";
+            c3.DataPropertyName = "StatName";
+            c3.AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
+            c3.Width = 200;
+            dgvItems.Columns.Add(c3);
+
+            DataGridViewTextBoxColumn c22 = new DataGridViewTextBoxColumn();
+            c22.Name = "CharmName";
+            c22.HeaderText = "Charm Name";
+            c22.DataPropertyName = "CharmName";
+            c22.AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
+            c3.Width = 100;
+            dgvItems.Columns.Add(c22);
+
+            DataGridViewTextBoxColumn c5 = new DataGridViewTextBoxColumn();
+            c5.Name = "OrderProfit";
+            c5.HeaderText = "Order Profit";
+            c5.DataPropertyName = "OrderProfit";
+            c5.AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
+            c5.Width = 80;
+            dgvItems.Columns.Add(c5);
+
+            DataGridViewTextBoxColumn c7 = new DataGridViewTextBoxColumn();
+            c7.Name = "QuanityToBuyout";
+            c7.HeaderText = "Quantity To Buyout";
+            c7.DataPropertyName = "QuanityToBuyout";
+            c7.AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
+            c7.Width = 50;
+            dgvItems.Columns.Add(c7);
+
+            DataGridViewTextBoxColumn c6 = new DataGridViewTextBoxColumn();
+            c6.Name = "TotalBuyoutProfit";
+            c6.HeaderText = "Total Profit";
+            c6.DataPropertyName = "TotalBuyoutProfit";
+            c6.AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
+            c6.Width = 80;
+            dgvItems.Columns.Add(c6);
+
+            DataGridViewTextBoxColumn c8 = new DataGridViewTextBoxColumn();
+            c8.Name = "Buyouttill";
+            c8.HeaderText = "Buyout till";
+            c8.DataPropertyName = "BuyoutTill";
+            c8.AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
+            c8.Width = 80;
+            dgvItems.Columns.Add(c8);
+
+        }
+        private void LoadSettings()
 		{
 			try
 			{
@@ -438,8 +437,8 @@ namespace gw2_Investment_Tool.Controls
 			{
 				data = data.Where(p => p.Rarity == "Rare").ToList();
 			}
-
-			if (cbCharm.SelectedText != "Any")
+            
+            if (cbCharm.SelectedItem.ToString() != "Any")
 			{
 				var parts = cbCharm.Text.Split(' ');
 				data = data.Where(p => p.CharmName == parts[2]).ToList();
