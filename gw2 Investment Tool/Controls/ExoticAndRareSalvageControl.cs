@@ -45,12 +45,13 @@ namespace gw2_Investment_Tool.Controls
 		List<UpgradeComponent> Inscriptions = new List<UpgradeComponent>();
 		List<SalvageItemsFull> CharmsAndSymbols = new List<SalvageItemsFull>();
 		List<ExtractableUpgradeComponents> Upgrades = new List<ExtractableUpgradeComponents>();
+        List<GridDataSalvage> ProfitableItems = new List<GridDataSalvage>();
 
 
 
 
 
-		public ExoticAndRareSalvageControl()
+        public ExoticAndRareSalvageControl()
 		{
 			InitializeComponent();
 			SetGridColumns();
@@ -87,10 +88,10 @@ namespace gw2_Investment_Tool.Controls
 		{
 			if (AllItems.Count != 0) //apply filters only
 			{
-				List<GridDataSalvage> data = dgvItems.DataSource as List<GridDataSalvage>;
-				data = FilterResults(data);
+			    var data = ProfitableItems;
+                data = FilterResults(data);
 				dgvItems.DataSource = null;
-				dgvItems.DataSource = data;
+				dgvItems.DataSource = data.OrderByDescending(p => p.InstantProfit).ToList();
 				return;
 			}
 
@@ -99,21 +100,20 @@ namespace gw2_Investment_Tool.Controls
 			await InitializeCollections();
 
 			List<int> idsToGetTransactions = new List<int>();
-			List<GridDataSalvage> profitableItems = new List<GridDataSalvage>();
-
+			
 			List<SalvageItemsFull> AllWeapons =
 				AllItems.Where(p => p.level >= 68 && p.type == "Weapon" && p.NoSalvage != true).ToList();
 			List<SalvageItemsFull> AllArmors =
 				AllItems.Where(p => p.level >= 68 && p.type == "Armor" && p.NoSalvage != true).ToList();
 
 			// filter weapons
-			CalculateProfitability(AllWeapons, Inscriptions, idsToGetTransactions, profitableItems);
-			CalculateProfitability(AllArmors, Insignias, idsToGetTransactions, profitableItems);
+			CalculateProfitability(AllWeapons, Inscriptions, idsToGetTransactions, ProfitableItems);
+			CalculateProfitability(AllArmors, Insignias, idsToGetTransactions, ProfitableItems);
 
 			List<ItemListings> listings = await SAItems.GetAllItemListnings(idsToGetTransactions);
 
 			// combine listing and item data
-			foreach (var item in profitableItems)
+			foreach (var item in ProfitableItems)
 			{
 				var itemListings = listings.FirstOrDefault(p => p.id == item.Id);
 				if (itemListings != null)
@@ -143,7 +143,7 @@ namespace gw2_Investment_Tool.Controls
 
 			}
 
-		    var result = FilterResults(profitableItems);
+		    var result = FilterResults(ProfitableItems);
 			dgvItems.DataSource = null;
 			dgvItems.DataSource = result.OrderByDescending(p => p.InstantProfit).ToList();
 
@@ -262,6 +262,8 @@ namespace gw2_Investment_Tool.Controls
 		private void btnRefresh_Click(object sender, EventArgs e)
 		{
 			GlobOfEctoplasm = new SalvageItemsFull();
+            LucentMote = new SalvageItemsFull();
+            ProfitableItems.Clear();
 			AllItems.Clear();
 		}
 
