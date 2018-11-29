@@ -161,74 +161,74 @@ namespace gw2_Investment_Tool.Controls
 
 				SalvageItemsFull charmHolder = new SalvageItemsFull();
 
-				switch (item.rarity)
-				{
-					case "Exotic":
-						//calculate gold from ectos
-						goldFromEctos = (int) (GlobOfEctoplasm.sell_price * (numExoticEctoDropRate.Value / 100));
+			    switch (item.rarity)
+			    {
+			        case "Exotic":
+			            //calculate gold from ectos
+			            goldFromEctos = (int) (GlobOfEctoplasm.sell_price * (numExoticEctoDropRate.Value / 100));
 
-						//calculate gold from component - only exotics
-						if (component.Any(p => p.StatId == item.statID))
-						{
-							var ins = component.FirstOrDefault(p => p.StatId == item.statID);
-							goldFromComponent = (int) (ins.SellPrice * (numComponentDropRate.Value / 100));
-						}
+			            // calculate gold from charms/motes
+			            if (item.upgrade1 != 0)
+			            {
+			                var upgrade = Upgrades.FirstOrDefault(p => p.id == item.upgrade1);
+			                if (upgrade != null)
+			                {
+			                    var charm = CharmsAndSymbols.FirstOrDefault(p =>
+			                        p.name.ToLower().Contains(upgrade.Charm.ToLower()));
+			                    charmHolder = charm;
+			                    if (upgrade.name.Contains("Major"))
+			                    {
+			                        goldFromCharm = (int) (charm.sell_price * (numRareCharmDropRate.Value / 100));
+			                        goldFromMotes = (int) (LucentMote.sell_price * (numRareMoteDropRate.Value / 100));
+			                    }
+			                    else if (upgrade.name.Contains("Superior"))
+			                    {
+			                        goldFromCharm = (int) (charm.sell_price * (numExoticCharmDroprate.Value / 100));
+			                        goldFromMotes = (int) (LucentMote.sell_price * (numExoticMoteDropRate.Value / 100));
+			                    }
+			                }
 
-						// calculate gold from charms/motes
-						if (item.upgrade1 != 0)
-						{
-							var upgrade = Upgrades.FirstOrDefault(p => p.id == item.upgrade1);
-							if (upgrade != null)
-							{
-								var charm = CharmsAndSymbols.FirstOrDefault(p =>
-									p.name.ToLower().Contains(upgrade.Charm.ToLower()));
-								charmHolder = charm;
-								if (upgrade.name.Contains("Major"))
-								{
-									goldFromCharm = (int) (charm.sell_price * (numRareCharmDropRate.Value / 100));
-									goldFromMotes = (int) (LucentMote.sell_price * (numRareMoteDropRate.Value / 100));
-								}
-								else if (upgrade.name.Contains("Superior"))
-								{
-									goldFromCharm = (int) (charm.sell_price * (numExoticCharmDroprate.Value / 100));
-									goldFromMotes = (int) (LucentMote.sell_price * (numExoticMoteDropRate.Value / 100));
-								}
-							}
-						}
+			                //calculate gold from component - only exotics and only if it has upgrade component (not crafted item)
+			                if (component.Any(p => p.StatId == item.statID))
+			                {
+			                    var ins = component.FirstOrDefault(p => p.StatId == item.statID);
+			                    // exclude craftable items with these stats
+                                goldFromComponent = (int) (ins.SellPrice * (numComponentDropRate.Value / 100));
+			                }
+			            }
 
-						break;
+			            break;
 
-					case "Rare":
-						//calculate gold from ectos
-						goldFromEctos = (int) (GlobOfEctoplasm.sell_price * (numRareEctoDropRate.Value / 100));
+			        case "Rare":
+			            //calculate gold from ectos
+			            goldFromEctos = (int) (GlobOfEctoplasm.sell_price * (numRareEctoDropRate.Value / 100));
 
-						//rares dont have component in them - skip component part
+			            // calculate gold from charms/motes
+			            var upgrade1 = Upgrades.FirstOrDefault(p => p.id == item.upgrade1);
+			            if (upgrade1 != null)
+			            {
+			                var charm = CharmsAndSymbols.FirstOrDefault(
+			                    p => p.name.ToLower().Contains(upgrade1.Charm.ToLower()));
+			                charmHolder = charm;
+			                if (upgrade1.name.Contains("Major"))
+			                {
+			                    goldFromCharm = (int) (charm.sell_price * (numRareCharmDropRate.Value / 100));
+			                    goldFromMotes = (int) (LucentMote.sell_price * (numRareMoteDropRate.Value / 100));
+			                }
+			                else if (upgrade1.name.Contains("Superior"))
+			                {
+			                    goldFromCharm = (int) (charm.sell_price * (numExoticCharmDroprate.Value / 100));
+			                    goldFromMotes = (int) (LucentMote.sell_price * (numExoticMoteDropRate.Value / 100));
+			                }
+			                //rares dont have component in them - skip component part
+			            }
 
-						// calculate gold from charms/motes
-						var upgrade1 = Upgrades.FirstOrDefault(p => p.id == item.upgrade1);
-						if (upgrade1 != null)
-						{
-							var charm = CharmsAndSymbols.FirstOrDefault(
-								p => p.name.ToLower().Contains(upgrade1.Charm.ToLower()));
-							charmHolder = charm;
-							if (upgrade1.name.Contains("Major"))
-							{
-								goldFromCharm = (int) (charm.sell_price * (numRareCharmDropRate.Value / 100));
-								goldFromMotes = (int) (LucentMote.sell_price * (numRareMoteDropRate.Value / 100));
-							}
-							else if (upgrade1.name.Contains("Superior"))
-							{
-								goldFromCharm = (int) (charm.sell_price * (numExoticCharmDroprate.Value / 100));
-								goldFromMotes = (int) (LucentMote.sell_price * (numExoticMoteDropRate.Value / 100));
-							}
-						}
+			            break;
+			    }
 
-						break;
-				}
-
-				// calculate profitability
+			    // calculate profitability
 				int total = goldFromMotes + goldFromEctos + goldFromCharm + goldFromComponent;
-				if (item.buy_price < total)
+				if ((total * 0.85 - item.buy_price)>500)
 				{
 					GridDataSalvage result = new GridDataSalvage
 					{
@@ -238,8 +238,9 @@ namespace gw2_Investment_Tool.Controls
 						Level = item.level,
 						Rarity = item.rarity,
 						StatName = item.statName,
-						ValueOfItem = (int) (total * 0.85)
-					};
+						ValueOfItem = (int) (total * 0.85),
+                        RuneName = Upgrades.FirstOrDefault(p => p.id == item.upgrade1)?.name
+                    };
 					if (charmHolder != null && charmHolder.name != null)
 					{
 						var parts = charmHolder.name.Split(' ');
@@ -261,6 +262,7 @@ namespace gw2_Investment_Tool.Controls
 
 		private void btnRefresh_Click(object sender, EventArgs e)
 		{
+		    dgvItems.DataSource = null;
 			GlobOfEctoplasm = new SalvageItemsFull();
             LucentMote = new SalvageItemsFull();
             ProfitableItems.Clear();
@@ -368,6 +370,22 @@ namespace gw2_Investment_Tool.Controls
             c3.Width = 100;
             dgvItems.Columns.Add(c22);
 
+            DataGridViewTextBoxColumn c32 = new DataGridViewTextBoxColumn();
+            c32.Name = "RuneName";
+            c32.HeaderText = "Upgrade Name";
+            c32.DataPropertyName = "RuneName";
+            c32.AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
+            c32.Width = 200;
+            dgvItems.Columns.Add(c32);
+
+            DataGridViewTextBoxColumn a = new DataGridViewTextBoxColumn();
+            a.Name = "Rarity";
+            a.HeaderText = "Rarity";
+            a.DataPropertyName = "Rarity";
+            a.AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
+            a.Width = 100;
+            dgvItems.Columns.Add(a);
+
             DataGridViewTextBoxColumn c5 = new DataGridViewTextBoxColumn();
             c5.Name = "OrderProfit";
             c5.HeaderText = "Order Profit";
@@ -466,6 +484,7 @@ namespace gw2_Investment_Tool.Controls
 			public int QuanityToBuyout { get; set; }
 			public string BuyoutTill { get; set; }
 			public int ValueOfItem { get; set; }
+            public string RuneName { get; set; }
 		}
 
 	}
