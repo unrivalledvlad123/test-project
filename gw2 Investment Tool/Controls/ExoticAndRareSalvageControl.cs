@@ -51,6 +51,7 @@ namespace gw2_Investment_Tool.Controls
 		List<SalvageItemsFull> CharmsAndSymbols = new List<SalvageItemsFull>();
 		List<ExtractableUpgradeComponents> Upgrades = new List<ExtractableUpgradeComponents>();
         List<GridDataSalvage> ProfitableItems = new List<GridDataSalvage>();
+		List<string> VerifiedItems = new List<string>();
 
 
 
@@ -63,11 +64,9 @@ namespace gw2_Investment_Tool.Controls
 			cbCharm.DataSource = _elements;
 			cbStat.DataSource = _Stats;
 			cbCalculateWith.SelectedIndex = 0;
-			LoadSettings();
-			
+			LoadSettings();			
 		}
-
-
+		
 
 		#region Events
 		private void btnSaveSettings_Click(object sender, EventArgs e)
@@ -96,9 +95,8 @@ namespace gw2_Investment_Tool.Controls
 			if (AllItems.Count != 0) //apply filters only
 			{
 			    var data = ProfitableItems;
-                data = FilterResults(data);
-				dgvItems.DataSource = null;
-				dgvItems.DataSource = data.OrderByDescending(p => p.InstantProfit).ToList();
+                dgvItems.DataSource = null;
+				dgvItems.DataSource = FilterResults(data);
 				return;
 			}
 
@@ -153,10 +151,9 @@ namespace gw2_Investment_Tool.Controls
 				}
 
 			}
-
-		    var result = FilterResults(ProfitableItems);
+			
 			dgvItems.DataSource = null;
-			dgvItems.DataSource = result.OrderByDescending(p => p.InstantProfit).ToList();
+			dgvItems.DataSource = FilterResults(ProfitableItems);
 
 		}
 
@@ -170,6 +167,7 @@ namespace gw2_Investment_Tool.Controls
 				int goldFromCharm = 0;
 				int goldFromMotes = 0;
 				int upgradeSellValue = 0;
+				bool verifiedFlag = false;
 
 				SalvageItemsFull charmHolder = new SalvageItemsFull();
 
@@ -199,16 +197,31 @@ namespace gw2_Investment_Tool.Controls
 			                        goldFromCharm = (int) (charm.sell_price * (numExoticCharmDroprate.Value / 100));
 			                        goldFromMotes = (int) (LucentMote.sell_price * (numExoticMoteDropRate.Value / 100));
 			                    }
-
-				               
+								
 			                }
 
 			                //calculate gold from component - only exotics and only if it has upgrade component (not crafted item)
+							
 			                if (component.Any(p => p.StatId == item.statID))
 			                {
 			                    var ins = component.FirstOrDefault(p => p.StatId == item.statID);
 			                    // exclude craftable items with these stats
                                 goldFromComponent = (int) (ins.SellPrice * (numComponentDropRate.Value / 100));
+								//TODO insert component only if the item is verified in the future. Need time to check items and verify them manually
+				                // calculate based on verified items - checked items that drop that component for sure
+				                foreach (var verified in VerifiedItems)
+				                {
+					                if (item.name.Contains("Errol"))
+					                {
+
+					                }
+					                if (item.name.ToLower().Contains(verified.ToLower()))
+					                {
+						                verifiedFlag = true;
+										break;
+					                }   
+				                }
+
 			                }
 			            }
 
@@ -271,11 +284,12 @@ namespace gw2_Investment_Tool.Controls
 						OrderProfit = ((int) (total * 0.85 - item.buy_price)).ToGoldFormat(),
 						Level = item.level,
 						Rarity = item.rarity,
-						StatName = item.statName,
+						StatName = item.statName + (verifiedFlag? " - VERIFIED":string.Empty),
 						ValueOfItem = (int) (total * 0.85),
 						RuneName = Upgrades.FirstOrDefault(p => p.id == item.upgrade1)?.name,
 						RuneSellPrice = upgrade?.sell_price.ToGoldFormat(),
-						RuneSalvageValue = (goldFromMotes + goldFromCharm).ToGoldFormat()
+						RuneSalvageValue = (goldFromMotes + goldFromCharm).ToGoldFormat(),
+						Verified = verifiedFlag
 					};
 
 					if (charmHolder != null && charmHolder.name != null)
@@ -309,7 +323,7 @@ namespace gw2_Investment_Tool.Controls
         #endregion
 
         #region methods
-        public async Task InitializeCollections()
+        private async Task InitializeCollections()
         {
             // making the collections and sorting them
             AllItems = await SAItems.GetAllSalvagableItems();
@@ -489,10 +503,29 @@ namespace gw2_Investment_Tool.Controls
 			{
 				// ignored
 			}
+
+			try
+			{
+				var directory = Directory.GetCurrentDirectory();
+				string line;
+				StreamReader file = new StreamReader(directory + "\\DataFiles\\System\\VerifiedItems.txt");
+				while ((line = file.ReadLine()) != null)
+				{
+					if (!string.IsNullOrWhiteSpace(line))
+					{
+						VerifiedItems.Add(line);
+					}
+				}
+
+				file.Close();
+			}
+			catch (Exception)
+			{
+				// ignored
+			}
+
 		}
-
-
-		public List<GridDataSalvage> FilterResults(List<GridDataSalvage> data)
+		private List<GridDataSalvage> FilterResults(List<GridDataSalvage> data)
 		{
 			//apply Filtering
 			if (rbExotic.Checked)
@@ -514,9 +547,8 @@ namespace gw2_Investment_Tool.Controls
 			{
 				data = data.Where(p => p.StatName == cbStat.SelectedItem.ToString()).ToList();
 			}
-
-
-			return data;
+			
+			return data.OrderByDescending(p => p.Verified).ThenByDescending(p => p.InstantProfit).ToList();
 		}
 
 		#endregion
@@ -540,8 +572,8 @@ namespace gw2_Investment_Tool.Controls
             public string RuneName { get; set; }
 			public string RuneSellPrice { get; set; }
 			public string RuneSalvageValue { get; set; }
+			public bool Verified { get; set; }
 		}
-
 	}
 	
 
