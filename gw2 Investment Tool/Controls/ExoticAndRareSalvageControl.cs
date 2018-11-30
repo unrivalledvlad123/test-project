@@ -543,12 +543,13 @@ namespace gw2_Investment_Tool.Controls
 				data = data.Where(p => p.CharmName == parts[2]).ToList();
 			}
 
-			if (cbStat.SelectedItem.ToString() != "Any")
-			{
-				data = data.Where(p => p.StatName == cbStat.SelectedItem.ToString()).ToList();
-			}
-			
-			return data.OrderByDescending(p => p.Verified).ThenByDescending(p => p.InstantProfit).ToList();
+		    if (cbStat.SelectedItem.ToString() != "Any")
+		    {
+                var t = cbStat.SelectedItem.ToString();
+                data = data.Where(p => p.StatName.Contains(t)).ToList();
+		    }
+
+		    return data.OrderByDescending(p => p.Verified).ThenByDescending(p => p.InstantProfit).ToList();
 		}
 
 		#endregion
