@@ -29,6 +29,8 @@
 		private void InitializeComponent()
 		{
 			this.gbRates = new System.Windows.Forms.GroupBox();
+			this.label8 = new System.Windows.Forms.Label();
+			this.numMinProfit = new System.Windows.Forms.NumericUpDown();
 			this.btnSaveSettings = new System.Windows.Forms.Button();
 			this.label7 = new System.Windows.Forms.Label();
 			this.numExoticCharmDroprate = new System.Windows.Forms.NumericUpDown();
@@ -45,15 +47,17 @@
 			this.label1 = new System.Windows.Forms.Label();
 			this.numRareEctoDropRate = new System.Windows.Forms.NumericUpDown();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
-			this.rbRare = new System.Windows.Forms.RadioButton();
-			this.rbExotic = new System.Windows.Forms.RadioButton();
-			this.btnSearch = new System.Windows.Forms.Button();
-			this.btnRefresh = new System.Windows.Forms.Button();
 			this.cbCharm = new System.Windows.Forms.ComboBox();
+			this.btnRefresh = new System.Windows.Forms.Button();
+			this.btnSearch = new System.Windows.Forms.Button();
+			this.rbExotic = new System.Windows.Forms.RadioButton();
+			this.rbRare = new System.Windows.Forms.RadioButton();
 			this.dgvItems = new System.Windows.Forms.DataGridView();
-			this.label8 = new System.Windows.Forms.Label();
-			this.numMinProfit = new System.Windows.Forms.NumericUpDown();
+			this.cbStat = new System.Windows.Forms.ComboBox();
+			this.label9 = new System.Windows.Forms.Label();
+			this.cbCalculateWith = new System.Windows.Forms.ComboBox();
 			this.gbRates.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numMinProfit)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numExoticCharmDroprate)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numRareCharmDropRate)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numExoticMoteDropRate)).BeginInit();
@@ -63,7 +67,6 @@
 			((System.ComponentModel.ISupportInitialize)(this.numRareEctoDropRate)).BeginInit();
 			this.groupBox2.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dgvItems)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numMinProfit)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// gbRates
@@ -89,15 +92,42 @@
 			this.gbRates.Controls.Add(this.numRareEctoDropRate);
 			this.gbRates.Location = new System.Drawing.Point(3, 3);
 			this.gbRates.Name = "gbRates";
-			this.gbRates.Size = new System.Drawing.Size(687, 118);
+			this.gbRates.Size = new System.Drawing.Size(945, 118);
 			this.gbRates.TabIndex = 0;
 			this.gbRates.TabStop = false;
 			this.gbRates.Text = "Drop rates";
 			// 
+			// label8
+			// 
+			this.label8.AutoSize = true;
+			this.label8.Location = new System.Drawing.Point(389, 20);
+			this.label8.Name = "label8";
+			this.label8.Size = new System.Drawing.Size(74, 13);
+			this.label8.TabIndex = 16;
+			this.label8.Text = "Profit minimum";
+			// 
+			// numMinProfit
+			// 
+			this.numMinProfit.DecimalPlaces = 2;
+			this.numMinProfit.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+			this.numMinProfit.Location = new System.Drawing.Point(388, 42);
+			this.numMinProfit.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+			this.numMinProfit.Name = "numMinProfit";
+			this.numMinProfit.Size = new System.Drawing.Size(120, 20);
+			this.numMinProfit.TabIndex = 15;
+			// 
 			// btnSaveSettings
 			// 
 			this.btnSaveSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnSaveSettings.Location = new System.Drawing.Point(596, 89);
+			this.btnSaveSettings.Location = new System.Drawing.Point(854, 89);
 			this.btnSaveSettings.Name = "btnSaveSettings";
 			this.btnSaveSettings.Size = new System.Drawing.Size(85, 23);
 			this.btnSaveSettings.TabIndex = 14;
@@ -298,6 +328,9 @@
 			// 
 			this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox2.Controls.Add(this.cbCalculateWith);
+			this.groupBox2.Controls.Add(this.label9);
+			this.groupBox2.Controls.Add(this.cbStat);
 			this.groupBox2.Controls.Add(this.cbCharm);
 			this.groupBox2.Controls.Add(this.btnRefresh);
 			this.groupBox2.Controls.Add(this.btnSearch);
@@ -305,21 +338,40 @@
 			this.groupBox2.Controls.Add(this.rbRare);
 			this.groupBox2.Location = new System.Drawing.Point(3, 127);
 			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(687, 49);
+			this.groupBox2.Size = new System.Drawing.Size(945, 49);
 			this.groupBox2.TabIndex = 1;
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "Filters";
 			// 
-			// rbRare
+			// cbCharm
 			// 
-			this.rbRare.AutoSize = true;
-			this.rbRare.Location = new System.Drawing.Point(6, 19);
-			this.rbRare.Name = "rbRare";
-			this.rbRare.Size = new System.Drawing.Size(48, 17);
-			this.rbRare.TabIndex = 0;
-			this.rbRare.TabStop = true;
-			this.rbRare.Text = "Rare";
-			this.rbRare.UseVisualStyleBackColor = true;
+			this.cbCharm.FormattingEnabled = true;
+			this.cbCharm.Location = new System.Drawing.Point(132, 15);
+			this.cbCharm.Name = "cbCharm";
+			this.cbCharm.Size = new System.Drawing.Size(250, 21);
+			this.cbCharm.TabIndex = 4;
+			// 
+			// btnRefresh
+			// 
+			this.btnRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnRefresh.Location = new System.Drawing.Point(763, 13);
+			this.btnRefresh.Name = "btnRefresh";
+			this.btnRefresh.Size = new System.Drawing.Size(85, 23);
+			this.btnRefresh.TabIndex = 3;
+			this.btnRefresh.Text = "Refresh";
+			this.btnRefresh.UseVisualStyleBackColor = true;
+			this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
+			// 
+			// btnSearch
+			// 
+			this.btnSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnSearch.Location = new System.Drawing.Point(854, 13);
+			this.btnSearch.Name = "btnSearch";
+			this.btnSearch.Size = new System.Drawing.Size(85, 23);
+			this.btnSearch.TabIndex = 2;
+			this.btnSearch.Text = "Search";
+			this.btnSearch.UseVisualStyleBackColor = true;
+			this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
 			// 
 			// rbExotic
 			// 
@@ -332,35 +384,16 @@
 			this.rbExotic.Text = "Exotics";
 			this.rbExotic.UseVisualStyleBackColor = true;
 			// 
-			// btnSearch
+			// rbRare
 			// 
-			this.btnSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnSearch.Location = new System.Drawing.Point(596, 13);
-			this.btnSearch.Name = "btnSearch";
-			this.btnSearch.Size = new System.Drawing.Size(85, 23);
-			this.btnSearch.TabIndex = 2;
-			this.btnSearch.Text = "Search";
-			this.btnSearch.UseVisualStyleBackColor = true;
-			this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
-			// 
-			// btnRefresh
-			// 
-			this.btnRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnRefresh.Location = new System.Drawing.Point(505, 13);
-			this.btnRefresh.Name = "btnRefresh";
-			this.btnRefresh.Size = new System.Drawing.Size(85, 23);
-			this.btnRefresh.TabIndex = 3;
-			this.btnRefresh.Text = "Refresh";
-			this.btnRefresh.UseVisualStyleBackColor = true;
-			this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
-			// 
-			// cbCharm
-			// 
-			this.cbCharm.FormattingEnabled = true;
-			this.cbCharm.Location = new System.Drawing.Point(132, 15);
-			this.cbCharm.Name = "cbCharm";
-			this.cbCharm.Size = new System.Drawing.Size(250, 21);
-			this.cbCharm.TabIndex = 4;
+			this.rbRare.AutoSize = true;
+			this.rbRare.Location = new System.Drawing.Point(6, 19);
+			this.rbRare.Name = "rbRare";
+			this.rbRare.Size = new System.Drawing.Size(48, 17);
+			this.rbRare.TabIndex = 0;
+			this.rbRare.TabStop = true;
+			this.rbRare.Text = "Rare";
+			this.rbRare.UseVisualStyleBackColor = true;
 			// 
 			// dgvItems
 			// 
@@ -370,35 +403,36 @@
 			this.dgvItems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dgvItems.Location = new System.Drawing.Point(3, 182);
 			this.dgvItems.Name = "dgvItems";
-			this.dgvItems.Size = new System.Drawing.Size(687, 417);
+			this.dgvItems.Size = new System.Drawing.Size(945, 417);
 			this.dgvItems.TabIndex = 2;
 			// 
-			// label8
+			// cbStat
 			// 
-			this.label8.AutoSize = true;
-			this.label8.Location = new System.Drawing.Point(389, 20);
-			this.label8.Name = "label8";
-			this.label8.Size = new System.Drawing.Size(74, 13);
-			this.label8.TabIndex = 16;
-			this.label8.Text = "Profit minimum";
+			this.cbStat.FormattingEnabled = true;
+			this.cbStat.Location = new System.Drawing.Point(388, 15);
+			this.cbStat.Name = "cbStat";
+			this.cbStat.Size = new System.Drawing.Size(111, 21);
+			this.cbStat.TabIndex = 5;
 			// 
-			// numMinProfit
+			// label9
 			// 
-			this.numMinProfit.DecimalPlaces = 2;
-			this.numMinProfit.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            131072});
-			this.numMinProfit.Location = new System.Drawing.Point(388, 42);
-			this.numMinProfit.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-			this.numMinProfit.Name = "numMinProfit";
-			this.numMinProfit.Size = new System.Drawing.Size(120, 20);
-			this.numMinProfit.TabIndex = 15;
+			this.label9.AutoSize = true;
+			this.label9.Location = new System.Drawing.Point(505, 21);
+			this.label9.Name = "label9";
+			this.label9.Size = new System.Drawing.Size(76, 13);
+			this.label9.TabIndex = 6;
+			this.label9.Text = "Calculate with:";
+			// 
+			// cbCalculateWith
+			// 
+			this.cbCalculateWith.FormattingEnabled = true;
+			this.cbCalculateWith.Items.AddRange(new object[] {
+            "Sell value",
+            "Salvage value"});
+			this.cbCalculateWith.Location = new System.Drawing.Point(587, 15);
+			this.cbCalculateWith.Name = "cbCalculateWith";
+			this.cbCalculateWith.Size = new System.Drawing.Size(134, 21);
+			this.cbCalculateWith.TabIndex = 7;
 			// 
 			// ExoticAndRareSalvageControl
 			// 
@@ -408,9 +442,10 @@
 			this.Controls.Add(this.groupBox2);
 			this.Controls.Add(this.gbRates);
 			this.Name = "ExoticAndRareSalvageControl";
-			this.Size = new System.Drawing.Size(693, 602);
+			this.Size = new System.Drawing.Size(951, 602);
 			this.gbRates.ResumeLayout(false);
 			this.gbRates.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numMinProfit)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numExoticCharmDroprate)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numRareCharmDropRate)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numExoticMoteDropRate)).EndInit();
@@ -421,7 +456,6 @@
 			this.groupBox2.ResumeLayout(false);
 			this.groupBox2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dgvItems)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numMinProfit)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -453,5 +487,8 @@
 		private System.Windows.Forms.DataGridView dgvItems;
 		private System.Windows.Forms.Label label8;
 		private System.Windows.Forms.NumericUpDown numMinProfit;
+		private System.Windows.Forms.ComboBox cbStat;
+		private System.Windows.Forms.ComboBox cbCalculateWith;
+		private System.Windows.Forms.Label label9;
 	}
 }

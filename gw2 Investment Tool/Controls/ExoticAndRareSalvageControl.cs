@@ -20,12 +20,12 @@ namespace gw2_Investment_Tool.Controls
 	{
 		#region global constants
 
-		private readonly List<int> _extractableInscriptionIds = new List<int>()
+		private readonly List<int> _extractableInscriptionIds = new List<int>
 		{
 			46684, 46685, 46686, 46687, 46688, 46690
 		}; // a list of all salvagable Inscriptions ids
 
-		private readonly List<int> _extractableInsigniasIds = new List<int>()
+		private readonly List<int> _extractableInsigniasIds = new List<int>
 		{
 			49522, 46710, 46709, 46711, 46712, 46708
 		}; // a list of all salvagable Insignias ids
@@ -33,6 +33,11 @@ namespace gw2_Investment_Tool.Controls
 		private readonly List<string> _elements = new List<string>
 		{
 			"Any","Charm of Skill", "Charm of Brilliance", "Charm of Potence", "Symbol of Pain", "Symbol of Enhancement", "Symbol of Control"
+		};
+
+		private readonly  List<string> _Stats = new List<string>
+		{
+			"Any","Shaman's", "Cavalier's", "Rabid", "Magi's", "Soldier's", "Dire"
 		};
 
 		#endregion
@@ -56,6 +61,8 @@ namespace gw2_Investment_Tool.Controls
 			InitializeComponent();
 			SetGridColumns();
 			cbCharm.DataSource = _elements;
+			cbStat.DataSource = _Stats;
+			cbCalculateWith.SelectedIndex = 0;
 			LoadSettings();
 			
 		}
@@ -126,13 +133,17 @@ namespace gw2_Investment_Tool.Controls
 						foreach (var listing in goodListings)
 						{
 						    decimal t1 = (decimal) item.ValueOfItem /(decimal) listing.unit_price;
-						   
-                            if (t1 >= numMinProfit.Value)// calculate min ROI
+							
+                            if (((t1 - 1) * 100) >= (numMinProfit.Value))// calculate min ROI
 							{
 								totalQuantity = totalQuantity + listing.quantity;
 								totalProfit = totalProfit + listing.quantity * item.ValueOfItem - listing.unit_price;
 								item.BuyoutTill = listing.unit_price.ToGoldFormat();
-							}						
+							}
+                            else
+                            {
+								break;
+                            }						
 						}
 
 						item.TotalBuyoutProfit = totalProfit.ToGoldFormat();
@@ -158,6 +169,7 @@ namespace gw2_Investment_Tool.Controls
 				int goldFromComponent = 0;
 				int goldFromCharm = 0;
 				int goldFromMotes = 0;
+				int upgradeSellValue = 0;
 
 				SalvageItemsFull charmHolder = new SalvageItemsFull();
 
@@ -173,7 +185,8 @@ namespace gw2_Investment_Tool.Controls
 			                var upgrade = Upgrades.FirstOrDefault(p => p.id == item.upgrade1);
 			                if (upgrade != null)
 			                {
-			                    var charm = CharmsAndSymbols.FirstOrDefault(p =>
+				                upgradeSellValue = upgrade.sell_price;
+								var charm = CharmsAndSymbols.FirstOrDefault(p =>
 			                        p.name.ToLower().Contains(upgrade.Charm.ToLower()));
 			                    charmHolder = charm;
 			                    if (upgrade.name.Contains("Major"))
@@ -186,6 +199,8 @@ namespace gw2_Investment_Tool.Controls
 			                        goldFromCharm = (int) (charm.sell_price * (numExoticCharmDroprate.Value / 100));
 			                        goldFromMotes = (int) (LucentMote.sell_price * (numExoticMoteDropRate.Value / 100));
 			                    }
+
+				               
 			                }
 
 			                //calculate gold from component - only exotics and only if it has upgrade component (not crafted item)
@@ -207,7 +222,8 @@ namespace gw2_Investment_Tool.Controls
 			            var upgrade1 = Upgrades.FirstOrDefault(p => p.id == item.upgrade1);
 			            if (upgrade1 != null)
 			            {
-			                var charm = CharmsAndSymbols.FirstOrDefault(
+				            upgradeSellValue = upgrade1.sell_price;
+							var charm = CharmsAndSymbols.FirstOrDefault(
 			                    p => p.name.ToLower().Contains(upgrade1.Charm.ToLower()));
 			                charmHolder = charm;
 			                if (upgrade1.name.Contains("Major"))
@@ -226,10 +242,28 @@ namespace gw2_Investment_Tool.Controls
 			            break;
 			    }
 
-			    // calculate profitability
-				int total = goldFromMotes + goldFromEctos + goldFromCharm + goldFromComponent;
+				// calculate profitability
+				int total = 0;
+				if (cbCalculateWith.SelectedItem != null)
+				{
+					switch (cbCalculateWith.SelectedItem.ToString())
+					{
+						case "Salvage value":
+							total = goldFromMotes + goldFromEctos + goldFromCharm + goldFromComponent;
+							break;
+						case "Sell value":
+							total = goldFromEctos + upgradeSellValue + goldFromComponent;
+							break;
+					}
+				}
+				else
+				{
+					total = goldFromMotes + goldFromEctos + goldFromCharm + goldFromComponent;
+				}
+				
 				if ((total * 0.85 - item.buy_price)>500)
 				{
+					var upgrade = Upgrades.FirstOrDefault(p => p.id == item.upgrade1);
 					GridDataSalvage result = new GridDataSalvage
 					{
 						Id = item.id,
@@ -239,8 +273,11 @@ namespace gw2_Investment_Tool.Controls
 						Rarity = item.rarity,
 						StatName = item.statName,
 						ValueOfItem = (int) (total * 0.85),
-                        RuneName = Upgrades.FirstOrDefault(p => p.id == item.upgrade1)?.name
-                    };
+						RuneName = Upgrades.FirstOrDefault(p => p.id == item.upgrade1)?.name,
+						RuneSellPrice = upgrade?.sell_price.ToGoldFormat(),
+						RuneSalvageValue = (goldFromMotes + goldFromCharm).ToGoldFormat()
+					};
+
 					if (charmHolder != null && charmHolder.name != null)
 					{
 						var parts = charmHolder.name.Split(' ');
@@ -353,38 +390,47 @@ namespace gw2_Investment_Tool.Controls
             c2.DataPropertyName = "Name";
             c2.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             dgvItems.Columns.Add(c2);
-
-            DataGridViewTextBoxColumn c3 = new DataGridViewTextBoxColumn();
+			
+			DataGridViewTextBoxColumn c3 = new DataGridViewTextBoxColumn();
             c3.Name = "StatName";
             c3.HeaderText = "Stat Name";
             c3.DataPropertyName = "StatName";
             c3.AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
-            c3.Width = 200;
+            c3.Width = 80;
             dgvItems.Columns.Add(c3);
+			
+            DataGridViewTextBoxColumn b = new DataGridViewTextBoxColumn();
+            b.Name = "RuneName";
+            b.HeaderText = "Upgrade Name";
+            b.DataPropertyName = "RuneName";
+            b.AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
+            b.Width = 150;
+            dgvItems.Columns.Add(b);
 
-            DataGridViewTextBoxColumn c22 = new DataGridViewTextBoxColumn();
-            c22.Name = "CharmName";
-            c22.HeaderText = "Charm Name";
-            c22.DataPropertyName = "CharmName";
-            c22.AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
-            c3.Width = 100;
-            dgvItems.Columns.Add(c22);
+	        DataGridViewTextBoxColumn c22 = new DataGridViewTextBoxColumn();
+	        c22.Name = "CharmName";
+	        c22.HeaderText = "Charm Name";
+	        c22.DataPropertyName = "CharmName";
+	        c22.AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
+	        c3.Width = 80;
+	        dgvItems.Columns.Add(c22);
 
-            DataGridViewTextBoxColumn c32 = new DataGridViewTextBoxColumn();
-            c32.Name = "RuneName";
-            c32.HeaderText = "Upgrade Name";
-            c32.DataPropertyName = "RuneName";
-            c32.AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
-            c32.Width = 200;
-            dgvItems.Columns.Add(c32);
+			DataGridViewTextBoxColumn c = new DataGridViewTextBoxColumn();
+	        c.Name = "RuneSellPrice";
+	        c.HeaderText = "Rune Sell Price";
+	        c.DataPropertyName = "RuneSellPrice";
+	        c.AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
+	        c.Width = 80;
+	        dgvItems.Columns.Add(c);
 
-            DataGridViewTextBoxColumn a = new DataGridViewTextBoxColumn();
-            a.Name = "Rarity";
-            a.HeaderText = "Rarity";
-            a.DataPropertyName = "Rarity";
-            a.AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
-            a.Width = 100;
-            dgvItems.Columns.Add(a);
+	        DataGridViewTextBoxColumn c32 = new DataGridViewTextBoxColumn();
+	        c32.Name = "RuneSalvageValue";
+	        c32.HeaderText = "Rune Salvage Value";
+	        c32.DataPropertyName = "RuneSalvageValue";
+	        c32.AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
+	        c32.Width = 80;
+	        dgvItems.Columns.Add(c32);
+			
 
             DataGridViewTextBoxColumn c5 = new DataGridViewTextBoxColumn();
             c5.Name = "OrderProfit";
@@ -463,6 +509,13 @@ namespace gw2_Investment_Tool.Controls
 				var parts = cbCharm.Text.Split(' ');
 				data = data.Where(p => p.CharmName == parts[2]).ToList();
 			}
+
+			if (cbStat.SelectedItem.ToString() != "Any")
+			{
+				data = data.Where(p => p.StatName == cbStat.SelectedItem.ToString()).ToList();
+			}
+
+
 			return data;
 		}
 
@@ -485,6 +538,8 @@ namespace gw2_Investment_Tool.Controls
 			public string BuyoutTill { get; set; }
 			public int ValueOfItem { get; set; }
             public string RuneName { get; set; }
+			public string RuneSellPrice { get; set; }
+			public string RuneSalvageValue { get; set; }
 		}
 
 	}
