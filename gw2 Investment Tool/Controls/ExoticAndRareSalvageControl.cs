@@ -294,7 +294,7 @@ namespace gw2_Investment_Tool.Controls
 						RuneSellPrice = upgrade?.sell_price.ToGoldFormat(),
 						RuneSalvageValue = (goldFromMotes + goldFromCharm).ToGoldFormat(),
 						Verified = verifiedFlag,
-						SellSalvageRatio = upgrade != null ? upgrade.sell_price - (goldFromMotes + goldFromCharm) : 0
+						SellSalvageRatio = upgrade != null ? upgrade.sell_price - (goldFromMotes + goldFromCharm) : (decimal?) null
 					};
 
 					if (charmHolder?.name != null)
@@ -609,7 +609,7 @@ namespace gw2_Investment_Tool.Controls
 				case "Total Profit":
 					return data.OrderByDescending(p => p.Verified).ThenByDescending(p => p.InstantProfit).ToList();
 				case "Sell/Salvage ratio":
-					return data.OrderByDescending(p => p.Verified).ThenBy( p => p.SellSalvageRatio).ThenByDescending(p => p.SellSalvageRatio).ToList();
+					return data.OrderByDescending(p => p.Verified).ThenByDescending( p => p.SellSalvageRatio.HasValue).ThenByDescending(p => p.SellSalvageRatio).ToList();
 				case "Quantity/Profit ratio":
 					return data.OrderByDescending(p => p.Verified).ThenByDescending(p => p.QuantityProfitRatio.HasValue).ThenByDescending(p => p.QuantityProfitRatio).ToList();
 			}
