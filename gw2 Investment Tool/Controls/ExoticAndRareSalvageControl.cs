@@ -32,12 +32,12 @@ namespace gw2_Investment_Tool.Controls
 
 		private readonly List<string> _elements = new List<string>
 		{
-			"Any","Charm of Skill", "Charm of Brilliance", "Charm of Potence", "Symbol of Pain", "Symbol of Enhancement", "Symbol of Control"
+			"Charm of Skill", "Charm of Brilliance", "Charm of Potence", "Symbol of Pain", "Symbol of Enhancement", "Symbol of Control"
 		};
 
 		private readonly  List<string> _Stats = new List<string>
 		{
-			"Any","Shaman's", "Cavalier's", "Rabid", "Magi's", "Soldier's", "Dire"
+			"Shaman's", "Cavalier's", "Rabid", "Magi's", "Soldier's", "Dire"
 		};
 
 		#endregion
@@ -61,10 +61,9 @@ namespace gw2_Investment_Tool.Controls
 		{
 			InitializeComponent();
 			SetGridColumns();
-			cbCharm.DataSource = _elements;
-			cbStat.DataSource = _Stats;
 			cbCalculateWith.SelectedIndex = 0;
 			LoadSettings();			
+			LoadComboboxes();
 		}
 		
 
@@ -147,6 +146,11 @@ namespace gw2_Investment_Tool.Controls
 						item.TotalBuyoutProfit = totalProfit.ToGoldFormat();
 						item.InstantProfit = totalProfit;
 						item.QuanityToBuyout = totalQuantity;
+						if (totalProfit != 0 && totalQuantity != 0)
+						{
+							item.QuantityProfitRatio = totalProfit / totalQuantity;
+						}
+						
 					}
 				}
 
@@ -273,8 +277,8 @@ namespace gw2_Investment_Tool.Controls
 				{
 					total = goldFromMotes + goldFromEctos + goldFromCharm + goldFromComponent;
 				}
-				
-				if ((total * 0.85 - item.buy_price)>500)
+
+				if ((total * 0.85 - item.buy_price) > 500)
 				{
 					var upgrade = Upgrades.FirstOrDefault(p => p.id == item.upgrade1);
 					GridDataSalvage result = new GridDataSalvage
@@ -284,21 +288,23 @@ namespace gw2_Investment_Tool.Controls
 						OrderProfit = ((int) (total * 0.85 - item.buy_price)).ToGoldFormat(),
 						Level = item.level,
 						Rarity = item.rarity,
-						StatName = item.statName + (verifiedFlag? " - VERIFIED":string.Empty),
+						StatName = item.statName + (verifiedFlag ? " - VERIFIED" : string.Empty),
 						ValueOfItem = (int) (total * 0.85),
 						RuneName = Upgrades.FirstOrDefault(p => p.id == item.upgrade1)?.name,
 						RuneSellPrice = upgrade?.sell_price.ToGoldFormat(),
 						RuneSalvageValue = (goldFromMotes + goldFromCharm).ToGoldFormat(),
-						Verified = verifiedFlag
+						Verified = verifiedFlag,
+						SellSalvageRatio = upgrade != null ? upgrade.sell_price - (goldFromMotes + goldFromCharm) : 0
 					};
 
-					if (charmHolder != null && charmHolder.name != null)
+					if (charmHolder?.name != null)
 					{
 						var parts = charmHolder.name.Split(' ');
 						result.CharmName = parts[2];
 					}
-                    profitableItems.Add(result);
-                   
+
+					profitableItems.Add(result);
+
 				}
 
 				if (item.sell_price < total)
@@ -320,10 +326,52 @@ namespace gw2_Investment_Tool.Controls
 			AllItems.Clear();
 		}
 
-        #endregion
+		private void cbFilterBy_SelectionChangeCommitted(object sender, EventArgs e)
+		{
+			if (ProfitableItems.Count != 0)
+			{
+				switch (cbFilterBy.SelectedItem.ToString())
+				{
+					//set the datasourse for the next combo based on currently selected filter
+					case "Any":
+						cbFilterValue.DataSource = null;
+						cbFilterValue.DataSource = new List<string> { "Any" };
+						break;
+					case "Stat name":
+						cbFilterValue.DataSource = null;
+						cbFilterValue.DataSource = _Stats;
+						break;
+					case "Charm name":
+						cbFilterValue.DataSource = null;
+						cbFilterValue.DataSource = _elements;
+						break;
+					case "Rune name":
+						cbFilterValue.DataSource = null;
+						if (dgvItems.DataSource is List<GridDataSalvage> currentBindings)
+						{
+							var t = currentBindings.GroupBy(p => p.RuneName).Select(g => g.First().RuneName)
+								.Where(p => !string.IsNullOrWhiteSpace(p)).OrderBy(t1 => t1).ToList();
+							cbFilterValue.DataSource = t;
+						}
+						else
+						{
+							cbFilterValue.DataSource = new List<string> { "Yes", "No" };
+						}
+						break;
+				}
+			}
+			else
+			{
+				cbFilterValue.DataSource = null;
+				cbFilterValue.DataSource = new List<string> { "Any" };
+			}
 
-        #region methods
-        private async Task InitializeCollections()
+		}
+
+		#endregion
+
+		#region methods
+		private async Task InitializeCollections()
         {
             // making the collections and sorting them
             AllItems = await SAItems.GetAllSalvagableItems();
@@ -527,7 +575,7 @@ namespace gw2_Investment_Tool.Controls
 		}
 		private List<GridDataSalvage> FilterResults(List<GridDataSalvage> data)
 		{
-			//apply Filtering
+			//Apply filtering
 			if (rbExotic.Checked)
 			{
 				data = data.Where(p => p.Rarity == "Exotic").ToList();
@@ -536,20 +584,48 @@ namespace gw2_Investment_Tool.Controls
 			{
 				data = data.Where(p => p.Rarity == "Rare").ToList();
 			}
-            
-            if (cbCharm.SelectedItem.ToString() != "Any")
+
+			switch (cbFilterBy.SelectedItem.ToString())
 			{
-				var parts = cbCharm.Text.Split(' ');
-				data = data.Where(p => p.CharmName == parts[2]).ToList();
+				case "Any":
+					//Apply no further filtering
+					break;
+				case "Stat name":
+					var t2 = cbFilterValue.SelectedItem.ToString();
+					data = data.Where(p => p.StatName.Contains(t2)).ToList();
+					break;
+				case "Charm name":
+					var parts = cbFilterValue.Text.Split(' ');
+					data = data.Where(p => p.CharmName == parts[2]).ToList();
+					break;
+				case "Rune name":
+					var runename = cbFilterValue.SelectedItem.ToString();
+					data = data.Where(p => p.RuneName == runename).ToList();
+					break;
+			}
+			//Apply advanced filtering
+			switch (cbAdvancedFilters.SelectedItem.ToString())
+			{
+				case "Total Profit":
+					return data.OrderByDescending(p => p.Verified).ThenByDescending(p => p.InstantProfit).ToList();
+				case "Sell/Salvage ratio":
+					return data.OrderByDescending(p => p.Verified).ThenBy( p => p.SellSalvageRatio).ThenByDescending(p => p.SellSalvageRatio).ToList();
+				case "Quantity/Profit ratio":
+					return data.OrderByDescending(p => p.Verified).ThenByDescending(p => p.QuantityProfitRatio.HasValue).ThenByDescending(p => p.QuantityProfitRatio).ToList();
 			}
 
-		    if (cbStat.SelectedItem.ToString() != "Any")
-		    {
-                var t = cbStat.SelectedItem.ToString();
-                data = data.Where(p => p.StatName.Contains(t)).ToList();
-		    }
+			return data.OrderByDescending(p => p.Verified).ThenByDescending(p => p.InstantProfit).ToList();
+		}
 
-		    return data.OrderByDescending(p => p.Verified).ThenByDescending(p => p.InstantProfit).ToList();
+		private void LoadComboboxes()
+		{
+			List<string> filterBy = new List<string>
+			{
+				"Any","Stat name", "Charm name", "Rune name"
+			};
+			cbFilterBy.DataSource = filterBy;
+			cbFilterValue.DataSource = new List<string> { "Any" };
+			cbAdvancedFilters.DataSource = new List<string>{"Total Profit","Sell/Salvage ratio","Quantity/Profit ratio"};
 		}
 
 		#endregion
@@ -574,7 +650,11 @@ namespace gw2_Investment_Tool.Controls
 			public string RuneSellPrice { get; set; }
 			public string RuneSalvageValue { get; set; }
 			public bool Verified { get; set; }
+			public decimal? SellSalvageRatio { get; set; }
+			public decimal? QuantityProfitRatio { get; set; }
 		}
+
+		
 	}
 	
 

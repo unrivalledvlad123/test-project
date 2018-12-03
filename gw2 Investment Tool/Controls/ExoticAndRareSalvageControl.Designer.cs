@@ -47,15 +47,16 @@
 			this.label1 = new System.Windows.Forms.Label();
 			this.numRareEctoDropRate = new System.Windows.Forms.NumericUpDown();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
-			this.cbCharm = new System.Windows.Forms.ComboBox();
+			this.cbCalculateWith = new System.Windows.Forms.ComboBox();
+			this.label9 = new System.Windows.Forms.Label();
 			this.btnRefresh = new System.Windows.Forms.Button();
 			this.btnSearch = new System.Windows.Forms.Button();
 			this.rbExotic = new System.Windows.Forms.RadioButton();
 			this.rbRare = new System.Windows.Forms.RadioButton();
 			this.dgvItems = new System.Windows.Forms.DataGridView();
-			this.cbStat = new System.Windows.Forms.ComboBox();
-			this.label9 = new System.Windows.Forms.Label();
-			this.cbCalculateWith = new System.Windows.Forms.ComboBox();
+			this.cbFilterBy = new System.Windows.Forms.ComboBox();
+			this.cbFilterValue = new System.Windows.Forms.ComboBox();
+			this.cbAdvancedFilters = new System.Windows.Forms.ComboBox();
 			this.gbRates.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numMinProfit)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numExoticCharmDroprate)).BeginInit();
@@ -328,10 +329,11 @@
 			// 
 			this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox2.Controls.Add(this.cbAdvancedFilters);
+			this.groupBox2.Controls.Add(this.cbFilterValue);
+			this.groupBox2.Controls.Add(this.cbFilterBy);
 			this.groupBox2.Controls.Add(this.cbCalculateWith);
 			this.groupBox2.Controls.Add(this.label9);
-			this.groupBox2.Controls.Add(this.cbStat);
-			this.groupBox2.Controls.Add(this.cbCharm);
 			this.groupBox2.Controls.Add(this.btnRefresh);
 			this.groupBox2.Controls.Add(this.btnSearch);
 			this.groupBox2.Controls.Add(this.rbExotic);
@@ -343,13 +345,27 @@
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "Filters";
 			// 
-			// cbCharm
+			// cbCalculateWith
 			// 
-			this.cbCharm.FormattingEnabled = true;
-			this.cbCharm.Location = new System.Drawing.Point(132, 15);
-			this.cbCharm.Name = "cbCharm";
-			this.cbCharm.Size = new System.Drawing.Size(250, 21);
-			this.cbCharm.TabIndex = 4;
+			this.cbCalculateWith.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.cbCalculateWith.FormattingEnabled = true;
+			this.cbCalculateWith.Items.AddRange(new object[] {
+            "Sell value",
+            "Salvage value"});
+			this.cbCalculateWith.Location = new System.Drawing.Point(496, 15);
+			this.cbCalculateWith.Name = "cbCalculateWith";
+			this.cbCalculateWith.Size = new System.Drawing.Size(134, 21);
+			this.cbCalculateWith.TabIndex = 7;
+			// 
+			// label9
+			// 
+			this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.label9.AutoSize = true;
+			this.label9.Location = new System.Drawing.Point(414, 21);
+			this.label9.Name = "label9";
+			this.label9.Size = new System.Drawing.Size(76, 13);
+			this.label9.TabIndex = 6;
+			this.label9.Text = "Calculate with:";
 			// 
 			// btnRefresh
 			// 
@@ -406,33 +422,33 @@
 			this.dgvItems.Size = new System.Drawing.Size(945, 417);
 			this.dgvItems.TabIndex = 2;
 			// 
-			// cbStat
+			// cbFilterBy
 			// 
-			this.cbStat.FormattingEnabled = true;
-			this.cbStat.Location = new System.Drawing.Point(388, 15);
-			this.cbStat.Name = "cbStat";
-			this.cbStat.Size = new System.Drawing.Size(111, 21);
-			this.cbStat.TabIndex = 5;
+			this.cbFilterBy.FormattingEnabled = true;
+			this.cbFilterBy.Location = new System.Drawing.Point(132, 15);
+			this.cbFilterBy.Name = "cbFilterBy";
+			this.cbFilterBy.Size = new System.Drawing.Size(121, 21);
+			this.cbFilterBy.TabIndex = 8;
+			this.cbFilterBy.SelectionChangeCommitted += new System.EventHandler(this.cbFilterBy_SelectionChangeCommitted);
 			// 
-			// label9
+			// cbFilterValue
 			// 
-			this.label9.AutoSize = true;
-			this.label9.Location = new System.Drawing.Point(505, 21);
-			this.label9.Name = "label9";
-			this.label9.Size = new System.Drawing.Size(76, 13);
-			this.label9.TabIndex = 6;
-			this.label9.Text = "Calculate with:";
+			this.cbFilterValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.cbFilterValue.FormattingEnabled = true;
+			this.cbFilterValue.Location = new System.Drawing.Point(261, 15);
+			this.cbFilterValue.Name = "cbFilterValue";
+			this.cbFilterValue.Size = new System.Drawing.Size(147, 21);
+			this.cbFilterValue.TabIndex = 9;
 			// 
-			// cbCalculateWith
+			// cbAdvancedFilters
 			// 
-			this.cbCalculateWith.FormattingEnabled = true;
-			this.cbCalculateWith.Items.AddRange(new object[] {
-            "Sell value",
-            "Salvage value"});
-			this.cbCalculateWith.Location = new System.Drawing.Point(587, 15);
-			this.cbCalculateWith.Name = "cbCalculateWith";
-			this.cbCalculateWith.Size = new System.Drawing.Size(134, 21);
-			this.cbCalculateWith.TabIndex = 7;
+			this.cbAdvancedFilters.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.cbAdvancedFilters.FormattingEnabled = true;
+			this.cbAdvancedFilters.Location = new System.Drawing.Point(636, 15);
+			this.cbAdvancedFilters.Name = "cbAdvancedFilters";
+			this.cbAdvancedFilters.Size = new System.Drawing.Size(121, 21);
+			this.cbAdvancedFilters.TabIndex = 10;
 			// 
 			// ExoticAndRareSalvageControl
 			// 
@@ -483,12 +499,13 @@
 		private System.Windows.Forms.RadioButton rbExotic;
 		private System.Windows.Forms.RadioButton rbRare;
 		private System.Windows.Forms.Button btnRefresh;
-		private System.Windows.Forms.ComboBox cbCharm;
 		private System.Windows.Forms.DataGridView dgvItems;
 		private System.Windows.Forms.Label label8;
 		private System.Windows.Forms.NumericUpDown numMinProfit;
-		private System.Windows.Forms.ComboBox cbStat;
 		private System.Windows.Forms.ComboBox cbCalculateWith;
 		private System.Windows.Forms.Label label9;
+		private System.Windows.Forms.ComboBox cbAdvancedFilters;
+		private System.Windows.Forms.ComboBox cbFilterValue;
+		private System.Windows.Forms.ComboBox cbFilterBy;
 	}
 }
