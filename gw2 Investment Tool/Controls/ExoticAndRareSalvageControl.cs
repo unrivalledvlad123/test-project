@@ -174,8 +174,8 @@ namespace gw2_Investment_Tool.Controls
 				bool verifiedFlag = false;
 
 				SalvageItemsFull charmHolder = new SalvageItemsFull();
-
-			    switch (item.rarity)
+               
+                switch (item.rarity)
 			    {
 			        case "Exotic":
 			            //calculate gold from ectos
@@ -306,7 +306,7 @@ namespace gw2_Investment_Tool.Controls
 					profitableItems.Add(result);
 
 				}
-
+			   
 				if (item.sell_price < total)
 				{
 					// add id to get transactions
@@ -347,12 +347,13 @@ namespace gw2_Investment_Tool.Controls
 						break;
 					case "Rune name":
 						cbFilterValue.DataSource = null;
-						if (dgvItems.DataSource is List<GridDataSalvage> currentBindings)
-						{
-							var t = currentBindings.GroupBy(p => p.RuneName).Select(g => g.First().RuneName)
-								.Where(p => !string.IsNullOrWhiteSpace(p)).OrderBy(t1 => t1).ToList();
-							cbFilterValue.DataSource = t;
-						}
+				        var datasourse = dgvItems.DataSource as List<GridDataSalvage>;
+				        if (datasourse != null && datasourse.Count != 0)
+				        {
+                            var t = datasourse.GroupBy(p => p.RuneName).Select(g => g.First().RuneName)
+                                  .Where(p => !string.IsNullOrWhiteSpace(p)).OrderBy(t1 => t1).ToList();
+                            cbFilterValue.DataSource = t;
+                        }
 						else
 						{
 							cbFilterValue.DataSource = new List<string> { "Yes", "No" };
@@ -609,7 +610,8 @@ namespace gw2_Investment_Tool.Controls
 				case "Total Profit":
 					return data.OrderByDescending(p => p.Verified).ThenByDescending(p => p.InstantProfit).ToList();
 				case "Sell/Salvage ratio":
-					return data.OrderByDescending(p => p.Verified).ThenByDescending( p => p.SellSalvageRatio.HasValue).ThenByDescending(p => p.SellSalvageRatio).ToList();
+			        data = data.Where(p => !string.IsNullOrWhiteSpace(p.TotalBuyoutProfit)).ToList();
+					return data.OrderByDescending(p => p.Verified).ThenBy(p => p.SellSalvageRatio.HasValue).ThenBy(p => p.SellSalvageRatio).ToList();
 				case "Quantity/Profit ratio":
 					return data.OrderByDescending(p => p.Verified).ThenByDescending(p => p.QuantityProfitRatio.HasValue).ThenByDescending(p => p.QuantityProfitRatio).ToList();
 			}
