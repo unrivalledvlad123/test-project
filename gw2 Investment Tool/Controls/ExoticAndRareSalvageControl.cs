@@ -119,6 +119,10 @@ namespace gw2_Investment_Tool.Controls
 			// combine listing and item data
 			foreach (var item in ProfitableItems)
 			{
+			    if (item.Name == "Aidan's Leggings")
+			    {
+			        
+			    }
 				var itemListings = listings.FirstOrDefault(p => p.id == item.Id);
 				if (itemListings != null)
 				{
@@ -134,7 +138,7 @@ namespace gw2_Investment_Tool.Controls
                             if (((t1 - 1) * 100) >= (numMinProfit.Value))// calculate min ROI
 							{
 								totalQuantity = totalQuantity + listing.quantity;
-								totalProfit = totalProfit + listing.quantity * item.ValueOfItem - listing.unit_price;
+								totalProfit = totalProfit + listing.quantity * (item.ValueOfItem - listing.unit_price);
 								item.BuyoutTill = listing.unit_price.ToGoldFormat();
 							}
                             else
@@ -610,7 +614,7 @@ namespace gw2_Investment_Tool.Controls
 				case "Total Profit":
 					return data.OrderByDescending(p => p.Verified).ThenByDescending(p => p.InstantProfit).ToList();
 				case "Sell/Salvage ratio":
-			        data = data.Where(p => !string.IsNullOrWhiteSpace(p.TotalBuyoutProfit)).ToList();
+			        data = data.Where(p => !string.IsNullOrWhiteSpace(p.TotalBuyoutProfit) && p.TotalBuyoutProfit != "1c").ToList();
 					return data.OrderByDescending(p => p.Verified).ThenBy(p => p.SellSalvageRatio.HasValue).ThenBy(p => p.SellSalvageRatio).ToList();
 				case "Quantity/Profit ratio":
 					return data.OrderByDescending(p => p.Verified).ThenByDescending(p => p.QuantityProfitRatio.HasValue).ThenByDescending(p => p.QuantityProfitRatio).ToList();

@@ -110,3 +110,4 @@ C:\Projects\test-project\gw2 Investment Tool\bin\Debug\Newtonsoft.Json.xml
 C:\Projects\test-project\gw2 Investment Tool\bin\Debug\System.Net.Http.Formatting.xml
 C:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2 Investment Tool.exe
 C:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2 Investment Tool.pdb
+C:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2 Investment Tool.csprojResolveAssemblyReference.cache
