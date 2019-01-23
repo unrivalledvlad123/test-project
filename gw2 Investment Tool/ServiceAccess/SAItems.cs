@@ -391,7 +391,7 @@ namespace gw2_Investment_Tool.ServiceAccess
 			    if (response.IsSuccessStatusCode)
 			    {
 				    var items = await response.Content.ReadAsAsync<List<SalvageItemsFull>>();
-				    return items.Where(p => p.buy_price > 0).ToList();
+				    return items.ToList();
 			    }
 
 			    return null;

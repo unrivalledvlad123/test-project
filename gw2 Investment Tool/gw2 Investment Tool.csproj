@@ -76,6 +76,12 @@
     <Compile Include="Controls\ExoticAndRareSalvageControl.Designer.cs">
       <DependentUpon>ExoticAndRareSalvageControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ExoticDataCollectionControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ExoticDataCollectionControl.Designer.cs">
+      <DependentUpon>ExoticDataCollectionControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ExtractorControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -148,6 +154,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ExoticAndRareSalvageControl.resx">
       <DependentUpon>ExoticAndRareSalvageControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ExoticDataCollectionControl.resx">
+      <DependentUpon>ExoticDataCollectionControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ExtractorControl.resx">
       <DependentUpon>ExtractorControl.cs</DependentUpon>

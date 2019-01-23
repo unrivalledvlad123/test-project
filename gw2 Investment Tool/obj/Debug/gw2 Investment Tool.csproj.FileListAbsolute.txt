@@ -111,3 +111,4 @@ C:\Projects\test-project\gw2 Investment Tool\bin\Debug\System.Net.Http.Formattin
 C:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2 Investment Tool.exe
 C:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2 Investment Tool.pdb
 C:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2 Investment Tool.csprojResolveAssemblyReference.cache
+D:\Projects\test-project\gw2 Investment Tool\obj\Debug\gw2_Investment_Tool.Controls.ExoticDataCollectionControl.resources
