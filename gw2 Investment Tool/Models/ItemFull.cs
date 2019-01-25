@@ -1,6 +1,4 @@
-﻿using gw2_Investment_Tool.Classes;
-
-namespace gw2_Investment_Tool.Models
+﻿namespace gw2_Investment_Tool.Models
 {
 	public class ItemFull
     {

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using gw2_Investment_Tool.Classes;
 
 namespace gw2_Investment_Tool.Models
 {

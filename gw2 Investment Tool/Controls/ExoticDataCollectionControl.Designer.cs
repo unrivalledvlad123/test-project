@@ -36,9 +36,11 @@
 			this.numQuantity = new System.Windows.Forms.NumericUpDown();
 			this.label3 = new System.Windows.Forms.Label();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.btnLoadOldData = new System.Windows.Forms.Button();
 			this.btnSave = new System.Windows.Forms.Button();
 			this.dgvResults = new System.Windows.Forms.DataGridView();
-			this.btnLoadOldData = new System.Windows.Forms.Button();
+			this.btnExportToCsv = new System.Windows.Forms.Button();
+			this.btnExportToJson = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.numQuantity)).BeginInit();
 			this.groupBox1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dgvResults)).BeginInit();
@@ -105,6 +107,8 @@
 			// 
 			// groupBox1
 			// 
+			this.groupBox1.Controls.Add(this.btnExportToCsv);
+			this.groupBox1.Controls.Add(this.btnExportToJson);
 			this.groupBox1.Controls.Add(this.btnLoadOldData);
 			this.groupBox1.Controls.Add(this.btnSave);
 			this.groupBox1.Controls.Add(this.tbLocation);
@@ -120,10 +124,21 @@
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Input data";
 			// 
+			// btnLoadOldData
+			// 
+			this.btnLoadOldData.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnLoadOldData.Location = new System.Drawing.Point(896, 77);
+			this.btnLoadOldData.Name = "btnLoadOldData";
+			this.btnLoadOldData.Size = new System.Drawing.Size(90, 23);
+			this.btnLoadOldData.TabIndex = 9;
+			this.btnLoadOldData.Text = "Load Old data";
+			this.btnLoadOldData.UseVisualStyleBackColor = true;
+			this.btnLoadOldData.Click += new System.EventHandler(this.btnLoadOldData_Click);
+			// 
 			// btnSave
 			// 
 			this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnSave.Location = new System.Drawing.Point(800, 82);
+			this.btnSave.Location = new System.Drawing.Point(800, 77);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(90, 23);
 			this.btnSave.TabIndex = 7;
@@ -142,16 +157,25 @@
 			this.dgvResults.Size = new System.Drawing.Size(989, 493);
 			this.dgvResults.TabIndex = 8;
 			// 
-			// btnLoadOldData
+			// btnExportToCsv
 			// 
-			this.btnLoadOldData.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnLoadOldData.Location = new System.Drawing.Point(896, 82);
-			this.btnLoadOldData.Name = "btnLoadOldData";
-			this.btnLoadOldData.Size = new System.Drawing.Size(90, 23);
-			this.btnLoadOldData.TabIndex = 9;
-			this.btnLoadOldData.Text = "Load Old data";
-			this.btnLoadOldData.UseVisualStyleBackColor = true;
-			this.btnLoadOldData.Click += new System.EventHandler(this.btnLoadOldData_Click);
+			this.btnExportToCsv.Location = new System.Drawing.Point(947, 19);
+			this.btnExportToCsv.Name = "btnExportToCsv";
+			this.btnExportToCsv.Size = new System.Drawing.Size(39, 23);
+			this.btnExportToCsv.TabIndex = 10;
+			this.btnExportToCsv.Text = "Csv";
+			this.btnExportToCsv.UseVisualStyleBackColor = true;
+			this.btnExportToCsv.Click += new System.EventHandler(this.btnExportToCsv_Click);
+			// 
+			// btnExportToJson
+			// 
+			this.btnExportToJson.Location = new System.Drawing.Point(902, 19);
+			this.btnExportToJson.Name = "btnExportToJson";
+			this.btnExportToJson.Size = new System.Drawing.Size(39, 23);
+			this.btnExportToJson.TabIndex = 11;
+			this.btnExportToJson.Text = "Json";
+			this.btnExportToJson.UseVisualStyleBackColor = true;
+			this.btnExportToJson.Click += new System.EventHandler(this.btnExportToJson_Click);
 			// 
 			// ExoticDataCollectionControl
 			// 
@@ -182,5 +206,7 @@
 		private System.Windows.Forms.Button btnSave;
 		private System.Windows.Forms.DataGridView dgvResults;
 		private System.Windows.Forms.Button btnLoadOldData;
+		private System.Windows.Forms.Button btnExportToJson;
+		private System.Windows.Forms.Button btnExportToCsv;
 	}
 }

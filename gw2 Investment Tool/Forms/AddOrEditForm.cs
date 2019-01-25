@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using gw2_Investment_Tool.Classes;
 using gw2_Investment_Tool.Models;
 
 namespace gw2_Investment_Tool.Forms

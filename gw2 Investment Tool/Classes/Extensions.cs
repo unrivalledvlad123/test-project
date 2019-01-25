@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using gw2_Investment_Tool.Models;
 
 namespace gw2_Investment_Tool.Classes
@@ -42,6 +39,11 @@ namespace gw2_Investment_Tool.Classes
 				result = $"{gold}g, {silver}s, {copper}c";
 			}
 			return result;
+		}
+
+		public static string ToFileName(this DateTime time)
+		{
+			return $"{time.Day}.{time.Month}.{time.Year}-{DateTime.UtcNow.Hour}:{time.Minute}:{time.Second}";
 		}
 	}
 }

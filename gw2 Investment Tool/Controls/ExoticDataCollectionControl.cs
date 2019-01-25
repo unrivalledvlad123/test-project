@@ -1,23 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using gw2_Investment_Tool.Classes;
 using gw2_Investment_Tool.Models;
 using gw2_Investment_Tool.ServiceAccess;
+using Newtonsoft.Json;
 
 namespace gw2_Investment_Tool.Controls
 {
 	public partial class ExoticDataCollectionControl : UserControl
 	{
 		List<GridDataModel> _currentItems = new List<GridDataModel>();
+
 		public ExoticDataCollectionControl()
 		{
 			InitializeComponent();
@@ -35,54 +31,35 @@ namespace gw2_Investment_Tool.Controls
 			};
 		}
 
-		private async void btnBrowse_Click(object sender, EventArgs e)
+		private void btnBrowse_Click(object sender, EventArgs e)
 		{
 			if (dialog.ShowDialog() != DialogResult.OK)
-			return;
+				return;
 
 			tbLocation.Text = dialog.SafeFileName;
+			var json = JsonConvert.DeserializeObject<List<JsonObjectFromFile>>(File.ReadAllText(dialog.FileName));
 
-			StreamReader file = new StreamReader(dialog.FileName);
-				string line;
-			while ((line = file.ReadLine()) != null)
+			foreach (var jsonItem in json)
 			{
-				line = line.Replace('"', ' ');
-				string[] values = line.Split(Convert.ToChar(","));
-				int itemId;
-				int qty;
-				int.TryParse(values[0], out itemId);
-				int.TryParse(values[1], out qty);
-
-				// check if item already exist
-				var itemCheck = _currentItems.FirstOrDefault(p => p.ItemId == itemId);
+				var itemCheck = _currentItems.FirstOrDefault(p => p.ItemId == jsonItem.ID);
 				if (itemCheck != null)
 				{
-					itemCheck.Quantity += qty;
+					itemCheck.Quantity += jsonItem.Quantity;
 				}
-				else if (itemId != 0 && qty != 0)
+				else if (jsonItem.ID != 0 && jsonItem.Quantity != 0)
 				{
 					GridDataModel item = new GridDataModel();
-					item.ItemId = itemId;
-					item.Quantity = qty;
+					item.ItemId = jsonItem.ID;
+					item.Quantity = jsonItem.Quantity;
+					item.ItemName = jsonItem.Name;
 					_currentItems.Add(item);
 
 				}
 			}
 
-			List<ItemFull> itemsData = await SAItems.GetAlItemsAsync(_currentItems.Select(p => p.ItemId).ToList());
-
-			foreach (var currentItem in _currentItems)
-			{
-				var match = itemsData.FirstOrDefault(p => p.id == currentItem.ItemId);
-				if (match == null)
-				continue;
-
-				currentItem.ItemName = match.name;
-			}
 			dgvResults.DataSource = null;
 			dgvResults.DataSource = _currentItems;
-			file.Close();
-			
+
 		}
 
 		private void btnSave_Click(object sender, EventArgs e)
@@ -145,10 +122,11 @@ namespace gw2_Investment_Tool.Controls
 						}
 					}
 				}
+
 				file.Close();
 
 				// get the new data and combine both
-				savedData.TotalCount += (int)numQuantity.Value;
+				savedData.TotalCount += (int) numQuantity.Value;
 				foreach (var currentItem in _currentItems)
 				{
 					//find the item
@@ -181,7 +159,7 @@ namespace gw2_Investment_Tool.Controls
 					//clear old data
 					dgvResults.DataSource = null;
 					_currentItems.Clear();
-					
+
 				}
 
 			}
@@ -221,6 +199,7 @@ namespace gw2_Investment_Tool.Controls
 
 				}
 			}
+
 			file.Close();
 
 			List<ItemFull> itemsData = await SAItems.GetAlItemsAsync(allItems.Select(p => p.ItemId).ToList());
@@ -231,15 +210,54 @@ namespace gw2_Investment_Tool.Controls
 					continue;
 
 				currentItem.ItemName = match.name;
-				double t1 = (double) currentItem.Quantity;
-				double t2 = (double)totalQty;
-				var temp = (t1 / t2);
-				currentItem.DropRate = temp.ToString(CultureInfo.InvariantCulture);
 			}
 
 			dgvResults.DataSource = null;
 			dgvResults.DataSource = allItems;
 
+		}
+
+		private void btnExportToJson_Click(object sender, EventArgs e)
+		{
+			var directory = Directory.GetCurrentDirectory();
+			List<GridDataModel> data = dgvResults.DataSource as List<GridDataModel>;
+			if (data == null || data.Count == 0)
+				return;
+
+			string json = JsonConvert.SerializeObject(data.Select(x => new {x.ItemId, x.Quantity}).ToList());
+			if (!string.IsNullOrWhiteSpace(json))
+			{
+				File.WriteAllText(directory + "\\Exports\\JsonExport.json", json);
+				//clear old data
+				dgvResults.DataSource = null;
+			}
+
+		}
+
+		private void btnExportToCsv_Click(object sender, EventArgs e)
+		{
+			var directory = Directory.GetCurrentDirectory();
+			List<GridDataModel> data = dgvResults.DataSource as List<GridDataModel>;
+			if (data == null || data.Count == 0)
+				return;
+
+			List<string> lines = new List<string>();
+			lines.Add("Id,Quantity");
+			foreach (var row in data)
+			{
+				StringBuilder sb = new StringBuilder();
+				sb.Append(row.ItemId.ToString());
+				sb.Append(",");
+				sb.Append(row.Quantity);
+				lines.Add(sb.ToString());
+			}
+
+			if (lines.Count != 0)
+			{
+				File.WriteAllLines(directory + "\\Exports\\CsvExport.csv", lines);
+				//clear old data
+				dgvResults.DataSource = null;
+			}
 		}
 
 		private void SetGridColumns()
@@ -249,7 +267,7 @@ namespace gw2_Investment_Tool.Controls
 			dgvResults.AutoGenerateColumns = false;
 			dgvResults.RowHeadersVisible = false;
 			dgvResults.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
-			
+
 			DataGridViewTextBoxColumn c2 = new DataGridViewTextBoxColumn();
 			c2.Name = "name";
 			c2.HeaderText = "Item Name";
@@ -265,14 +283,6 @@ namespace gw2_Investment_Tool.Controls
 			c3.Width = 100;
 			dgvResults.Columns.Add(c3);
 
-			DataGridViewTextBoxColumn c4 = new DataGridViewTextBoxColumn();
-			c4.Name = "DropRate";
-			c4.HeaderText = "Drop Rate";
-			c4.DataPropertyName = "DropRate";
-			c4.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
-			c4.Width = 100;
-			dgvResults.Columns.Add(c4);
-			
 			DataGridViewTextBoxColumn c7 = new DataGridViewTextBoxColumn();
 			c7.Name = "itemId";
 			c7.HeaderText = "Item ID";
@@ -288,16 +298,20 @@ namespace gw2_Investment_Tool.Controls
 			public List<GridDataModel> Items { get; set; }
 			public int TotalCount { get; set; }
 		}
-		
+
 		private class GridDataModel
 		{
 			public int ItemId { get; set; }
 			public string ItemName { get; set; }
 			public int Quantity { get; set; }
-			public string DropRate { get; set; }
-
 		}
 
-		
+		private class JsonObjectFromFile
+		{
+			public int ID { get; set; }
+			public string Name { get; set; }
+			public int Quantity { get; set; }
+		}
+
 	}
 }
