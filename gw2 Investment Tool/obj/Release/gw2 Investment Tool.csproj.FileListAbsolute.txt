@@ -70,3 +70,4 @@ C:\Projects\test-project\gw2 Investment Tool\obj\Release\gw2 Investment Tool.csp
 C:\Projects\test-project\gw2 Investment Tool\obj\Release\gw2 Investment Tool.exe
 C:\Projects\test-project\gw2 Investment Tool\obj\Release\gw2 Investment Tool.pdb
 C:\Projects\test-project\gw2 Investment Tool\obj\Release\gw2_Investment_Tool.Controls.ExoticAndRareSalvageControl.resources
+C:\Projects\test-project\gw2 Investment Tool\obj\Release\gw2_Investment_Tool.Controls.ExoticDataCollectionControl.resources

@@ -224,7 +224,7 @@ namespace gw2_Investment_Tool.Controls
 			if (data == null || data.Count == 0)
 				return;
 
-			string json = JsonConvert.SerializeObject(data.Select(x => new {x.ItemId, x.Quantity}).ToList());
+			string json = JsonConvert.SerializeObject(data.Select(x => new {x.ItemId, x.Quantity}).OrderBy(x => x.ItemId).ToList());
 			if (!string.IsNullOrWhiteSpace(json))
 			{
 				File.WriteAllText(directory + "\\Exports\\JsonExport.json", json);
@@ -242,12 +242,13 @@ namespace gw2_Investment_Tool.Controls
 				return;
 
 			List<string> lines = new List<string>();
-			lines.Add("Id,Quantity");
+			lines.Add("Id , Quantity");
+		    data = data.OrderBy(p => p.ItemId).ToList();
 			foreach (var row in data)
 			{
 				StringBuilder sb = new StringBuilder();
 				sb.Append(row.ItemId.ToString());
-				sb.Append(",");
+				sb.Append(" , ");
 				sb.Append(row.Quantity);
 				lines.Add(sb.ToString());
 			}
