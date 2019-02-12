@@ -37,23 +37,55 @@ namespace gw2_Investment_Tool.Controls
 				return;
 
 			tbLocation.Text = dialog.SafeFileName;
-			var json = JsonConvert.DeserializeObject<List<JsonObjectFromFile>>(File.ReadAllText(dialog.FileName));
-
-			foreach (var jsonItem in json)
+			if (dialog.SafeFileName.EndsWith(".json"))
 			{
-				var itemCheck = _currentItems.FirstOrDefault(p => p.ItemId == jsonItem.ID);
-				if (itemCheck != null)
-				{
-					itemCheck.Quantity += jsonItem.Quantity;
-				}
-				else if (jsonItem.ID != 0 && jsonItem.Quantity != 0)
-				{
-					GridDataModel item = new GridDataModel();
-					item.ItemId = jsonItem.ID;
-					item.Quantity = jsonItem.Quantity;
-					item.ItemName = jsonItem.Name;
-					_currentItems.Add(item);
+				var json = JsonConvert.DeserializeObject<List<JsonObjectFromFile>>(File.ReadAllText(dialog.FileName));
 
+				foreach (var jsonItem in json)
+				{
+					var itemCheck = _currentItems.FirstOrDefault(p => p.ItemId == jsonItem.ID);
+					if (itemCheck != null)
+					{
+						itemCheck.Quantity += jsonItem.Quantity;
+					}
+					else if (jsonItem.ID != 0 && jsonItem.Quantity != 0)
+					{
+						GridDataModel item = new GridDataModel();
+						item.ItemId = jsonItem.ID;
+						item.Quantity = jsonItem.Quantity;
+						item.ItemName = jsonItem.Name;
+						_currentItems.Add(item);
+
+					}
+				}
+			}
+			else if (dialog.SafeFileName.EndsWith(".csv"))
+			{
+				StreamReader file = new StreamReader(dialog.SafeFileName);
+				string line;
+				while ((line = file.ReadLine()) != null)
+				{
+					string[] values = line.Split(Convert.ToChar(","));
+
+					int itemId;
+					int qty;
+					int.TryParse(values[0], out itemId);
+					int.TryParse(values[2], out qty);
+					string name = values[1];
+
+					var itemCheck = _currentItems.FirstOrDefault(p => p.ItemId == itemId);
+					if (itemCheck != null)
+					{
+						itemCheck.Quantity += qty;
+					}
+					else if (itemId != 0 && qty != 0)
+					{
+						GridDataModel item = new GridDataModel();
+						item.ItemId = itemId;
+						item.Quantity = qty;
+						item.ItemName = name;
+						_currentItems.Add(item);
+					}
 				}
 			}
 
