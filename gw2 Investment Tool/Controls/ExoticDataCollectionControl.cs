@@ -17,20 +17,10 @@ namespace gw2_Investment_Tool.Controls
 		public ExoticDataCollectionControl()
 		{
 			InitializeComponent();
-			InitializeControls();
+			cbGearType.DataSource = getDataCollections();
 			SetGridColumns();
 		}
-
-		private void InitializeControls()
-		{
-			cbGearType.DataSource = new List<string>
-			{
-				"Piece of Common Unidentified Gear",
-				"Piece of Unidentified Gear",
-				"Piece of Rare Unidentified Gear"
-			};
-		}
-
+		
 		private void btnBrowse_Click(object sender, EventArgs e)
 		{
 			if (dialog.ShowDialog() != DialogResult.OK)
@@ -325,6 +315,27 @@ namespace gw2_Investment_Tool.Controls
 
 		}
 
+		private List<string> getDataCollections()
+		{
+			string directory = string.Empty;
+			var directoryInfo = Directory.GetCurrentDirectory();
+			if (directoryInfo != null)
+			{
+				directory = directoryInfo;
+			}
+
+			List<string> alLists = new List<string>();
+			string[] files = Directory.GetFiles(directory + "\\DataFiles\\DataCollection");
+			foreach (string list in files)
+			{
+				var temp = list.Replace(directory + "\\DataFiles\\DataCollection", "");
+				string temp2 = temp.Replace(@"\", "");
+				string temp3 = temp2.Replace(".txt", "");
+				alLists.Add(temp3);
+			}
+
+			return alLists;
+		}
 
 		private class SaveDataObject
 		{
