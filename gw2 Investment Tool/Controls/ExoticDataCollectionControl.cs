@@ -249,7 +249,8 @@ namespace gw2_Investment_Tool.Controls
 			string json = JsonConvert.SerializeObject(data.Select(x => new {x.ItemId, x.Quantity}).OrderBy(x => x.ItemId).ToList());
 			if (!string.IsNullOrWhiteSpace(json))
 			{
-				File.WriteAllText(directory + "\\Exports\\JsonExport.json", json);
+			    var filename = cbGearType.Text;
+				File.WriteAllText(directory + $"\\Exports\\JsonExport - {filename}.json", json);
 				//clear old data
 				dgvResults.DataSource = null;
 			}
@@ -277,7 +278,8 @@ namespace gw2_Investment_Tool.Controls
 
 			if (lines.Count != 0)
 			{
-				File.WriteAllLines(directory + "\\Exports\\CsvExport.csv", lines);
+                var filename = cbGearType.Text;
+                File.WriteAllLines(directory + $"\\Exports\\CsvExport - {filename}.csv", lines);
 				//clear old data
 				dgvResults.DataSource = null;
 			}

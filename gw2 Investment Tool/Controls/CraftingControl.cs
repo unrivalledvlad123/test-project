@@ -463,6 +463,7 @@ namespace gw2_Investment_Tool.Controls
 			dgvItemsToCalculate.Columns.Clear();
 			dgvItemsToCalculate.AutoGenerateColumns = false;
 			dgvItemsToCalculate.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+		    dgvItemsToCalculate.RowHeadersVisible = false;
 
 			DataGridViewCheckBoxColumn c1 = new DataGridViewCheckBoxColumn();
 			c1.Name = "active";
