@@ -11,7 +11,7 @@ namespace gw2_Investment_Tool.ServiceAccess
     class SAItems
     {
 
-        public static async Task<ItemFull> GetItemsAsync(int itemId)
+        public static async Task<ItemFull> GetItemAsync(int itemId)
         {
             using (HttpClient client = new HttpClient())
             {

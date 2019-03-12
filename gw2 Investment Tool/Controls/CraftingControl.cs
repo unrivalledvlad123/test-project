@@ -188,10 +188,12 @@ namespace gw2_Investment_Tool.Controls
 
 		private void btnDelete_Click(object sender, EventArgs e)
 		{
-			if (dgvItemsToCalculate.SelectedRows.Count <= 0)
+			if (dgvItemsToCalculate.SelectedCells.Count <= 0)
 				return;
-
-			Item selectedItem = (Item)dgvItemsToCalculate.SelectedRows[0].DataBoundItem;
+			
+			int selectedrowindex = dgvItemsToCalculate.SelectedCells[0].RowIndex;
+			
+			Item selectedItem = (Item)dgvItemsToCalculate.Rows[selectedrowindex].DataBoundItem;
 			if (AllItems.FirstOrDefault(p => p.ItemId == selectedItem.ItemId) != null)
 			{
 				AllItems.Remove(selectedItem);
@@ -342,7 +344,7 @@ namespace gw2_Investment_Tool.Controls
 			}
 			else
 			{
-				ItemFull item = await SAItems.GetItemsAsync((int)singleId);
+				ItemFull item = await SAItems.GetItemAsync((int)singleId);
 				Item sincedItem = AllItems.FirstOrDefault(p => p.ItemId == item.id);
 				if (sincedItem != null)
 				{

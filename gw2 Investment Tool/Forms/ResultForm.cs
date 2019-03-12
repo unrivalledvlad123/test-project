@@ -206,21 +206,19 @@ namespace gw2_Investment_Tool.Forms
                                         }
                                         break;
                                     }
+
+                                    ResultItem check = ItemsToKeep.FirstOrDefault(p => p.ItemId == item.ItemId);
+                                    if (check != null)
+                                    {
+	                                    check.Quantity += Math.Min(remainingQuantity, listning.quantity);
+	                                    remainingQuantity = remainingQuantity - listning.quantity;
+                                    }
                                     else
                                     {
-                                        ResultItem check = ItemsToKeep.FirstOrDefault(p => p.ItemId == item.ItemId);
-                                        if (check != null)
-                                        {
-                                            check.Quantity += Math.Min(remainingQuantity, listning.quantity);
-                                            remainingQuantity = remainingQuantity - listning.quantity;
-                                        }
-                                        else
-                                        {
-                                            ResultItem temp = CurrnetItems.FirstOrDefault(p => p.ItemId == item.ItemId);
-                                            temp.Quantity = listning.quantity;
-                                            remainingQuantity = remainingQuantity - listning.quantity;
-                                            ItemsToKeep.Add(temp);
-                                        }
+	                                    ResultItem temp = CurrnetItems.FirstOrDefault(p => p.ItemId == item.ItemId);
+	                                    temp.Quantity = listning.quantity;
+	                                    remainingQuantity = remainingQuantity - listning.quantity;
+	                                    ItemsToKeep.Add(temp);
                                     }
                                 }
                                 else
@@ -243,7 +241,7 @@ namespace gw2_Investment_Tool.Forms
                                         }
                                         else
                                         {
-                                            ResultSet.Add(new Item()
+                                            ResultSet.Add(new Item
                                             {
                                                 ItemId = ingredient.item_id,
                                                 Quantity =
@@ -266,7 +264,16 @@ namespace gw2_Investment_Tool.Forms
                             foreach (var ing in recipeData.ingredients)
                             {
                                 var price = ingredientPrices.FirstOrDefault(p => p.id == ing.item_id);
-                                priceCounter += ing.count * price.buys.unit_price;
+                                if (price != null)
+                                {
+									priceCounter += ing.count * price.buys.unit_price;
+								}
+								else //vendor ingredient
+                                {
+	                                var itemData = await SAItems.GetItemAsync(ing.item_id);
+	                                priceCounter += ing.count * (itemData.vendor_value * 8);
+                                }
+                               
                             }
                             item.CraftingPrice = priceCounter;
                             ItemPrices itemPrice = ingredientPrices.FirstOrDefault(p => p.id == item.ItemId);

@@ -10,5 +10,6 @@
         public string[] flags { get; set; }
         public ItemDetails details { get; set; }
 	    public int level { get; set; }
+		public int vendor_value { get; set; }
 	}
 }
