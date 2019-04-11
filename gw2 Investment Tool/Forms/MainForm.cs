@@ -11,9 +11,7 @@ namespace gw2_Investment_Tool.Forms
     public partial class MainForm : Form
     {
         public static List<ItemFull> ItemNames = new List<ItemFull>();
-        public static List<WhiteListedItem> WhiteListedItems = new List<WhiteListedItem>();
-       
-
+      
         public MainForm()
         {
             InitializeComponent();
@@ -68,37 +66,7 @@ namespace gw2_Investment_Tool.Forms
 		    try
 		    {
                 var directory = Directory.GetCurrentDirectory();
-
-                if (File.Exists(directory + "\\DataFiles\\System\\WhiteListedItems.txt"))
-			    {
-				    StreamReader file2 = new StreamReader(directory + "\\DataFiles\\System\\WhiteListedItems.txt");
-				    string line2;
-				    while ((line2 = file2.ReadLine()) != null)
-				    {
-					    WhiteListedItem item = new WhiteListedItem();
-					    string[] values = line2.Split(Convert.ToChar("%"));
-					    int itemId;
-					    int price;
-					    bool active;
-					    int.TryParse(values[1], out itemId);
-					    int.TryParse(values[2], out price);
-					    bool.TryParse(values[3], out active);
-
-					    item.ItemId = itemId;
-					    item.Price = price;
-					    item.Name = values[0];
-					    item.Active = active;
-
-					    if (WhiteListedItems.FirstOrDefault(p => p.ItemId == item.ItemId) == null)
-					    {
-						    WhiteListedItems.Add(item);
-					    }
-				    }
-
-				    file2.Close();
-			    }
-
-
+				
 			    if (File.Exists(directory + "\\DataFiles\\System\\LoadNames.txt"))
 			    {
 				    StreamReader file3 = new StreamReader(directory + "\\DataFiles\\System\\LoadNames.txt");

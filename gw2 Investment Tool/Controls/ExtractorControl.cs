@@ -61,6 +61,10 @@ namespace gw2_Investment_Tool.Controls
 					UpgradeName = item.UpgradeComponent.name,
 				};
 				var itemListings = allListings.FirstOrDefault(p => p.id == item.id);
+
+				if (itemListings == null)
+				continue;
+
 				if (itemListings.buys.Count != 0)
 				{
 					data.OrderProfit = (item.UpgradeComponent.sell_price - itemListings.buys.First().unit_price + 1).ToGoldFormat();

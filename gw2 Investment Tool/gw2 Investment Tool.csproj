@@ -115,7 +115,6 @@
     <Compile Include="Models\Recipe.cs" />
     <Compile Include="Models\ResultItem.cs" />
     <Compile Include="Models\SalvageItemsFull.cs" />
-    <Compile Include="Models\WhiteListedItem.cs" />
     <Compile Include="Controls\GoldValueControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -139,12 +138,6 @@
     </Compile>
     <Compile Include="Forms\ResultForm.Designer.cs">
       <DependentUpon>ResultForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\WhiteListForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\WhiteListForm.Designer.cs">
-      <DependentUpon>WhiteListForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -178,9 +171,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ResultForm.resx">
       <DependentUpon>ResultForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\WhiteListForm.resx">
-      <DependentUpon>WhiteListForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

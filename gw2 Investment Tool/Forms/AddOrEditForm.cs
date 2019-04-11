@@ -66,16 +66,17 @@ namespace gw2_Investment_Tool.Forms
 
 	    private void dgvSearchResult_CellSelected(object sender, EventArgs e)
 	    {
-		    if (dgvSearchResults.SelectedRows.Count != 0)
+		    if (dgvSearchResults.SelectedCells.Count > 0)
 		    {
-			    if (dgvSearchResults.SelectedCells[0].Value.ToString() != "")
-			    {
-				    ItemFull item = (ItemFull) dgvSearchResults.SelectedRows[0].DataBoundItem;
-				    tbItemId.Text = item.id.ToString();
-			    }
-		    }
-
-	    }
+			    int index = dgvSearchResults.SelectedCells[0].RowIndex;
+			    var row = dgvSearchResults.Rows[index];
+				if (dgvSearchResults.SelectedCells[0].Value != null)
+				{
+					ItemFull item = (ItemFull)row.DataBoundItem;
+					tbItemId.Text = item.id.ToString();
+				}
+			}
+		}
 
 	    private void SetGridColumns()
         {
@@ -83,7 +84,7 @@ namespace gw2_Investment_Tool.Forms
             dgvSearchResults.Columns.Clear();
             dgvSearchResults.AutoGenerateColumns = false;
             dgvSearchResults.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
-            //dgvSearchResults.RowHeadersVisible = false;
+            dgvSearchResults.RowHeadersVisible = false;
 
 			DataGridViewTextBoxColumn c1 = new DataGridViewTextBoxColumn();
 			c1.Name = "id";

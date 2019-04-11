@@ -30,7 +30,6 @@
 		{
 			this.cbLists = new System.Windows.Forms.ComboBox();
 			this.btnGenerateLocalData = new System.Windows.Forms.Button();
-			this.btnWhiteList = new System.Windows.Forms.Button();
 			this.btnDelete = new System.Windows.Forms.Button();
 			this.btnCalculate = new System.Windows.Forms.Button();
 			this.btnSave = new System.Windows.Forms.Button();
@@ -62,21 +61,10 @@
 			this.btnGenerateLocalData.UseVisualStyleBackColor = true;
 			this.btnGenerateLocalData.Click += new System.EventHandler(this.btnGenerateLocalData_Click);
 			// 
-			// btnWhiteList
-			// 
-			this.btnWhiteList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.btnWhiteList.Location = new System.Drawing.Point(102, 218);
-			this.btnWhiteList.Name = "btnWhiteList";
-			this.btnWhiteList.Size = new System.Drawing.Size(75, 23);
-			this.btnWhiteList.TabIndex = 24;
-			this.btnWhiteList.Text = "White List";
-			this.btnWhiteList.UseVisualStyleBackColor = true;
-			this.btnWhiteList.Click += new System.EventHandler(this.btnWhiteList_Click);
-			// 
 			// btnDelete
 			// 
 			this.btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.btnDelete.Location = new System.Drawing.Point(183, 218);
+			this.btnDelete.Location = new System.Drawing.Point(102, 218);
 			this.btnDelete.Name = "btnDelete";
 			this.btnDelete.Size = new System.Drawing.Size(75, 23);
 			this.btnDelete.TabIndex = 23;
@@ -98,7 +86,7 @@
 			// btnSave
 			// 
 			this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.btnSave.Location = new System.Drawing.Point(264, 218);
+			this.btnSave.Location = new System.Drawing.Point(183, 218);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(75, 23);
 			this.btnSave.TabIndex = 21;
@@ -168,7 +156,6 @@
 			this.Controls.Add(this.labelUsedKarma);
 			this.Controls.Add(this.cbLists);
 			this.Controls.Add(this.btnGenerateLocalData);
-			this.Controls.Add(this.btnWhiteList);
 			this.Controls.Add(this.btnDelete);
 			this.Controls.Add(this.btnCalculate);
 			this.Controls.Add(this.btnSave);
@@ -187,7 +174,6 @@
 
 		private System.Windows.Forms.ComboBox cbLists;
 		private System.Windows.Forms.Button btnGenerateLocalData;
-		private System.Windows.Forms.Button btnWhiteList;
 		private System.Windows.Forms.Button btnDelete;
 		private System.Windows.Forms.Button btnCalculate;
 		private System.Windows.Forms.Button btnSave;

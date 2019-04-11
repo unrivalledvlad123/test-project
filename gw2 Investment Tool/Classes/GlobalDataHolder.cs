@@ -9,7 +9,6 @@ namespace gw2_Investment_Tool.Classes
 		public static float TotalKarma = 0;
 
 		public static List<ItemFull> ItemNames = new List<ItemFull>();
-		public static List<WhiteListedItem> WhiteListedItems = new List<WhiteListedItem>();
-		
+	
 	}
 }

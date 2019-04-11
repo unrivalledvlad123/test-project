@@ -96,15 +96,8 @@ namespace gw2_Investment_Tool.Forms
                     ItemsToKeep.Add(CurrnetItems.FirstOrDefault(p => p.ItemId == (int) row.Cells["itemId"].Value));
                 }
             }
-	        List<int> allitemIds = MainForm.WhiteListedItems.Select(p => p.ItemId).ToList();
-	        List<ItemPrices> allItemPriceses = await SAItems.GetAllItemPrices(allitemIds);
-			foreach (var item in MainForm.WhiteListedItems)
-            {
-                ItemPrices prices = allItemPriceses.FirstOrDefault(p => p.id == item.ItemId);
-                item.CurrentPrice = prices.sells.unit_price+1;
-            }
-            
-            await GetRecipeFromApi(AllItems);
+
+	        await GetRecipeFromApi(AllItems);
             await CombineAllData();
             List<ItemPrices> sellItemPriceses = await SAItems.GetAllItemPrices(ItemsToKeep.Select(p => p.ItemId).ToList());
             foreach (var item in ItemsToKeep)
@@ -147,7 +140,7 @@ namespace gw2_Investment_Tool.Forms
         {
             List<Recipe> allRecipes = new List<Recipe>();
             List<int> allIngredientIds = new List<int>();
-            List<int> ints = MainForm.WhiteListedItems.Select(p => p.ItemId).ToList();
+            List<int> ints = new List<int>();
             foreach (Item item in allItems)
             {
                 int[] recipe = await SAItems.GetRecipesOutputAsync(item.ItemId);
@@ -180,232 +173,155 @@ namespace gw2_Investment_Tool.Forms
 
             foreach (var item in allItems)
             {
-                WhiteListedItem wlItem = MainForm.WhiteListedItems.FirstOrDefault(p => p.ItemId == item.ItemId);
-                if (item.Active)
-                {
-                    int remainingQuantity = item.Quantity;
-                    if (wlItem != null && wlItem.CurrentPrice <= wlItem.Price)
-                    {
-                        ItemListings curent = allItemListings.FirstOrDefault(p => p.id == item.ItemId);
-                        foreach (Prices listning in curent.sells)
-                        {
-                            if (listning.unit_price < wlItem.Price)
-                            {
-                                if (remainingQuantity > 0)
-                                {
-                                    if (listning.quantity >= remainingQuantity)
-                                    {
-                                        ResultItem check1 = ItemsToKeep.FirstOrDefault(p => p.ItemId == item.ItemId);
-                                        if (check1 != null)
-                                        {
-                                            check1.Quantity += remainingQuantity;
-                                        }
-                                        else
-                                        {
-                                            ItemsToKeep.Add(CurrnetItems.FirstOrDefault(p => p.ItemId == item.ItemId));
-                                        }
-                                        break;
-                                    }
+	            if (item.Active)
+	            {
+		            int remainingQuantity = item.Quantity;
+		            // calculate recipe
+		            Recipe recipeData = allRecipes.FirstOrDefault(p => p.output_item_id == item.ItemId);
+		            int priceCounter = 0;
+		            if (recipeData != null)
+		            {
+			            foreach (var ing in recipeData.ingredients)
+			            {
+				            var price = ingredientPrices.FirstOrDefault(p => p.id == ing.item_id);
+				            if (price != null)
+				            {
+					            priceCounter += ing.count * price.buys.unit_price;
+				            }
+				            else //vendor ingredient
+				            {
+					            var itemData = await SAItems.GetItemAsync(ing.item_id);
+					            priceCounter += ing.count * (itemData.vendor_value * 8);
+				            }
 
-                                    ResultItem check = ItemsToKeep.FirstOrDefault(p => p.ItemId == item.ItemId);
-                                    if (check != null)
-                                    {
-	                                    check.Quantity += Math.Min(remainingQuantity, listning.quantity);
-	                                    remainingQuantity = remainingQuantity - listning.quantity;
-                                    }
-                                    else
-                                    {
-	                                    ResultItem temp = CurrnetItems.FirstOrDefault(p => p.ItemId == item.ItemId);
-	                                    temp.Quantity = listning.quantity;
-	                                    remainingQuantity = remainingQuantity - listning.quantity;
-	                                    ItemsToKeep.Add(temp);
-                                    }
-                                }
-                                else
-                                {
-                                    break;
-                                }
-                            }
-                            else
-                            {
-                                Recipe recipeData = allRecipes.FirstOrDefault(p => p.output_item_id == item.ItemId);
-                                if (recipeData != null)
-                                    foreach (var ingredient in recipeData.ingredients)
-                                    {
-                                        Item check = ResultSet.FirstOrDefault(p => p.ItemId == ingredient.item_id);
-                                        if (check != null)
-                                        {
-                                            check.Quantity = check.Quantity +
-                                                             (ingredient.count * remainingQuantity /
-                                                              recipeData.output_item_count);
-                                        }
-                                        else
-                                        {
-                                            ResultSet.Add(new Item
-                                            {
-                                                ItemId = ingredient.item_id,
-                                                Quantity =
-                                                    ingredient.count * remainingQuantity / recipeData.output_item_count
-                                            });
-                                        }
-                                    }
-                                break;
-                            }
-                        }
-                    }
-                    else
-                    {
+			            }
 
-                        // calculate recipe
-                        Recipe recipeData = allRecipes.FirstOrDefault(p => p.output_item_id == item.ItemId);
-                        int priceCounter = 0;
-                        if (recipeData != null)
-                        {
-                            foreach (var ing in recipeData.ingredients)
-                            {
-                                var price = ingredientPrices.FirstOrDefault(p => p.id == ing.item_id);
-                                if (price != null)
-                                {
-									priceCounter += ing.count * price.buys.unit_price;
-								}
-								else //vendor ingredient
-                                {
-	                                var itemData = await SAItems.GetItemAsync(ing.item_id);
-	                                priceCounter += ing.count * (itemData.vendor_value * 8);
-                                }
-                               
-                            }
-                            item.CraftingPrice = priceCounter;
-                            ItemPrices itemPrice = ingredientPrices.FirstOrDefault(p => p.id == item.ItemId);
-                            if (priceCounter >= itemPrice.sells.unit_price)
-                            {
-                                ItemListings curent = allItemListings.FirstOrDefault(p => p.id == item.ItemId);
-                                foreach (Prices listning in curent.sells)
-                                {
-                                    if (listning.unit_price <= priceCounter)
-                                    {
-                                        if (remainingQuantity > 0)
-                                        {
-                                            if (listning.quantity >= remainingQuantity)
-                                            {
-                                                ResultItem check1 =
-                                                    ItemsToKeep.FirstOrDefault(p => p.ItemId == item.ItemId);
-                                                if (check1 != null)
-                                                {
-                                                    check1.Quantity += remainingQuantity;
-                                                }
-                                                else
-                                                {
-                                                    ResultItem temp = CurrnetItems.FirstOrDefault(p => p.ItemId == item.ItemId);
-                                                    temp.CraftingPrice = item.CraftingPrice.Value;
-                                                    ItemsToKeep.Add(temp);
-                                                }
-                                                break;
-                                            }
-                                            else
-                                            {
-                                                ResultItem check =
-                                                    ItemsToKeep.FirstOrDefault(p => p.ItemId == item.ItemId);
-                                                if (check != null)
-                                                {
-                                                    check.Quantity += Math.Min(remainingQuantity, listning.quantity);
-                                                    remainingQuantity = remainingQuantity - listning.quantity;
-                                                }
-                                                else
-                                                {
-                                                    ResultItem temp =
-                                                        CurrnetItems.FirstOrDefault(p => p.ItemId == item.ItemId);
-                                                    temp.Quantity = listning.quantity;
-                                                    temp.CraftingPrice = item.CraftingPrice.Value;
-                                                    remainingQuantity = remainingQuantity - listning.quantity;
-                                                    ItemsToKeep.Add(temp);
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            break;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        recipeData = allRecipes.FirstOrDefault(p => p.output_item_id == item.ItemId);
-                                        if (recipeData != null)
-                                            foreach (var ingredient in recipeData.ingredients)
-                                            {
-                                                Item check = ResultSet.FirstOrDefault(p => p.ItemId == ingredient.item_id);
-                                                if (check != null)
-                                                {
-                                                    check.Quantity = check.Quantity +
-                                                                     (ingredient.count * remainingQuantity /
-                                                                      recipeData.output_item_count);
-                                                }
-                                                else
-                                                {
-                                                    ResultSet.Add(new Item()
-                                                    {
-                                                        ItemId = ingredient.item_id,
-                                                        Quantity =
-                                                            ingredient.count * remainingQuantity / recipeData.output_item_count
-                                                    });
-                                                }
-                                            }
-                                        break;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                recipeData = allRecipes.FirstOrDefault(p => p.output_item_id == item.ItemId);
-                                if (recipeData != null)
-                                {
-                                    foreach (var ingredient in recipeData.ingredients)
-                                    {
-                                        Item check = ResultSet.FirstOrDefault(p => p.ItemId == ingredient.item_id);
-                                        if (check != null)
-                                        {
-                                            check.Quantity = check.Quantity +
-                                                             (ingredient.count * remainingQuantity /
-                                                              recipeData.output_item_count);
-                                        }
-                                        else
-                                        {
-                                            ResultSet.Add(new Item()
-                                            {
-                                                ItemId = ingredient.item_id,
-                                                Quantity =
-                                                    ingredient.count * remainingQuantity / recipeData.output_item_count
-                                            });
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            Item check = ResultSet.FirstOrDefault(p => p.ItemId == item.ItemId);
-                            if (check != null)
-                            {
-                                check.Quantity += item.Quantity;
-                            }
-                            else
-                            {
-                                ResultSet.Add(new Item() {ItemId = item.ItemId,Quantity = item.Quantity});
-                            }
-                        }
-                    }
-                }
+			            item.CraftingPrice = priceCounter;
+			            ItemPrices itemPrice = ingredientPrices.FirstOrDefault(p => p.id == item.ItemId);
+			            if (priceCounter >= itemPrice.sells.unit_price)
+			            {
+				            ItemListings curent = allItemListings.FirstOrDefault(p => p.id == item.ItemId);
+				            foreach (Prices listning in curent.sells)
+				            {
+					            if (listning.unit_price <= priceCounter)
+					            {
+						            if (remainingQuantity > 0)
+						            {
+							            if (listning.quantity >= remainingQuantity)
+							            {
+								            ResultItem check1 =
+									            ItemsToKeep.FirstOrDefault(p => p.ItemId == item.ItemId);
+								            if (check1 != null)
+								            {
+									            check1.Quantity += remainingQuantity;
+								            }
+								            else
+								            {
+									            ResultItem temp =
+										            CurrnetItems.FirstOrDefault(p => p.ItemId == item.ItemId);
+									            temp.CraftingPrice = item.CraftingPrice.Value;
+									            ItemsToKeep.Add(temp);
+								            }
+
+								            break;
+							            }
+							            else
+							            {
+								            ResultItem check =
+									            ItemsToKeep.FirstOrDefault(p => p.ItemId == item.ItemId);
+								            if (check != null)
+								            {
+									            check.Quantity += Math.Min(remainingQuantity, listning.quantity);
+									            remainingQuantity = remainingQuantity - listning.quantity;
+								            }
+								            else
+								            {
+									            ResultItem temp =
+										            CurrnetItems.FirstOrDefault(p => p.ItemId == item.ItemId);
+									            temp.Quantity = listning.quantity;
+									            temp.CraftingPrice = item.CraftingPrice.Value;
+									            remainingQuantity = remainingQuantity - listning.quantity;
+									            ItemsToKeep.Add(temp);
+								            }
+							            }
+						            }
+						            else
+						            {
+							            break;
+						            }
+					            }
+					            else
+					            {
+						            recipeData = allRecipes.FirstOrDefault(p => p.output_item_id == item.ItemId);
+						            if (recipeData != null)
+							            foreach (var ingredient in recipeData.ingredients)
+							            {
+								            Item check = ResultSet.FirstOrDefault(p => p.ItemId == ingredient.item_id);
+								            if (check != null)
+								            {
+									            check.Quantity = check.Quantity +
+									                             (ingredient.count * remainingQuantity /
+									                              recipeData.output_item_count);
+								            }
+								            else
+								            {
+									            ResultSet.Add(new Item()
+									            {
+										            ItemId = ingredient.item_id,
+										            Quantity =
+											            ingredient.count * remainingQuantity /
+											            recipeData.output_item_count
+									            });
+								            }
+							            }
+
+						            break;
+					            }
+				            }
+			            }
+			            else
+			            {
+				            recipeData = allRecipes.FirstOrDefault(p => p.output_item_id == item.ItemId);
+				            if (recipeData != null)
+				            {
+					            foreach (var ingredient in recipeData.ingredients)
+					            {
+						            Item check = ResultSet.FirstOrDefault(p => p.ItemId == ingredient.item_id);
+						            if (check != null)
+						            {
+							            check.Quantity = check.Quantity +
+							                             (ingredient.count * remainingQuantity /
+							                              recipeData.output_item_count);
+						            }
+						            else
+						            {
+							            ResultSet.Add(new Item()
+							            {
+								            ItemId = ingredient.item_id,
+								            Quantity =
+									            ingredient.count * remainingQuantity / recipeData.output_item_count
+							            });
+						            }
+					            }
+				            }
+			            }
+		            }
+		            else
+		            {
+			            Item check = ResultSet.FirstOrDefault(p => p.ItemId == item.ItemId);
+			            if (check != null)
+			            {
+				            check.Quantity += item.Quantity;
+			            }
+			            else
+			            {
+				            ResultSet.Add(new Item() {ItemId = item.ItemId, Quantity = item.Quantity});
+			            }
+		            }
+
+	            }
             }
-            //foreach (Item result in ResultSet)
-            //{
-            //    Item item = AllItems.FirstOrDefault(p => p.ItemId == result.ItemId);
-            //    if (item!=null)
-            //    {
-            //        result.CraftingPrice = item.CraftingPrice;
-            //    }
-            //}
-
-
+           
         }
 
         public async Task CombineAllData()

@@ -151,41 +151,6 @@ namespace gw2_Investment_Tool.Controls
 			labelKarmaValue.Text = CalculateTotalKarma().ToString(CultureInfo.InvariantCulture);
 		}
 
-		private void btnWhiteList_Click(object sender, EventArgs e)
-		{
-			WhiteListForm form = new WhiteListForm(GlobalDataHolder.WhiteListedItems);
-			if (form.ShowDialog() == DialogResult.OK)
-			{
-				GlobalDataHolder.WhiteListedItems.Clear();
-				GlobalDataHolder.WhiteListedItems = form.ItemsToSave;
-
-                var directory = Directory.GetCurrentDirectory();
-
-                List<string> lines = new List<string>();
-				foreach (var item in GlobalDataHolder.WhiteListedItems)
-				{
-					StringBuilder sb = new StringBuilder();
-					sb.Append(item.Name);
-					sb.Append("%");
-					sb.Append(item.ItemId.ToString());
-					sb.Append("%");
-					sb.Append(item.Price);
-					sb.Append("%");
-					sb.Append(item.Active.ToString());
-
-					lines.Add(sb.ToString());
-				}
-				if (lines.Count != 0)
-				{
-					File.WriteAllLines(directory + "\\DataFiles\\System\\WhiteListedItems.txt", lines);
-				}
-				else
-				{
-					File.WriteAllText(directory + "\\DataFiles\\System\\WhiteListedItems.txt", string.Empty);
-				}
-			}
-		}
-
 		private void btnDelete_Click(object sender, EventArgs e)
 		{
 			if (dgvItemsToCalculate.SelectedCells.Count <= 0)
