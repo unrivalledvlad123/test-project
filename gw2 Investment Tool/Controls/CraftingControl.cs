@@ -17,6 +17,7 @@ namespace gw2_Investment_Tool.Controls
 	{
 		public List<Item> AllItems = new List<Item>();
 		public Dictionary<int, int> ResultSet = new Dictionary<int, int>(); //key - itemId , value - quantity
+		public string comboSelectedItem { get; set; }
 
 		public CraftingControl()
 		{
@@ -59,7 +60,7 @@ namespace gw2_Investment_Tool.Controls
 
 		private async void btnAddItem_Click(object sender, EventArgs e)
 		{
-			AddOrEditForm addForm = new AddOrEditForm(null);
+			AddOrEditForm addForm = new AddOrEditForm(null,comboSelectedItem);
 
 			if (addForm.ShowDialog() == DialogResult.OK)
 			{
@@ -71,7 +72,7 @@ namespace gw2_Investment_Tool.Controls
 					{
 						try
 						{
-
+							comboSelectedItem = addForm.ComboSelecteditem;
 							AllItems.Add(newItem);
 							await GetNameFromApi(null, addForm.Item.ItemId);
 							dgvItemsToCalculate.DataSource = null;

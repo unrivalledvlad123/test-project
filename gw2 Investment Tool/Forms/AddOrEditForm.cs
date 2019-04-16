@@ -10,8 +10,9 @@ namespace gw2_Investment_Tool.Forms
     public partial class AddOrEditForm : Form
     {
         public Item Item;
+		public string ComboSelecteditem { get; set; }
 
-        public AddOrEditForm(Item selectedItem)
+        public AddOrEditForm(Item selectedItem, string selectedDiscipline)
         {
             InitializeComponent();
             SetGridColumns();
@@ -30,7 +31,12 @@ namespace gw2_Investment_Tool.Forms
 			};
 	        cbDiscipline.DataSource = disciplines;
 
-            if (selectedItem != null)
+	        if (!string.IsNullOrWhiteSpace(selectedDiscipline))
+	        {
+		        cbDiscipline.SelectedIndex = cbDiscipline.FindStringExact(selectedDiscipline);
+			}
+
+			if (selectedItem != null)
             {
                 tbItemId.Text = selectedItem.ItemId.ToString();
                 tbKarmaPerItem.Text = selectedItem.KarmaPerItem.ToString();
@@ -53,6 +59,7 @@ namespace gw2_Investment_Tool.Forms
             Item.Discipline = cbDiscipline.SelectedItem.ToString();
             Item.ItemId = itemId;
             Item.Quantity = quantity;
+            ComboSelecteditem = cbDiscipline.Text;
         }
 
         private void tbSearch_TextChanged(object sender, EventArgs e)
