@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +14,8 @@ namespace gw2_Investment_Tool.ServiceAccess
 
         public static async Task<ItemFull> GetItemAsync(int itemId)
         {
-            using (HttpClient client = new HttpClient())
+	        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+			using (HttpClient client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://api.guildwars2.com");
 
@@ -30,7 +32,8 @@ namespace gw2_Investment_Tool.ServiceAccess
  
         public static async Task<int[]> GetRecipesOutputAsync(int itemId)
         {
-            using (HttpClient client = new HttpClient())
+	        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+			using (HttpClient client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://api.guildwars2.com");
 
@@ -47,7 +50,8 @@ namespace gw2_Investment_Tool.ServiceAccess
 
         public static async Task<Recipe> GetRecipesIngredientsAsync(int recipeId)
         {
-            using (HttpClient client = new HttpClient())
+	        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+			using (HttpClient client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://api.guildwars2.com");
 
@@ -64,7 +68,8 @@ namespace gw2_Investment_Tool.ServiceAccess
 
 	    public static async Task<List<ItemPrices>> GetAllItemPrices(List<int> itemIds)
 	    {
-		    List<int> newCollection = itemIds.Distinct().ToList();
+		    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+			List<int> newCollection = itemIds.Distinct().ToList();
 			using (HttpClient client = new HttpClient())
 			{
 				List<ItemPrices> results = new List<ItemPrices>();
@@ -100,7 +105,8 @@ namespace gw2_Investment_Tool.ServiceAccess
 
         public static async Task<List<ItemListings>> GetAllItemListnings(List<int> itemIds)
         {
-	        List<int> newCollection = itemIds.Distinct().ToList();
+	        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+			List<int> newCollection = itemIds.Distinct().ToList();
 			using (HttpClient client = new HttpClient())
             {
                 List<ItemListings> results = new List<ItemListings>();
@@ -138,7 +144,8 @@ namespace gw2_Investment_Tool.ServiceAccess
 
         public static async Task<List<int>> GetAllrecipeIdsAsync()
         {
-            using (HttpClient client = new HttpClient())
+	        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+			using (HttpClient client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://api.guildwars2.com");
 
@@ -155,7 +162,8 @@ namespace gw2_Investment_Tool.ServiceAccess
 
         public static async Task<List<OutputItemId>> GetRecipeOutputIdAsync(List<int> itemIds)
         {
-	        List<int> newCollection = itemIds.Distinct().ToList();
+	        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+			List<int> newCollection = itemIds.Distinct().ToList();
 			using (HttpClient client = new HttpClient())
             {
                 List<OutputItemId> results = new List<OutputItemId>();
@@ -197,7 +205,8 @@ namespace gw2_Investment_Tool.ServiceAccess
 
         public static async Task<List<ItemFull>> GetItemNamesAsync(List<OutputItemId> itemIds)
         {
-            using (HttpClient client = new HttpClient())
+	        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+			using (HttpClient client = new HttpClient())
             {
                 List<ItemFull> results = new List<ItemFull>();
                 client.BaseAddress = new Uri("https://api.guildwars2.com");
@@ -232,7 +241,8 @@ namespace gw2_Investment_Tool.ServiceAccess
 
         public static async Task<List<Recipe>> GetRecipeFullAsync(List<int> itemIds)
         {
-	        List<int> newCollection = itemIds.Distinct().ToList();
+	        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+			List<int> newCollection = itemIds.Distinct().ToList();
 			using (HttpClient client = new HttpClient())
             {
                 List<Recipe> results = new List<Recipe>();
@@ -275,7 +285,8 @@ namespace gw2_Investment_Tool.ServiceAccess
 
 		public static async Task<List<GuildItemFull>> GetAllGuildItemsAsync(List<int> itemIds)
         {
-	        List<int> newCollection = itemIds.Distinct().ToList();
+	        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+			List<int> newCollection = itemIds.Distinct().ToList();
 			using (HttpClient client = new HttpClient())
             {
                 List<GuildItemFull> results = new List<GuildItemFull>();
@@ -310,7 +321,8 @@ namespace gw2_Investment_Tool.ServiceAccess
         }
         public static async Task<List<ItemFull>> GetAlItemsAsync(List<int> itemIds)
         {
-	        List<int> newCollection = itemIds.Distinct().ToList();
+	        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+			List<int> newCollection = itemIds.Distinct().ToList();
 			using (HttpClient client = new HttpClient())
             {
                 List<ItemFull> results = new List<ItemFull>();
@@ -346,9 +358,11 @@ namespace gw2_Investment_Tool.ServiceAccess
 
 	    public static async Task<List<ExtractableItems>> GetAllExtractableItems()
 	    {
-		    using (HttpClient client = new HttpClient())
+		    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+			using (HttpClient client = new HttpClient())
 		    {
-			    client.BaseAddress = new Uri("https://api.silveress.ie");
+			    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+				client.BaseAddress = new Uri("https://api.silveress.ie");
 
 			    HttpResponseMessage response = await client.GetAsync("/gw2/v1/items/json?fields=id,name,upgrade1,buy_price,sell_price,charm");
 			    if (response.IsSuccessStatusCode)
@@ -363,7 +377,8 @@ namespace gw2_Investment_Tool.ServiceAccess
 
 	    public static async Task<List<ExtractableUpgradeComponents>> GetAllUpgradeComponents()
 	    {
-		    using (HttpClient client = new HttpClient())
+		    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+			using (HttpClient client = new HttpClient())
 		    {
 			    client.BaseAddress = new Uri("https://api.silveress.ie");
 
@@ -380,7 +395,8 @@ namespace gw2_Investment_Tool.ServiceAccess
 
 	    public static async Task<List<SalvageItemsFull>> GetAllSalvagableItems()
 	    {
-		    using (HttpClient client = new HttpClient())
+		    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+			using (HttpClient client = new HttpClient())
 		    {
 			    client.BaseAddress = new Uri("https://api.silveress.ie");
 
