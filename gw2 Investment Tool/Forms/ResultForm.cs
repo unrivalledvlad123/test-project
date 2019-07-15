@@ -38,7 +38,7 @@ namespace gw2_Investment_Tool.Forms
             }
 			
 	        
-	        ParsePriceInControl((int) ((GlobalDataHolder.TotalGold - CalculateTotal(items))*0.85),gvcProfitValue);
+	        ParsePriceInControl((int) ((GlobalDataHolder.TotalGold * 0.85) - CalculateTotal(items)),gvcProfitValue);
             ParsePriceInControl(CalculateTotal(items),gvcTotalValue);
 			if (GlobalDataHolder.TotalKarma < 1)
 	        {
@@ -49,10 +49,10 @@ namespace gw2_Investment_Tool.Forms
 	        {
 		        labelTotalPerKarmaValue.Visible = false;
 		        gvcTotalPerKarmaValue.Visible = true;
-				ParsePriceInControl((int)((int)((GlobalDataHolder.TotalGold - CalculateTotal(items)) * 0.85) / (GlobalDataHolder.TotalKarma / 1000)),gvcTotalPerKarmaValue);
+				ParsePriceInControl((int)((int)((GlobalDataHolder.TotalGold * 0.85) - CalculateTotal(items)) / (GlobalDataHolder.TotalKarma / 1000)),gvcTotalPerKarmaValue);
 	        }
 
-			labelROI.Text = (((GlobalDataHolder.TotalGold - CalculateTotal(items)) * 0.85) / (CalculateTotal(items))).ToString("#.##" + "%");
+			labelROI.Text = (((GlobalDataHolder.TotalGold * 0.85) - CalculateTotal(items)) / (CalculateTotal(items))).ToString("#.##" + "%");
             dgvResults.DataSource = null;
             dgvResults.DataSource = SortResult(tempList);
         }
