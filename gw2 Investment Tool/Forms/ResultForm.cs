@@ -372,6 +372,8 @@ namespace gw2_Investment_Tool.Forms
             List<ResultItem> all = new List<ResultItem>();
             List<ResultItem> jewels = new List<ResultItem>();
 
+            //var test = "some test to test commit";
+
             foreach (ResultItem item in unsortedList)
             {
                 if (item.Name.Contains("Ingot"))
