@@ -51,7 +51,7 @@ namespace gw2_Investment_Tool.Controls
 			}
 			else if (dialog.SafeFileName.EndsWith(".csv"))
 			{
-				StreamReader file = new StreamReader(dialog.SafeFileName);
+				StreamReader file = new StreamReader(dialog.FileName);
 				string line;
 				while ((line = file.ReadLine()) != null)
 				{
