@@ -29,19 +29,15 @@
 		private void InitializeComponent()
 		{
 			this.dialog = new System.Windows.Forms.OpenFileDialog();
-			this.tbLocation = new System.Windows.Forms.TextBox();
 			this.btnBrowse = new System.Windows.Forms.Button();
 			this.cbGearType = new System.Windows.Forms.ComboBox();
 			this.label1 = new System.Windows.Forms.Label();
-			this.numQuantity = new System.Windows.Forms.NumericUpDown();
-			this.label3 = new System.Windows.Forms.Label();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.btnExportToCsv = new System.Windows.Forms.Button();
+			this.btnExportToJson = new System.Windows.Forms.Button();
 			this.btnLoadOldData = new System.Windows.Forms.Button();
 			this.btnSave = new System.Windows.Forms.Button();
 			this.dgvResults = new System.Windows.Forms.DataGridView();
-			this.btnExportToCsv = new System.Windows.Forms.Button();
-			this.btnExportToJson = new System.Windows.Forms.Button();
-			((System.ComponentModel.ISupportInitialize)(this.numQuantity)).BeginInit();
 			this.groupBox1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dgvResults)).BeginInit();
 			this.SuspendLayout();
@@ -49,17 +45,11 @@
 			// dialog
 			// 
 			this.dialog.FileName = "openFileDialog1";
-			// 
-			// tbLocation
-			// 
-			this.tbLocation.Location = new System.Drawing.Point(6, 19);
-			this.tbLocation.Name = "tbLocation";
-			this.tbLocation.Size = new System.Drawing.Size(248, 20);
-			this.tbLocation.TabIndex = 0;
+			this.dialog.Multiselect = true;
 			// 
 			// btnBrowse
 			// 
-			this.btnBrowse.Location = new System.Drawing.Point(260, 17);
+			this.btnBrowse.Location = new System.Drawing.Point(9, 19);
 			this.btnBrowse.Name = "btnBrowse";
 			this.btnBrowse.Size = new System.Drawing.Size(92, 23);
 			this.btnBrowse.TabIndex = 1;
@@ -70,7 +60,7 @@
 			// cbGearType
 			// 
 			this.cbGearType.FormattingEnabled = true;
-			this.cbGearType.Location = new System.Drawing.Point(3, 79);
+			this.cbGearType.Location = new System.Drawing.Point(9, 84);
 			this.cbGearType.Name = "cbGearType";
 			this.cbGearType.Size = new System.Drawing.Size(248, 21);
 			this.cbGearType.TabIndex = 2;
@@ -80,30 +70,9 @@
 			this.label1.AutoSize = true;
 			this.label1.Location = new System.Drawing.Point(6, 63);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(53, 13);
+			this.label1.Size = new System.Drawing.Size(93, 13);
 			this.label1.TabIndex = 3;
-			this.label1.Text = "Gear type";
-			// 
-			// numQuantity
-			// 
-			this.numQuantity.Location = new System.Drawing.Point(260, 80);
-			this.numQuantity.Maximum = new decimal(new int[] {
-            999999999,
-            0,
-            0,
-            0});
-			this.numQuantity.Name = "numQuantity";
-			this.numQuantity.Size = new System.Drawing.Size(92, 20);
-			this.numQuantity.TabIndex = 4;
-			// 
-			// label3
-			// 
-			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(257, 64);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(46, 13);
-			this.label3.TabIndex = 6;
-			this.label3.Text = "Quantity";
+			this.label1.Text = "Output destination";
 			// 
 			// groupBox1
 			// 
@@ -111,10 +80,7 @@
 			this.groupBox1.Controls.Add(this.btnExportToJson);
 			this.groupBox1.Controls.Add(this.btnLoadOldData);
 			this.groupBox1.Controls.Add(this.btnSave);
-			this.groupBox1.Controls.Add(this.tbLocation);
-			this.groupBox1.Controls.Add(this.label3);
 			this.groupBox1.Controls.Add(this.btnBrowse);
-			this.groupBox1.Controls.Add(this.numQuantity);
 			this.groupBox1.Controls.Add(this.cbGearType);
 			this.groupBox1.Controls.Add(this.label1);
 			this.groupBox1.Location = new System.Drawing.Point(3, 3);
@@ -123,6 +89,26 @@
 			this.groupBox1.TabIndex = 7;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Input data";
+			// 
+			// btnExportToCsv
+			// 
+			this.btnExportToCsv.Location = new System.Drawing.Point(947, 19);
+			this.btnExportToCsv.Name = "btnExportToCsv";
+			this.btnExportToCsv.Size = new System.Drawing.Size(39, 23);
+			this.btnExportToCsv.TabIndex = 10;
+			this.btnExportToCsv.Text = "Csv";
+			this.btnExportToCsv.UseVisualStyleBackColor = true;
+			this.btnExportToCsv.Click += new System.EventHandler(this.btnExportToCsv_Click);
+			// 
+			// btnExportToJson
+			// 
+			this.btnExportToJson.Location = new System.Drawing.Point(902, 19);
+			this.btnExportToJson.Name = "btnExportToJson";
+			this.btnExportToJson.Size = new System.Drawing.Size(39, 23);
+			this.btnExportToJson.TabIndex = 11;
+			this.btnExportToJson.Text = "Json";
+			this.btnExportToJson.UseVisualStyleBackColor = true;
+			this.btnExportToJson.Click += new System.EventHandler(this.btnExportToJson_Click);
 			// 
 			// btnLoadOldData
 			// 
@@ -157,26 +143,6 @@
 			this.dgvResults.Size = new System.Drawing.Size(989, 493);
 			this.dgvResults.TabIndex = 8;
 			// 
-			// btnExportToCsv
-			// 
-			this.btnExportToCsv.Location = new System.Drawing.Point(947, 19);
-			this.btnExportToCsv.Name = "btnExportToCsv";
-			this.btnExportToCsv.Size = new System.Drawing.Size(39, 23);
-			this.btnExportToCsv.TabIndex = 10;
-			this.btnExportToCsv.Text = "Csv";
-			this.btnExportToCsv.UseVisualStyleBackColor = true;
-			this.btnExportToCsv.Click += new System.EventHandler(this.btnExportToCsv_Click);
-			// 
-			// btnExportToJson
-			// 
-			this.btnExportToJson.Location = new System.Drawing.Point(902, 19);
-			this.btnExportToJson.Name = "btnExportToJson";
-			this.btnExportToJson.Size = new System.Drawing.Size(39, 23);
-			this.btnExportToJson.TabIndex = 11;
-			this.btnExportToJson.Text = "Json";
-			this.btnExportToJson.UseVisualStyleBackColor = true;
-			this.btnExportToJson.Click += new System.EventHandler(this.btnExportToJson_Click);
-			// 
 			// ExoticDataCollectionControl
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -185,7 +151,6 @@
 			this.Controls.Add(this.groupBox1);
 			this.Name = "ExoticDataCollectionControl";
 			this.Size = new System.Drawing.Size(998, 616);
-			((System.ComponentModel.ISupportInitialize)(this.numQuantity)).EndInit();
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox1.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dgvResults)).EndInit();
@@ -196,12 +161,9 @@
 		#endregion
 
 		private System.Windows.Forms.OpenFileDialog dialog;
-		private System.Windows.Forms.TextBox tbLocation;
 		private System.Windows.Forms.Button btnBrowse;
 		private System.Windows.Forms.ComboBox cbGearType;
 		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.NumericUpDown numQuantity;
-		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.Button btnSave;
 		private System.Windows.Forms.DataGridView dgvResults;

@@ -26,56 +26,61 @@ namespace gw2_Investment_Tool.Controls
 			if (dialog.ShowDialog() != DialogResult.OK)
 				return;
 
-			tbLocation.Text = dialog.SafeFileName;
-			if (dialog.SafeFileName.EndsWith(".json"))
+			foreach (var fileName in dialog.FileNames)
 			{
-				var json = JsonConvert.DeserializeObject<List<JsonObjectFromFile>>(File.ReadAllText(dialog.FileName));
-
-				foreach (var jsonItem in json)
+				if (fileName != null && fileName.EndsWith(".json"))
 				{
-					var itemCheck = _currentItems.FirstOrDefault(p => p.ItemId == jsonItem.ID);
-					if (itemCheck != null)
-					{
-						itemCheck.Quantity += jsonItem.Quantity;
-					}
-					else if (jsonItem.ID != 0 && jsonItem.Quantity != 0)
-					{
-						GridDataModel item = new GridDataModel();
-						item.ItemId = jsonItem.ID;
-						item.Quantity = jsonItem.Quantity;
-						item.ItemName = jsonItem.Name;
-						_currentItems.Add(item);
+					var json = JsonConvert.DeserializeObject<List<JsonObjectFromFile>>(File.ReadAllText(fileName));
 
+					foreach (var jsonItem in json)
+					{
+						var itemCheck = _currentItems.FirstOrDefault(p => p.ItemId == jsonItem.Id);
+						if (itemCheck != null)
+						{
+							itemCheck.Quantity += jsonItem.Quantity;
+						}
+						else if (jsonItem.Id != 0 && jsonItem.Quantity != 0)
+						{
+							GridDataModel item = new GridDataModel
+							{
+								ItemId = jsonItem.Id,
+								Quantity = jsonItem.Quantity,
+								ItemName = jsonItem.Name
+							};
+							_currentItems.Add(item);
+
+						}
 					}
 				}
-			}
-			else if (dialog.SafeFileName.EndsWith(".csv"))
-			{
-				StreamReader file = new StreamReader(dialog.FileName);
-				string line;
-				while ((line = file.ReadLine()) != null)
+				else if (fileName != null && fileName.EndsWith(".csv"))
 				{
-					string[] values = line.Split(Convert.ToChar(","));
-
-					int itemId;
-					int qty;
-					int.TryParse(values[0], out itemId);
-					int.TryParse(values[2], out qty);
-					string name = values[1];
-
-					var itemCheck = _currentItems.FirstOrDefault(p => p.ItemId == itemId);
-					if (itemCheck != null)
+					StreamReader file = new StreamReader(fileName);
+					string line;
+					while ((line = file.ReadLine()) != null)
 					{
-						itemCheck.Quantity += qty;
+						string[] values = line.Split(Convert.ToChar(","));
+
+						int.TryParse(values[0], out var itemId);
+						int.TryParse(values[2], out var qty);
+						string name = values[1];
+
+						var itemCheck = _currentItems.FirstOrDefault(p => p.ItemId == itemId);
+						if (itemCheck != null)
+						{
+							itemCheck.Quantity += qty;
+						}
+						else if (itemId != 0 && qty != 0)
+						{
+							GridDataModel item = new GridDataModel
+							{
+								ItemId = itemId,
+								Quantity = qty,
+								ItemName = name
+							};
+							_currentItems.Add(item);
+						}
 					}
-					else if (itemId != 0 && qty != 0)
-					{
-						GridDataModel item = new GridDataModel();
-						item.ItemId = itemId;
-						item.Quantity = qty;
-						item.ItemName = name;
-						_currentItems.Add(item);
-					}
+
 				}
 			}
 
@@ -91,13 +96,7 @@ namespace gw2_Investment_Tool.Controls
 				MessageBox.Show("Gear type not selected", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
-
-			if (_currentItems.Count != 0 && numQuantity.Value == 0)
-			{
-				MessageBox.Show("Quantity is missing", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				return;
-			}
-
+			
 			//initialize collection
 			SaveDataObject savedData = new SaveDataObject();
 			savedData.Items = new List<GridDataModel>();
@@ -114,41 +113,33 @@ namespace gw2_Investment_Tool.Controls
 				while ((line = file.ReadLine()) != null)
 				{
 					string[] values = line.Split(Convert.ToChar("%"));
-					if (values[0] == "TOTALQUANTITY")
+
+					int.TryParse(values[0], out var itemId);
+					int.TryParse(values[1], out var qty);
+
+					var itemCheck = savedData.Items.FirstOrDefault(p => p.ItemId == itemId);
+					if (itemCheck != null)
 					{
-						int totalQty;
-						int.TryParse(values[1], out totalQty);
-						savedData.TotalCount = totalQty;
+						itemCheck.Quantity += qty;
 					}
 					else
 					{
-						int itemId;
-						int qty;
-						int.TryParse(values[0], out itemId);
-						int.TryParse(values[1], out qty);
-
-						var itemCheck = savedData.Items.FirstOrDefault(p => p.ItemId == itemId);
-						if (itemCheck != null)
+						GridDataModel item = new GridDataModel
 						{
-							itemCheck.Quantity += qty;
-						}
-						else
+							ItemId = itemId,
+							Quantity = qty
+						};
+						if (itemId != 0 && qty != 0)
 						{
-							GridDataModel item = new GridDataModel();
-							item.ItemId = itemId;
-							item.Quantity = qty;
-							if (itemId != 0 && qty != 0)
-							{
-								savedData.Items.Add(item);
-							}
+							savedData.Items.Add(item);
 						}
 					}
+
 				}
 
 				file.Close();
 
 				// get the new data and combine both
-				savedData.TotalCount += (int) numQuantity.Value;
 				foreach (var currentItem in _currentItems)
 				{
 					//find the item
@@ -165,7 +156,6 @@ namespace gw2_Investment_Tool.Controls
 
 				//Save the data
 				List<string> lines = new List<string>();
-				lines.Add($"TOTALQUANTITY%{savedData.TotalCount}");
 				foreach (var item in savedData.Items)
 				{
 					StringBuilder sb = new StringBuilder();
@@ -200,26 +190,19 @@ namespace gw2_Investment_Tool.Controls
 
 			StreamReader file = new StreamReader(directory + $"\\DataFiles\\DataCollection\\{gearType}.txt");
 			string line;
-			int totalQty = 0;
 			while ((line = file.ReadLine()) != null)
 			{
 				string[] values = line.Split(Convert.ToChar("%"));
-				if (values[0] == "TOTALQUANTITY")
-				{
-					int.TryParse(values[1], out totalQty);
-				}
-				else
-				{
-					int itemId;
-					int qty;
-					int.TryParse(values[0], out itemId);
-					int.TryParse(values[1], out qty);
-					GridDataModel item = new GridDataModel();
-					item.ItemId = itemId;
-					item.Quantity = qty;
-					allItems.Add(item);
 
-				}
+				int.TryParse(values[0], out var itemId);
+				int.TryParse(values[1], out var qty);
+				GridDataModel item = new GridDataModel
+				{
+					ItemId = itemId,
+					Quantity = qty
+				};
+				allItems.Add(item);
+
 			}
 
 			file.Close();
@@ -319,12 +302,8 @@ namespace gw2_Investment_Tool.Controls
 
 		private List<string> getDataCollections()
 		{
-			string directory = string.Empty;
 			var directoryInfo = Directory.GetCurrentDirectory();
-			if (directoryInfo != null)
-			{
-				directory = directoryInfo;
-			}
+			string directory = directoryInfo;
 
 			List<string> alLists = new List<string>();
 			string[] files = Directory.GetFiles(directory + "\\DataFiles\\DataCollection");
@@ -342,7 +321,6 @@ namespace gw2_Investment_Tool.Controls
 		private class SaveDataObject
 		{
 			public List<GridDataModel> Items { get; set; }
-			public int TotalCount { get; set; }
 		}
 
 		private class GridDataModel
@@ -354,7 +332,7 @@ namespace gw2_Investment_Tool.Controls
 
 		private class JsonObjectFromFile
 		{
-			public int ID { get; set; }
+			public int Id { get; set; }
 			public string Name { get; set; }
 			public int Quantity { get; set; }
 		}
